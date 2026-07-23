@@ -91,7 +91,8 @@ const components = {
   'staggered-menu': () => import('../demo/Components/StaggeredMenuDemo.vue'),
   'infinite-menu': () => import('../demo/Components/InfiniteMenuDemo.vue'),
   'border-glow': () => import('../demo/Components/BorderGlowDemo.vue'),
-  'model-viewer': () => import('../demo/Components/ModelViewerDemo.vue')
+  'model-viewer': () => import('../demo/Components/ModelViewerDemo.vue'),
+  'line-sidebar': () => import('../demo/Components/LineSidebarDemo.vue'),
 };
 
 const backgrounds = {

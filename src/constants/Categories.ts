@@ -7,7 +7,8 @@ export const NEW = [
   'Side Rays',
   'Ferrofluid',
   'Lightfall',
-  'Plasma Wave'
+  'Plasma Wave',
+  'Line Sidebar'
 ];
 export const UPDATED = [];
 
@@ -104,6 +105,7 @@ export const CATEGORIES = [
       'Glass Surface',
       'Gooey Nav',
       'Infinite Menu',
+      'Line Sidebar',
       'Magic Bento',
       'Masonry',
       'Model Viewer',
