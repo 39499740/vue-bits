@@ -54,6 +54,15 @@ export const componentMetadata: ComponentMetadata = {
     docsUrl: 'https://vue-bits.dev/animations/cubes',
     tags: []
   },
+  'Animations/CursorGrid': {
+    videoUrl: '/assets/videos/cursorgrid.webm',
+    description:
+      'Canvas grid whose cells light up around the cursor with configurable radius, falloff and click pulses.',
+    category: 'Animations',
+    name: 'CursorGrid',
+    docsUrl: 'https://vue-bits.dev/animations/cursor-grid',
+    tags: []
+  },
   'Animations/ElectricBorder': {
     videoUrl: '/assets/videos/electricborder.webm',
     description: 'Jittery electric energy border with animated arcs, glow and adjustable intensity.',

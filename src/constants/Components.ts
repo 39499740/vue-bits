@@ -28,7 +28,8 @@ const animations = {
   'pixel-trail': () => import('../demo/Animations/PixelTrailDemo.vue'),
   'orbit-images': () => import('../demo/Animations/OrbitImagesDemo.vue'),
   'magic-rings': () => import('../demo/Animations/MagicRingsDemo.vue'),
-  strands: () => import('../demo/Animations/StrandsDemo.vue')
+  strands: () => import('../demo/Animations/StrandsDemo.vue'),
+  'cursor-grid': () => import('../demo/Animations/CursorGridDemo.vue')
 };
 
 const textAnimations = {

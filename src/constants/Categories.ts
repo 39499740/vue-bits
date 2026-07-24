@@ -2,6 +2,7 @@
 export const NEW = [
   'Model Viewer',
   'Dot Field',
+  'Cursor Grid',
   'Shape Grid',
   'Strands',
   'Side Rays',
@@ -54,6 +55,7 @@ export const CATEGORIES = [
       'Click Spark',
       'Crosshair',
       'Cubes',
+      'Cursor Grid',
       'Electric Border',
       'Fade Content',
       'Ghost Cursor',
