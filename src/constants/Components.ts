@@ -68,6 +68,7 @@ const components = {
   'card-nav': () => import('../demo/Components/CardNavDemo.vue'),
   'pill-nav': () => import('../demo/Components/PillNavDemo.vue'),
   'gooey-nav': () => import('../demo/Components/GooeyNavDemo.vue'),
+  'curved-input': () => import('../demo/Components/CurvedInputDemo.vue'),
   'pixel-card': () => import('../demo/Components/PixelCardDemo.vue'),
   carousel: () => import('../demo/Components/CarouselDemo.vue'),
   'spotlight-card': () => import('../demo/Components/SpotlightCardDemo.vue'),
