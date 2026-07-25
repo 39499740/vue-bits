@@ -62,6 +62,7 @@ const components = {
   masonry: () => import('../demo/Components/MasonryDemo.vue'),
   'glass-surface': () => import('../demo/Components/GlassSurfaceDemo.vue'),
   'magic-bento': () => import('../demo/Components/MagicBentoDemo.vue'),
+  'option-wheel': () => import('../demo/Components/OptionWheelDemo.vue'),
   'profile-card': () => import('../demo/Components/ProfileCardDemo.vue'),
   'reflective-card': () => import('../demo/Components/ReflectiveCardDemo.vue'),
   dock: () => import('../demo/Components/DockDemo.vue'),
