@@ -6,6 +6,7 @@ export const NEW = [
   'Strands',
   'Side Rays',
   'Ferrofluid',
+  'Specular Button',
   'Lightfall',
   'Plasma Wave'
 ];
@@ -112,6 +113,7 @@ export const CATEGORIES = [
       'Profile Card',
       'Reflective Card',
       'Scroll Stack',
+      'Specular Button',
       'Spotlight Card',
       'Stack',
       'Staggered Menu',

@@ -86,6 +86,7 @@ export const COMPONENT_DEPENDENCIES: Record<string, string[]> = {
   'side-rays': ['ogl'],
   silk: ['ogl'],
   'soft-aurora': ['ogl'],
+  'specular-button': ['ogl'],
   'split-text': ['gsap'],
   stack: ['motion-v'],
   'staggered-menu': ['gsap'],
