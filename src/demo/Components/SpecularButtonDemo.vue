@@ -164,7 +164,7 @@ function reset() {
 }
 
 const props: PropRow[] = [
-  { name: 'children', type: 'ReactNode', default: '"Get Started"', description: 'Button label or any custom content.' },
+  { name: 'children', type: 'slot', default: '"Get Started"', description: 'Button label or any custom content.' },
   {
     name: 'size',
     type: '"sm" | "md" | "lg"',
