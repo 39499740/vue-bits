@@ -10,6 +10,7 @@ export const NEW = [
   'Ferrofluid',
   'Specular Button',
   'Lightfall',
+  'Curved Input',
   'Plasma Wave'
 ];
 export const UPDATED = [];
@@ -96,6 +97,7 @@ export const CATEGORIES = [
       'Carousel',
       'Chroma Grid',
       'Circular Gallery',
+      'Curved Input',
       'Counter',
       'Decay Card',
       'Dock',

@@ -524,6 +524,14 @@ export const componentMetadata: ComponentMetadata = {
     docsUrl: 'https://vue-bits.dev/components/counter',
     tags: []
   },
+  'Components/CurvedInput': {
+    videoUrl: '/assets/videos/curvedinput.webm',
+    description: 'Arc-bent input bar with text, caret and submit button all following the curve.',
+    category: 'Components',
+    name: 'CurvedInput',
+    docsUrl: 'https://vue-bits.dev/components/curved-input',
+    tags: []
+  },
   'Components/DecayCard': {
     videoUrl: '/assets/videos/decaycard.webm',
     description: 'Hover parallax effect that disintegrates the content of a card.',
