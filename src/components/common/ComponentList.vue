@@ -58,6 +58,8 @@ const mapToItem = (entry: RawEntry | string) => {
   const meta: RawEntry = isObj ? entry : (componentMetadata?.[entry] ?? {});
   const fullKey = key ?? (typeof entry === 'string' ? entry : '');
   const [cat, comp] = (fullKey || '').split('/');
+  const i18nKey = `components.${fullKey.replace(/\//g, '.')}`;
+  const translatedDesc = t(i18nKey);
   const title = fromPascal(meta.name ?? comp);
   return {
     key: fullKey,
@@ -65,7 +67,7 @@ const mapToItem = (entry: RawEntry | string) => {
     componentKey: comp,
     categoryLabel: fromPascal(meta.category ?? cat),
     title: fromPascal(meta.name ?? comp),
-    description: meta.description ?? '',
+    description: translatedDesc !== i18nKey ? translatedDesc : (meta.description ?? ''),
     videoUrl: meta.videoUrl ?? '',
     tags: Array.isArray(meta.tags) ? meta.tags : [],
     isNew: NEW.includes(title)
