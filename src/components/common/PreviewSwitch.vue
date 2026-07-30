@@ -5,7 +5,7 @@
       class="scrubber-track scrubber-track--switch"
       role="switch"
       :aria-checked="modelValue"
-      :aria-label="title"
+      :aria-label="displayTitle"
       :aria-disabled="isDisabled"
       :data-disabled="isDisabled"
       :data-checked="modelValue"
@@ -13,7 +13,7 @@
       @click="toggle"
       @keydown="onKeyDown"
     >
-      <span class="scrubber-label">{{ title }}</span>
+      <span class="scrubber-label">{{ displayTitle }}</span>
       <span class="scrubber-switch-toggle">
         <span class="scrubber-switch-knob" />
       </span>
@@ -22,6 +22,9 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
 const props = withDefaults(
   defineProps<{
     title?: string;
@@ -29,6 +32,13 @@ const props = withDefaults(
   }>(),
   { title: '', isDisabled: false }
 );
+
+const { t, te } = useI18n();
+
+const displayTitle = computed(() => {
+  const key = `controls.${props.title.replace(/\s+/g, '_')}`;
+  return te(key) ? t(key) : props.title;
+});
 
 const modelValue = defineModel<boolean>({ default: false });
 

@@ -54,15 +54,6 @@ export const componentMetadata: ComponentMetadata = {
     docsUrl: 'https://vue-bits.dev/animations/cubes',
     tags: []
   },
-  'Animations/CursorGrid': {
-    videoUrl: '/assets/videos/cursorgrid.webm',
-    description:
-      'Canvas grid whose cells light up around the cursor with configurable radius, falloff and click pulses.',
-    category: 'Animations',
-    name: 'CursorGrid',
-    docsUrl: 'https://vue-bits.dev/animations/cursor-grid',
-    tags: []
-  },
   'Animations/ElectricBorder': {
     videoUrl: '/assets/videos/electricborder.webm',
     description: 'Jittery electric energy border with animated arcs, glow and adjustable intensity.',
@@ -524,14 +515,6 @@ export const componentMetadata: ComponentMetadata = {
     docsUrl: 'https://vue-bits.dev/components/counter',
     tags: []
   },
-  'Components/CurvedInput': {
-    videoUrl: '/assets/videos/curvedinput.webm',
-    description: 'Arc-bent input bar with text, caret and submit button all following the curve.',
-    category: 'Components',
-    name: 'CurvedInput',
-    docsUrl: 'https://vue-bits.dev/components/curved-input',
-    tags: []
-  },
   'Components/DecayCard': {
     videoUrl: '/assets/videos/decaycard.webm',
     description: 'Hover parallax effect that disintegrates the content of a card.',
@@ -620,14 +603,6 @@ export const componentMetadata: ComponentMetadata = {
     docsUrl: 'https://vue-bits.dev/components/infinite-menu',
     tags: []
   },
-  'Components/LineSidebar': {
-    videoUrl: '/assets/videos/linesidebar.webm',
-    description: 'Static list navigation with a cursor-proximity effect that shifts and highlights nearby items.',
-    category: 'Components',
-    name: 'LineSidebar',
-    docsUrl: 'https://vue-bits.dev/components/line-sidebar',
-    tags: []
-  },
   'Components/MagicBento': {
     videoUrl: '/assets/videos/magicbento.webm',
     description: 'Interactive bento grid tiles expand + animate with various options.',
@@ -642,15 +617,6 @@ export const componentMetadata: ComponentMetadata = {
     category: 'Components',
     name: 'Masonry',
     docsUrl: 'https://vue-bits.dev/components/masonry',
-    tags: []
-  },
-  'Components/OptionWheel': {
-    videoUrl: '/assets/videos/optionwheel.webm',
-    description:
-      'Curved option picker that spins via scroll, drag, or arrow keys, fading and tilting items away from the selection.',
-    category: 'Components',
-    name: 'OptionWheel',
-    docsUrl: 'https://vue-bits.dev/components/option-wheel',
     tags: []
   },
   'Components/PillNav': {
@@ -691,15 +657,6 @@ export const componentMetadata: ComponentMetadata = {
     category: 'Components',
     name: 'ScrollStack',
     docsUrl: 'https://vue-bits.dev/components/scroll-stack',
-    tags: []
-  },
-  'Components/SpecularButton': {
-    videoUrl: '/assets/videos/specularbutton.webm',
-    description:
-      'Glass button with a shader-driven specular rim light that sweeps around the edge and follows the cursor.',
-    category: 'Components',
-    name: 'SpecularButton',
-    docsUrl: 'https://vue-bits.dev/components/specular-button',
     tags: []
   },
   'Components/SpotlightCard': {

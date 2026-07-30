@@ -399,6 +399,31 @@
 }
 
 /* ──────────────────────────────────────────────────────────
+   Language Switcher
+   ────────────────────────────────────────────────────────── */
+
+.ln-navbar-lang-trigger {
+  gap: 6px;
+}
+
+.ln-navbar-lang-text {
+  font-size: 12px;
+}
+
+.ln-navbar-lang-menu {
+  width: 160px;
+}
+
+.ln-navbar-lang-active {
+  color: #42b883;
+}
+
+.ln-navbar-lang-spacer {
+  width: 25px;
+  display: inline-block;
+}
+
+/* ──────────────────────────────────────────────────────────
    Mobile Hamburger
    ────────────────────────────────────────────────────────── */
 
@@ -576,8 +601,18 @@
   .ln-navbar-links,
   .ln-navbar-divider,
   .ln-navbar-github,
-  .ln-navbar-prefs-wrapper {
+  .ln-navbar-prefs-only {
     display: none;
+  }
+
+  .ln-navbar-lang-text {
+    display: none;
+  }
+
+  .ln-navbar-lang-trigger {
+    width: 36px;
+    justify-content: center;
+    padding: 0;
   }
 
   .ln-navbar-search span,

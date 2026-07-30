@@ -1,7 +1,7 @@
 <template>
   <div>
-    <title>Vue Bits - Component Index</title>
-    <ComponentList :list="componentMetadata" title="Index" sorting="alphabetical" has-favorite-button />
+    <title>{{ $t('index.pageTitle') }}</title>
+    <ComponentList :list="componentMetadata" :title="$t('index.title')" sorting="alphabetical" has-favorite-button />
   </div>
 </template>
 

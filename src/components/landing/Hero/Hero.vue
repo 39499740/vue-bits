@@ -208,7 +208,7 @@ const dotProps = computed(() => propValues.value[1] as Record<string, number | b
 
     <div class="ln-hero-content">
       <div class="ln-hero-left">
-        <a href="/backgrounds/option-wheel" class="ln-hero-tag">
+        <a href="/backgrounds/dot-field" class="ln-hero-tag">
           <span
             class="ln-hero-tag-new"
             :style="{
@@ -216,10 +216,10 @@ const dotProps = computed(() => propValues.value[1] as Record<string, number | b
               color: accentDerived.accentFg
             }"
           >
-            New Component
+            {{ $t('hero.newComponent') }}
           </span>
 
-          Option Wheel
+          DotField
 
           <svg width="10" height="10" viewBox="0 0 448 512" fill="currentColor" aria-hidden="true">
             <path
@@ -229,16 +229,15 @@ const dotProps = computed(() => propValues.value[1] as Record<string, number | b
         </a>
 
         <h1 class="ln-hero-headline">
-          <span class="ln-hero-headline-line">Vue components for</span>
+          <span class="ln-hero-headline-line">{{ $t('hero.headline1') }}</span>
 
           <br />
 
-          <span class="ln-hero-headline-line">creative developers</span>
+          <span class="ln-hero-headline-line">{{ $t('hero.headline2') }}</span>
         </h1>
 
         <p class="ln-hero-description">
-          Highly customizable animated components & backgrounds that drop into your project and instantly make it stand
-          out
+          {{ $t('hero.description') }}
         </p>
 
         <div class="ln-hero-buttons">
@@ -251,7 +250,7 @@ const dotProps = computed(() => propValues.value[1] as Record<string, number | b
               color: accentDerived.accentFg
             }"
           >
-            Browse Components
+            {{ $t('hero.browseComponents') }}
           </a>
         </div>
       </div>
@@ -266,7 +265,12 @@ const dotProps = computed(() => propValues.value[1] as Record<string, number | b
             </div>
 
             <div class="ln-hero-code-titlebar-actions">
-              <button v-if="hasChanges" class="ln-hero-code-reset" aria-label="Reset to defaults" @click="resetProps">
+              <button
+                v-if="hasChanges"
+                class="ln-hero-code-reset"
+                :aria-label="$t('hero.resetToDefaults')"
+                @click="resetProps"
+              >
                 <svg
                   width="14"
                   height="14"
@@ -330,7 +334,7 @@ const dotProps = computed(() => propValues.value[1] as Record<string, number | b
             />
           </div>
 
-          <p class="ln-hero-code-hint">Drag or click values to edit</p>
+          <p class="ln-hero-code-hint">{{ $t('hero.editHint') }}</p>
         </div>
       </div>
     </div>

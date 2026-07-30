@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { computed, ref, watch, defineAsyncComponent, shallowRef } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { decodeLabel } from '../utils/utils';
 import { componentMap } from '../constants/Components';
 
 const route = useRoute();
+const { t } = useI18n();
 
 const sub = computed(() => (route.params.subcategory as string) ?? '');
 const niceName = computed(() => decodeLabel(sub.value));
@@ -38,7 +40,7 @@ watch(
 watch(
   niceName,
   name => {
-    if (name) document.title = `${name} - Vue Bits`;
+    if (name) document.title = t('componentDetail.pageTitle', { name });
   },
   { immediate: true }
 );

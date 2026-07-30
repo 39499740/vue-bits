@@ -6,8 +6,11 @@ import { fuzzyMatch } from '@/utils/fuzzy';
 import gsap from 'gsap';
 import { useToast } from 'primevue/usetoast';
 import { computed, onBeforeUnmount, onMounted, ref, watch, watchEffect } from 'vue';
+import { useI18n } from 'vue-i18n';
 import LazyCardMedia from './LazyCardMedia.vue';
 import PreviewSelect from './PreviewSelect.vue';
+
+const { t, te } = useI18n();
 
 const CARD_RADIUS = 16;
 const CLEAR_APPEAR_DEBOUNCE_MS = 300;
@@ -55,17 +58,25 @@ const mapToItem = (entry: RawEntry | string) => {
   const meta: RawEntry = isObj ? entry : (componentMetadata?.[entry] ?? {});
   const fullKey = key ?? (typeof entry === 'string' ? entry : '');
   const [cat, comp] = (fullKey || '').split('/');
-  const title = fromPascal(meta.name ?? comp);
+  const i18nKey = `components.${fullKey.replace(/\//g, '.')}`;
+  const translatedDesc = t(i18nKey);
+  const rawTitle = fromPascal(meta.name ?? comp);
+  const titleI18nKey = `componentNames.${rawTitle.replace(/\s+/g, '_')}`;
+  const translatedTitle = te(titleI18nKey) ? t(titleI18nKey) : rawTitle;
+  const rawCategory = fromPascal(meta.category ?? cat);
+  const catKeyNoSpace = rawCategory.replace(/\s+/g, '');
+  const categoryI18nKey = `categories.${catKeyNoSpace.charAt(0).toLowerCase()}${catKeyNoSpace.slice(1)}`;
+  const translatedCategory = te(categoryI18nKey) ? t(categoryI18nKey) : rawCategory;
   return {
     key: fullKey,
     categoryKey: cat,
     componentKey: comp,
-    categoryLabel: fromPascal(meta.category ?? cat),
-    title: fromPascal(meta.name ?? comp),
-    description: meta.description ?? '',
+    categoryLabel: translatedCategory,
+    title: translatedTitle,
+    description: translatedDesc !== i18nKey ? translatedDesc : (meta.description ?? ''),
     videoUrl: meta.videoUrl ?? '',
     tags: Array.isArray(meta.tags) ? meta.tags : [],
-    isNew: NEW.includes(title)
+    isNew: NEW.includes(rawTitle)
   };
 };
 

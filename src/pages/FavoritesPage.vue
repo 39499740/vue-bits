@@ -13,7 +13,7 @@
       tabindex="-1"
       role="dialog"
       aria-modal="true"
-      aria-label="Docs navigation"
+      :aria-label="$t('favorites.docsNav')"
       :aria-hidden="!drawerOpen"
       :inert="!drawerOpen || undefined"
     >
@@ -28,11 +28,11 @@
 
         <div class="category-page">
           <ComponentList
-            title="Favorites"
+            :title="$t('favorites.title')"
             :list="savedList"
             :has-delete-button="true"
-            emptyTitle="Nothing here yet..."
-            emptyDescription="Tap the heart on any component to save it"
+            :empty-title="$t('favorites.emptyTitle')"
+            :empty-description="$t('favorites.emptyDescription')"
           />
         </div>
 

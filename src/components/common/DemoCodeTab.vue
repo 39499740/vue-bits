@@ -14,12 +14,12 @@ defineProps<Props>();
 
 <template>
   <CliInstall :slug="slug" />
-  <h3 class="demo-title-extra">Usage</h3>
+  <h3 class="demo-title-extra">{{ $t('demo.usage') }}</h3>
   <CodeBlock :code="usage" language="html" />
-  <h3 class="demo-title-extra">Component source</h3>
+  <h3 class="demo-title-extra">{{ $t('demo.componentSource') }}</h3>
   <CodeBlock :code="source" language="html" />
   <template v-if="utility">
-    <h3 class="demo-title-extra">Utility source</h3>
+    <h3 class="demo-title-extra">{{ $t('demo.utilitySource') }}</h3>
     <CodeBlock :code="utility" language="ts" />
   </template>
 </template>

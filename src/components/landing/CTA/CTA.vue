@@ -54,15 +54,15 @@ onUnmounted(() => {
         <div class="ln-cta-card-border"></div>
 
         <div class="ln-cta-card">
-          <h2 class="ln-cta-headline">Stop building from scratch.</h2>
+          <h2 class="ln-cta-headline">{{ $t('cta.headline') }}</h2>
 
           <p class="ln-cta-sub">
-            Beautiful, animated Vue components you can drop into any project. Open source. Always free.
+            {{ $t('cta.description') }}
           </p>
 
           <div class="ln-cta-buttons">
             <a href="/get-started/index" class="ln-cta-btn ln-cta-btn--primary">
-              Browse Components
+              {{ $t('cta.browseComponents') }}
 
               <svg
                 width="15"
@@ -88,7 +88,7 @@ onUnmounted(() => {
                 />
               </svg>
 
-              Star on GitHub
+              {{ $t('cta.starOnGitHub') }}
             </a>
           </div>
         </div>

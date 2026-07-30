@@ -38,25 +38,29 @@ onBeforeUnmount(() => io?.disconnect());
     <div ref="innerEl" class="ln-footer-inner" :class="{ 'is-visible': visible }">
       <div class="ln-footer-top">
         <div class="ln-footer-brand">
-          <img :src="vueBitsLogo" alt="Vue Bits" class="ln-footer-logo" />
-          <p class="ln-footer-tagline">Animated UI components for Vue.</p>
+          <img :src="vueBitsLogo" :alt="$t('site.title')" class="ln-footer-logo" />
+          <p class="ln-footer-tagline">{{ $t('site.tagline') }}</p>
         </div>
 
         <nav class="ln-footer-nav">
           <div class="ln-footer-col">
-            <span class="ln-footer-col-title">Product</span>
-            <RouterLink to="/get-started/index" class="ln-footer-link">Docs</RouterLink>
-            <a href="https://www.jsrepo.com/" target="_blank" rel="noopener noreferrer" class="ln-footer-link">CLI</a>
+            <span class="ln-footer-col-title">{{ $t('footer.product') }}</span>
+            <RouterLink to="/get-started/index" class="ln-footer-link">{{ $t('footer.docs') }}</RouterLink>
+            <a href="https://www.jsrepo.com/" target="_blank" rel="noopener noreferrer" class="ln-footer-link">
+              {{ $t('footer.cli') }}
+            </a>
           </div>
 
           <div class="ln-footer-col">
-            <span class="ln-footer-col-title">Community</span>
-            <a :href="GITHUB_URL" target="_blank" rel="noopener noreferrer" class="ln-footer-link">GitHub</a>
+            <span class="ln-footer-col-title">{{ $t('footer.community') }}</span>
+            <a :href="GITHUB_URL" target="_blank" rel="noopener noreferrer" class="ln-footer-link">
+              {{ $t('footer.github') }}
+            </a>
             <a href="https://reactbits.dev/" target="_blank" rel="noopener noreferrer" class="ln-footer-link">
-              React Bits
+              {{ $t('footer.reactBits') }}
             </a>
             <a href="https://sveltebits.xyz/" target="_blank" rel="noopener noreferrer" class="ln-footer-link">
-              Svelte Bits
+              {{ $t('footer.svelteBits') }}
             </a>
           </div>
         </nav>
@@ -64,16 +68,20 @@ onBeforeUnmount(() => io?.disconnect());
 
       <div class="ln-footer-bottom">
         <p class="ln-footer-attribution">
-          A Vue port of
-          <a href="https://reactbits.dev/" target="_blank" rel="noopener noreferrer" class="ln-footer-creator">
-            React Bits
-          </a>
-          by
-          <a href="https://x.com/davidhdev" target="_blank" rel="noopener noreferrer" class="ln-footer-creator">
-            davidhdev
-          </a>
+          <i18n-t keypath="footer.attribution" tag="span">
+            <template #reactBits>
+              <a href="https://reactbits.dev/" target="_blank" rel="noopener noreferrer" class="ln-footer-creator">
+                React Bits
+              </a>
+            </template>
+            <template #author>
+              <a href="https://x.com/davidhdev" target="_blank" rel="noopener noreferrer" class="ln-footer-creator">
+                davidhdev
+              </a>
+            </template>
+          </i18n-t>
         </p>
-        <p class="ln-footer-copy">© {{ year }} Vue Bits</p>
+        <p class="ln-footer-copy">{{ $t('footer.copyright', { year }) }}</p>
       </div>
     </div>
   </footer>

@@ -28,8 +28,7 @@ const animations = {
   'pixel-trail': () => import('../demo/Animations/PixelTrailDemo.vue'),
   'orbit-images': () => import('../demo/Animations/OrbitImagesDemo.vue'),
   'magic-rings': () => import('../demo/Animations/MagicRingsDemo.vue'),
-  strands: () => import('../demo/Animations/StrandsDemo.vue'),
-  'cursor-grid': () => import('../demo/Animations/CursorGridDemo.vue')
+  strands: () => import('../demo/Animations/StrandsDemo.vue')
 };
 
 const textAnimations = {
@@ -63,19 +62,16 @@ const components = {
   masonry: () => import('../demo/Components/MasonryDemo.vue'),
   'glass-surface': () => import('../demo/Components/GlassSurfaceDemo.vue'),
   'magic-bento': () => import('../demo/Components/MagicBentoDemo.vue'),
-  'option-wheel': () => import('../demo/Components/OptionWheelDemo.vue'),
   'profile-card': () => import('../demo/Components/ProfileCardDemo.vue'),
   'reflective-card': () => import('../demo/Components/ReflectiveCardDemo.vue'),
   dock: () => import('../demo/Components/DockDemo.vue'),
   'card-nav': () => import('../demo/Components/CardNavDemo.vue'),
   'pill-nav': () => import('../demo/Components/PillNavDemo.vue'),
   'gooey-nav': () => import('../demo/Components/GooeyNavDemo.vue'),
-  'curved-input': () => import('../demo/Components/CurvedInputDemo.vue'),
   'pixel-card': () => import('../demo/Components/PixelCardDemo.vue'),
   carousel: () => import('../demo/Components/CarouselDemo.vue'),
   'spotlight-card': () => import('../demo/Components/SpotlightCardDemo.vue'),
   'circular-gallery': () => import('../demo/Components/CircularGalleryDemo.vue'),
-  'specular-button': () => import('../demo/Components/SpecularButtonDemo.vue'),
   'flying-posters': () => import('../demo/Components/FlyingPostersDemo.vue'),
   folder: () => import('../demo/Components/FolderDemo.vue'),
   'card-swap': () => import('../demo/Components/CardSwapDemo.vue'),
@@ -95,8 +91,7 @@ const components = {
   'staggered-menu': () => import('../demo/Components/StaggeredMenuDemo.vue'),
   'infinite-menu': () => import('../demo/Components/InfiniteMenuDemo.vue'),
   'border-glow': () => import('../demo/Components/BorderGlowDemo.vue'),
-  'model-viewer': () => import('../demo/Components/ModelViewerDemo.vue'),
-  'line-sidebar': () => import('../demo/Components/LineSidebarDemo.vue'),
+  'model-viewer': () => import('../demo/Components/ModelViewerDemo.vue')
 };
 
 const backgrounds = {

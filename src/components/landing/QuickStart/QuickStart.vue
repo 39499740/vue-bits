@@ -128,7 +128,7 @@ onMounted(() => {
           }
         ]"
       >
-        <h2 class="ln-qs-title">Get started in seconds</h2>
+        <h2 class="ln-qs-title">{{ $t('quickStart.title') }}</h2>
       </div>
 
       <div
@@ -261,7 +261,7 @@ onMounted(() => {
                   'ln-qs-copy--done': copied
                 }
               ]"
-              aria-label="Copy command"
+              :aria-label="$t('quickStart.copyCommand')"
               @click="copy(command)"
             >
               <svg
@@ -298,11 +298,14 @@ onMounted(() => {
         </div>
 
         <p class="ln-qs-hint">
-          Use
-          <strong class="ln-qs-hint-strong">jsrepo</strong>
-          or
-          <strong class="ln-qs-hint-strong">shadcn</strong>
-          — components land in your codebase, ready to use, instantly.
+          <i18n-t keypath="quickStart.hint" tag="span">
+            <template #installer1>
+              <strong class="ln-qs-hint-strong">jsrepo</strong>
+            </template>
+            <template #installer2>
+              <strong class="ln-qs-hint-strong">shadcn</strong>
+            </template>
+          </i18n-t>
         </p>
       </div>
     </div>
