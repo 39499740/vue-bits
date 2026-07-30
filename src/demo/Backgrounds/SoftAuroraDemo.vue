@@ -1,5 +1,5 @@
 <template>
-  <h1 class="sub-category">Soft Aurora</h1>
+  <h1 class="sub-category">{{ $t('componentNames.Soft_Aurora') }}</h1>
   <TabsLayout
     :has-changes="hasChanges"
     :onreset="reset"

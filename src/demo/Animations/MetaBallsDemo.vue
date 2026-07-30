@@ -1,5 +1,5 @@
 <template>
-  <h1 class="sub-category">Meta Balls</h1>
+  <h1 class="sub-category">{{ $t('componentNames.Meta_Balls') }}</h1>
   <TabsLayout
     :has-changes="hasChanges"
     :onreset="reset"

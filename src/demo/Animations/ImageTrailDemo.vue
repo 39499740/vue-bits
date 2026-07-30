@@ -1,5 +1,5 @@
 <template>
-  <h1 class="sub-category">Image Trail</h1>
+  <h1 class="sub-category">{{ $t('componentNames.Image_Trail') }}</h1>
   <TabsLayout
     :has-changes="hasChanges"
     :onreset="reset"

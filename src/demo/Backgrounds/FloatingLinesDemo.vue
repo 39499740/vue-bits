@@ -1,5 +1,5 @@
 <template>
-  <h1 class="sub-category">Floating Lines</h1>
+  <h1 class="sub-category">{{ $t('componentNames.Floating_Lines') }}</h1>
   <TabsLayout
     :has-changes="hasChanges"
     :onreset="reset"

@@ -1,6 +1,6 @@
 <template>
   <!-- <div class="shape-blur-demo"> -->
-  <h1 class="sub-category">Shape Blur</h1>
+  <h1 class="sub-category">{{ $t('componentNames.Shape_Blur') }}</h1>
   <TabsLayout
     :has-changes="hasChanges"
     :onreset="reset"

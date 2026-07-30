@@ -1,5 +1,5 @@
 <template>
-  <h1 class="sub-category">Text Type</h1>
+  <h1 class="sub-category">{{ $t('componentNames.Text_Type') }}</h1>
   <TabsLayout
     :has-changes="hasChanges"
     :onreset="reset"

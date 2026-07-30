@@ -4,7 +4,7 @@
       ref="trackEl"
       class="scrubber-track"
       role="slider"
-      :aria-label="title"
+      :aria-label="displayTitle"
       :aria-valuemin="min"
       :aria-valuemax="max"
       :aria-valuenow="modelValue"
@@ -33,7 +33,7 @@
       </div>
 
       <div class="scrubber-label">
-        {{ title }}
+        {{ displayTitle }}
       </div>
 
       <div class="scrubber-value">
@@ -45,6 +45,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const props = withDefaults(
   defineProps<{
@@ -65,6 +66,13 @@ const props = withDefaults(
     isDisabled: false
   }
 );
+
+const { t, te } = useI18n();
+
+const displayTitle = computed(() => {
+  const key = `controls.${props.title.replace(/\s+/g, '_')}`;
+  return te(key) ? t(key) : props.title;
+});
 
 const modelValue = defineModel<number>({ default: 0 });
 

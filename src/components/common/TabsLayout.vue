@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, provide, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
@@ -39,6 +39,8 @@ const props = withDefaults(
 const toast = useToast();
 const route = useRoute();
 const { t } = useI18n();
+
+provide('componentSlug', props.componentName || '');
 
 const activeTab = ref<'preview' | 'code'>('preview');
 const copied = ref(false);

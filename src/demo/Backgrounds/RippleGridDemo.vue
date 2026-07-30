@@ -1,5 +1,5 @@
 <template>
-  <h1 class="sub-category">Ripple Grid</h1>
+  <h1 class="sub-category">{{ $t('componentNames.Ripple_Grid') }}</h1>
   <TabsLayout
     :has-changes="hasChanges"
     :onreset="reset"

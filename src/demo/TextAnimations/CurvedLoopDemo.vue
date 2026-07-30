@@ -1,5 +1,5 @@
 <template>
-  <h1 class="sub-category">Curved Loop</h1>
+  <h1 class="sub-category">{{ $t('componentNames.Curved_Loop') }}</h1>
   <TabsLayout
     :has-changes="hasChanges"
     :onreset="reset"

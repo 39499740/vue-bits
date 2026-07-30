@@ -1,5 +1,5 @@
 <template>
-  <h1 class="sub-category">Infinite Menu</h1>
+  <h1 class="sub-category">{{ $t('componentNames.Infinite_Menu') }}</h1>
   <TabsLayout
     :has-changes="hasChanges"
     :onreset="reset"

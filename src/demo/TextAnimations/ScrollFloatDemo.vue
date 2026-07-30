@@ -1,5 +1,5 @@
 <template>
-  <h1 class="sub-category">Scroll Float</h1>
+  <h1 class="sub-category">{{ $t('componentNames.Scroll_Float') }}</h1>
   <TabsLayout
     :has-changes="hasChanges"
     :onreset="reset"

@@ -1,5 +1,5 @@
 <template>
-  <h1 class="sub-category">Count Up</h1>
+  <h1 class="sub-category">{{ $t('componentNames.Count_Up') }}</h1>
   <TabsLayout
     :has-changes="hasChanges"
     :onreset="reset"

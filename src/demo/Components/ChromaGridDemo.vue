@@ -1,5 +1,5 @@
 <template>
-  <h1 class="sub-category">Chroma Grid</h1>
+  <h1 class="sub-category">{{ $t('componentNames.Chroma_Grid') }}</h1>
   <TabsLayout
     :has-changes="hasChanges"
     :onreset="reset"

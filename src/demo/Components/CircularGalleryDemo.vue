@@ -1,5 +1,5 @@
 <template>
-  <h1 class="sub-category">Circular Gallery</h1>
+  <h1 class="sub-category">{{ $t('componentNames.Circular_Gallery') }}</h1>
   <TabsLayout
     :has-changes="hasChanges"
     :onreset="reset"

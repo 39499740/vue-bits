@@ -1,5 +1,5 @@
 <template>
-  <h1 class="sub-category">Model Viewer</h1>
+  <h1 class="sub-category">{{ $t('componentNames.Model_Viewer') }}</h1>
   <TabsLayout
     :has-changes="hasChanges"
     :onreset="reset"

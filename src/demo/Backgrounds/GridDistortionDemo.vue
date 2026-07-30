@@ -1,5 +1,5 @@
 <template>
-  <h1 class="sub-category">Grid Distortion</h1>
+  <h1 class="sub-category">{{ $t('componentNames.Grid_Distortion') }}</h1>
   <TabsLayout
     :has-changes="hasChanges"
     :onreset="reset"

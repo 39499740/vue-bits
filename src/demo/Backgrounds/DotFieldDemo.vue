@@ -1,5 +1,5 @@
 <template>
-  <h1 class="sub-category">Dot Field</h1>
+  <h1 class="sub-category">{{ $t('componentNames.Dot_Field') }}</h1>
   <TabsLayout
     :has-changes="hasChanges"
     :onreset="reset"

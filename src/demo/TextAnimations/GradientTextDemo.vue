@@ -1,5 +1,5 @@
 <template>
-  <h1 class="sub-category">Gradient Text</h1>
+  <h1 class="sub-category">{{ $t('componentNames.Gradient_Text') }}</h1>
   <TabsLayout
     :has-changes="hasChanges"
     :onreset="reset"

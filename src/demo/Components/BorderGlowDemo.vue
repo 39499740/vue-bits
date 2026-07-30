@@ -1,5 +1,5 @@
 <template>
-  <h1 class="sub-category">Border Glow</h1>
+  <h1 class="sub-category">{{ $t('componentNames.Border_Glow') }}</h1>
   <TabsLayout
     :has-changes="hasChanges"
     :onreset="reset"

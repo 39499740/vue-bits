@@ -1,5 +1,5 @@
 <template>
-  <h1 class="sub-category">Card Swap</h1>
+  <h1 class="sub-category">{{ $t('componentNames.Card_Swap') }}</h1>
   <TabsLayout
     :has-changes="hasChanges"
     :onreset="reset"

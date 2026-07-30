@@ -24,7 +24,7 @@
             <td>
               <code class="prop-code">{{ row.default?.length ? row.default : $t('demo.placeholder') }}</code>
             </td>
-            <td>{{ row.description }}</td>
+            <td>{{ translatedDesc(row) }}</td>
           </tr>
         </tbody>
       </table>
@@ -37,7 +37,7 @@
           <code class="prop-code">{{ row.name }}</code>
           <span class="prop-card-type">{{ row.type }}</span>
         </div>
-        <p class="prop-card-desc">{{ row.description }}</p>
+        <p class="prop-card-desc">{{ translatedDesc(row) }}</p>
         <div class="prop-card-default">
           <span class="prop-card-label">{{ $t('demo.defaultLabel') }}</span>
           <code class="prop-code">{{ row.default?.length ? row.default : $t('demo.placeholder') }}</code>
@@ -48,6 +48,9 @@
 </template>
 
 <script setup lang="ts">
+import { inject } from 'vue';
+import { useI18n } from 'vue-i18n';
+
 export type PropRow = {
   name: string;
   type: string;
@@ -55,5 +58,14 @@ export type PropRow = {
   description: string;
 };
 
-defineProps<{ data: PropRow[] }>();
+const props = defineProps<{ data: PropRow[] }>();
+
+const { t, te } = useI18n();
+const componentSlug = inject('componentSlug', '');
+
+function translatedDesc(row: PropRow): string {
+  if (!componentSlug) return row.description;
+  const key = `propDescs.${componentSlug}.${row.name}`;
+  return te(key) ? t(key) : row.description;
+}
 </script>

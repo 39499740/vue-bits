@@ -1,5 +1,5 @@
 <template>
-  <h1 class="sub-category">Sticker Peel</h1>
+  <h1 class="sub-category">{{ $t('componentNames.Sticker_Peel') }}</h1>
   <TabsLayout
     :has-changes="hasChanges"
     :onreset="reset"

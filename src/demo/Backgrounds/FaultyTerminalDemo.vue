@@ -1,5 +1,5 @@
 <template>
-  <h1 class="sub-category">Faulty Terminal</h1>
+  <h1 class="sub-category">{{ $t('componentNames.Faulty_Terminal') }}</h1>
   <TabsLayout
     :has-changes="hasChanges"
     :onreset="reset"

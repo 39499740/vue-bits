@@ -1,5 +1,5 @@
 <template>
-  <h1 class="sub-category">Splash Cursor</h1>
+  <h1 class="sub-category">{{ $t('componentNames.Splash_Cursor') }}</h1>
   <TabsLayout
     :has-changes="hasChanges"
     :onreset="reset"

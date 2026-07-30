@@ -1,5 +1,5 @@
 <template>
-  <h1 class="sub-category">Elastic Slider</h1>
+  <h1 class="sub-category">{{ $t('componentNames.Elastic_Slider') }}</h1>
   <TabsLayout
     :has-changes="hasChanges"
     :onreset="reset"

@@ -1,5 +1,5 @@
 <template>
-  <h1 class="sub-category">Staggered Menu</h1>
+  <h1 class="sub-category">{{ $t('componentNames.Staggered_Menu') }}</h1>
   <TabsLayout
     :has-changes="hasChanges"
     :onreset="reset"

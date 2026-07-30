@@ -1,5 +1,5 @@
 <template>
-  <h1 class="sub-category">Glare Hover</h1>
+  <h1 class="sub-category">{{ $t('componentNames.Glare_Hover') }}</h1>
   <TabsLayout
     :has-changes="hasChanges"
     :onreset="reset"

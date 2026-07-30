@@ -1,5 +1,5 @@
 <template>
-  <h1 class="sub-category">Grid Scan</h1>
+  <h1 class="sub-category">{{ $t('componentNames.Grid_Scan') }}</h1>
   <TabsLayout
     :has-changes="hasChanges"
     :onreset="reset"

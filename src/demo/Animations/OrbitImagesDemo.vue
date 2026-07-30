@@ -1,5 +1,5 @@
 <template>
-  <h1 class="sub-category">Orbit Images</h1>
+  <h1 class="sub-category">{{ $t('componentNames.Orbit_Images') }}</h1>
   <TabsLayout
     :has-changes="hasChanges"
     :onreset="reset"

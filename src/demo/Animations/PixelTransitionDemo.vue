@@ -1,5 +1,5 @@
 <template>
-  <h1 class="sub-category">Pixel Transition</h1>
+  <h1 class="sub-category">{{ $t('componentNames.Pixel_Transition') }}</h1>
   <TabsLayout
     :has-changes="hasChanges"
     :onreset="reset"
