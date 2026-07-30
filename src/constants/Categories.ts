@@ -1,14 +1,19 @@
 // Highlighted sidebar items
 export const NEW = [
+  'Option Wheel',
   'Model Viewer',
   'Dot Field',
+  'Cursor Grid',
   'Shape Grid',
   'Strands',
   'Side Rays',
   'Ferrofluid',
+  'Specular Button',
   'Lightfall',
   'Plasma Wave',
-  'Line Sidebar'
+  'Line Sidebar',
+  'Curved Input',
+  'Plasma Wave'
 ];
 export const UPDATED = [];
 
@@ -55,6 +60,7 @@ export const CATEGORIES = [
       'Click Spark',
       'Crosshair',
       'Cubes',
+      'Cursor Grid',
       'Electric Border',
       'Fade Content',
       'Ghost Cursor',
@@ -93,6 +99,7 @@ export const CATEGORIES = [
       'Carousel',
       'Chroma Grid',
       'Circular Gallery',
+      'Curved Input',
       'Counter',
       'Decay Card',
       'Dock',
@@ -109,11 +116,13 @@ export const CATEGORIES = [
       'Magic Bento',
       'Masonry',
       'Model Viewer',
+      'Option Wheel',
       'Pill Nav',
       'Pixel Card',
       'Profile Card',
       'Reflective Card',
       'Scroll Stack',
+      'Specular Button',
       'Spotlight Card',
       'Stack',
       'Staggered Menu',

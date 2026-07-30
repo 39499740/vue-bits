@@ -208,7 +208,7 @@ const dotProps = computed(() => propValues.value[1] as Record<string, number | b
 
     <div class="ln-hero-content">
       <div class="ln-hero-left">
-        <a href="/backgrounds/dot-field" class="ln-hero-tag">
+        <a href="/backgrounds/option-wheel" class="ln-hero-tag">
           <span
             class="ln-hero-tag-new"
             :style="{
@@ -219,7 +219,7 @@ const dotProps = computed(() => propValues.value[1] as Record<string, number | b
             New Component
           </span>
 
-          DotField
+          Option Wheel
 
           <svg width="10" height="10" viewBox="0 0 448 512" fill="currentColor" aria-hidden="true">
             <path
