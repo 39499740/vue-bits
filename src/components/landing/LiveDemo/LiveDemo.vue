@@ -94,7 +94,7 @@ onMounted(() => {
 <template>
   <section class="ln-demo-section">
     <div class="ln-demo-inner">
-      <h2 class="ln-demo-title">See them in action</h2>
+      <h2 class="ln-demo-title">{{ $t('liveDemo.title') }}</h2>
 
       <div class="ln-demo-grid">
         <div

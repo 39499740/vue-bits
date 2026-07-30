@@ -2,6 +2,7 @@
 import { CATEGORIES, slug } from '@/constants/Categories';
 import { fuzzyMatch } from '@/utils/fuzzy';
 import { computed, nextTick, onUnmounted, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
 type Result = { categoryName: string; componentName: string };
@@ -16,6 +17,7 @@ const emit = defineEmits<{
 }>();
 
 const router = useRouter();
+const { t } = useI18n();
 
 const inputValue = ref('');
 const searchValue = ref('');
@@ -239,7 +241,7 @@ onUnmounted(() => {
           :value="inputValue"
           @input="handleInput"
           @keydown="handleInputKeydown"
-          placeholder="Search components, categories, or keywords..."
+          :placeholder="$t('search.placeholder')"
           role="combobox"
           :aria-expanded="Boolean(searchValue)"
           :aria-controls="listboxId"
@@ -258,7 +260,7 @@ onUnmounted(() => {
             class="search-results"
             @scroll="handleScroll"
             role="listbox"
-            aria-label="Search results"
+            :aria-label="$t('nav.search')"
           >
             <template v-if="results.length > 0">
               <div
@@ -298,7 +300,7 @@ onUnmounted(() => {
                   </div>
                   <div class="search-result-text">
                     <span class="search-result-name">{{ r.componentName }}</span>
-                    <span class="search-result-category">in {{ r.categoryName }}</span>
+                    <span class="search-result-category">{{ $t('search.inCategory', { category: r.categoryName }) }}</span>
                   </div>
                   <div class="search-result-enter">
                     <svg
@@ -320,7 +322,7 @@ onUnmounted(() => {
               </div>
             </template>
             <p v-else class="search-no-results">
-              No results found for
+              {{ $t('search.noResults') }}
               <strong>{{ searchValue }}</strong>
             </p>
           </div>

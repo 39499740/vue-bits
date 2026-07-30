@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, type ComponentPublicInstance } from 'vue';
 
+import { useI18n } from 'vue-i18n';
 import AITerminal from './AITerminal.vue';
 import CategorySelector from './CategorySelector.vue';
 import ComponentMarquee from './ComponentMarquee.vue';
@@ -8,6 +9,8 @@ import StarCard from './StarCard.vue';
 import VariantTabs from './VariantTabs.vue';
 
 import './Features.css';
+
+const { t } = useI18n();
 
 type CardKey = 'marquee' | 'orbit' | 'variants' | 'ai' | 'stars';
 
@@ -21,32 +24,32 @@ interface Card {
 const CARDS: Card[] = [
   {
     key: 'marquee',
-    title: '130+ Components',
-    desc: "Backgrounds, text effects, animations, UI patterns. The stuff you'd build from scratch, already done.",
+    title: t('features.cards.components.title'),
+    desc: t('features.cards.components.desc'),
     span: 7
   },
   {
     key: 'orbit',
-    title: 'Well Organized',
-    desc: "Four clear categories so you're not scrolling through a wall of unrelated stuff.",
+    title: t('features.cards.organized.title'),
+    desc: t('features.cards.organized.desc'),
     span: 5
   },
   {
     key: 'variants',
-    title: 'TypeScript + Tailwind',
-    desc: 'Every component ships as a typed Svelte 5 component styled with Tailwind. One stack, done right.',
+    title: t('features.cards.tech.title'),
+    desc: t('features.cards.tech.desc'),
     span: 4
   },
   {
     key: 'ai',
-    title: 'AI-Ready',
-    desc: 'Works great with Cursor, Copilot, and v0. Describe what you need, drop it in, ship.',
+    title: t('features.cards.ai.title'),
+    desc: t('features.cards.ai.desc'),
     span: 5
   },
   {
     key: 'stars',
-    title: 'Growing Fast',
-    desc: "Svelte's newest creative component library. Star us on GitHub to follow along.",
+    title: t('features.cards.growing.title'),
+    desc: t('features.cards.growing.desc'),
     span: 3
   }
 ];
@@ -95,7 +98,7 @@ onMounted(() => {
 <template>
   <section class="ln-features-section">
     <div class="ln-features-inner">
-      <h2 class="ln-features-title">What's inside</h2>
+      <h2 class="ln-features-title">{{ $t('features.title') }}</h2>
 
       <div class="ln-features-grid">
         <div

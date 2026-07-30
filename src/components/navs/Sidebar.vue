@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { getSavedComponents } from '@/utils/favorites';
 import { CATEGORIES, NEW, UPDATED } from '../../constants/Categories';
 
 const emit = defineEmits<{ navigate: [] }>();
+const { t } = useI18n();
 
 const route = useRoute();
 const router = useRouter();
@@ -13,6 +15,19 @@ const slug = (str: string) => str.replace(/\s+/g, '-').toLowerCase();
 
 const activeCategory = computed(() => (route.params.category as string) ?? '');
 const activeSub = computed(() => (route.params.subcategory as string) ?? '');
+
+const CATEGORY_I18N_KEY: Record<string, string> = {
+  'Get Started': 'categories.getStarted',
+  'Text Animations': 'categories.textAnimations',
+  Animations: 'categories.animations',
+  Components: 'categories.components',
+  Backgrounds: 'categories.backgrounds'
+};
+
+function catName(cat: string): string {
+  const key = CATEGORY_I18N_KEY[cat];
+  return key ? t(key) : cat;
+}
 
 function isActive(cat: string, sub: string) {
   return slug(cat) === activeCategory.value && slug(sub) === activeSub.value;
@@ -48,11 +63,11 @@ async function navigate(path: string) {
 </script>
 
 <template>
-  <aside class="sidebar" aria-label="Docs navigation">
+  <aside class="sidebar" :aria-label="$t('favorites.docsNav')">
     <div class="sidebar-inner">
       <div class="sidebar-cat-list">
         <div v-for="cat in CATEGORIES" :key="cat.name">
-          <p :id="`sidebar-${slug(cat.name)}`" class="category-name">{{ cat.name }}</p>
+          <p :id="`sidebar-${slug(cat.name)}`" class="category-name">{{ catName(cat.name) }}</p>
           <div class="sidebar-stack" role="list" :aria-labelledby="`sidebar-${slug(cat.name)}`">
             <a
               v-for="sub in cat.subcategories"
@@ -84,8 +99,8 @@ async function navigate(path: string) {
                   d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"
                 />
               </svg>
-              <span v-if="(NEW as string[]).includes(sub)" class="new-tag">New</span>
-              <span v-else-if="(UPDATED as string[]).includes(sub)" class="updated-tag">Updated</span>
+              <span v-if="(NEW as string[]).includes(sub)" class="new-tag">{{ $t('sidebar.new') }}</span>
+              <span v-else-if="(UPDATED as string[]).includes(sub)" class="updated-tag">{{ $t('sidebar.updated') }}</span>
             </a>
           </div>
         </div>

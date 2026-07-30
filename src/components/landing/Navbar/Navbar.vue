@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
 import SearchDialog from '@/components/common/SearchDialog.vue';
 import { useStars } from '@/composables/useStars';
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
@@ -9,9 +10,11 @@ import './Navbar.css';
 const { showDocs = false } = defineProps<{ showDocs?: boolean }>();
 const emit = defineEmits<{ hamburger: [] }>();
 
+const { t } = useI18n();
+
 const GITHUB_URL = 'https://github.com/DavidHDev/vue-bits';
 
-const NAV_LINKS = [{ label: 'Docs', to: '/get-started/index', match: '/get-started' }] as const;
+const NAV_LINKS = [{ label: t('nav.docs'), to: '/get-started/index', match: '/get-started' }] as const;
 
 const route = useRoute();
 const stars = useStars();
@@ -149,8 +152,8 @@ onUnmounted(() => {
     <div ref="navbarInnerEl" class="ln-navbar-inner">
       <!-- Left -->
       <div class="ln-navbar-left">
-        <RouterLink to="/" class="ln-navbar-logo" aria-label="Vue Bits home">
-          <img :src="Logo" alt="Vue Bits" />
+        <RouterLink to="/" class="ln-navbar-logo" :aria-label="$t('nav.home')">
+          <img :src="Logo" :alt="$t('site.title')" />
         </RouterLink>
 
         <span class="ln-navbar-divider">/</span>
@@ -173,7 +176,7 @@ onUnmounted(() => {
       <!-- Right -->
       <div class="ln-navbar-right">
         <!-- Search -->
-        <button type="button" class="ln-navbar-search" aria-label="Search" @click="toggleSearch">
+        <button type="button" class="ln-navbar-search" :aria-label="$t('nav.search')" @click="toggleSearch">
           <svg
             width="14"
             height="14"
@@ -188,7 +191,7 @@ onUnmounted(() => {
             <circle cx="11" cy="11" r="8" />
             <path d="m21 21-4.35-4.35" />
           </svg>
-          <span>Search</span>
+          <span>{{ $t('nav.search') }}</span>
           <kbd>/</kbd>
         </button>
 
@@ -200,7 +203,7 @@ onUnmounted(() => {
           @mouseenter="handlePrefsEnter"
           @mouseleave="handlePrefsLeave"
         >
-          <button type="button" class="ln-navbar-icon-btn ln-navbar-prefs-trigger" aria-label="Preferences">
+          <button type="button" class="ln-navbar-icon-btn ln-navbar-prefs-trigger" :aria-label="$t('nav.preferences')">
             <svg
               width="16"
               height="16"
@@ -235,7 +238,7 @@ onUnmounted(() => {
                     d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"
                   />
                 </svg>
-                Favorites
+                {{ $t('nav.favorites') }}
               </RouterLink>
             </div>
           </Transition>
@@ -247,7 +250,7 @@ onUnmounted(() => {
           :href="GITHUB_URL"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="GitHub repository"
+          :aria-label="$t('nav.github')"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -270,7 +273,7 @@ onUnmounted(() => {
           class="ln-navbar-hamburger"
           :class="{ open: menuOpen }"
           :aria-expanded="menuOpen"
-          aria-label="Menu"
+          :aria-label="$t('nav.menu')"
           @click="handleHamburger"
         >
           <span />
@@ -310,7 +313,7 @@ onUnmounted(() => {
                 d="M8 0C3.58 0 0 3.58 0 8a8 8 0 0 0 5.47 7.59c.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"
               />
             </svg>
-            GitHub
+            {{ $t('nav.githubLabel') }}
           </span>
           <span style="opacity: 0.6">{{ formattedStars }}</span>
         </a>

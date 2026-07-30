@@ -6,8 +6,11 @@ import { fuzzyMatch } from '@/utils/fuzzy';
 import gsap from 'gsap';
 import { useToast } from 'primevue/usetoast';
 import { computed, onBeforeUnmount, onMounted, ref, watch, watchEffect } from 'vue';
+import { useI18n } from 'vue-i18n';
 import LazyCardMedia from './LazyCardMedia.vue';
 import PreviewSelect from './PreviewSelect.vue';
+
+const { t } = useI18n();
 
 const CARD_RADIUS = 16;
 const CLEAR_APPEAR_DEBOUNCE_MS = 300;
@@ -102,10 +105,14 @@ const items = computed(() => {
 });
 
 // ── categories ────────────────────────────────────────────────────────────────
-const categoryOptions = computed(() => [
-  'All Components',
-  ...Array.from(new Set(items.value.map(i => i.categoryLabel))).sort((a, b) => a.localeCompare(b))
-]);
+const categoryOptions = computed(() => {
+  const allLabel = t('componentList.allComponents');
+  return [
+    { label: allLabel, value: 'All Components' },
+    ...Array.from(new Set(items.value.map(i => i.categoryLabel))).sort((a, b) => a.localeCompare(b))
+      .map(cat => ({ label: cat, value: cat }))
+  ];
+});
 
 const search = ref('');
 const selectedCategory = ref('All Components');
@@ -235,7 +242,7 @@ function toggleFavorite(key: string, componentKey: string) {
         <!-- Category select -->
         <PreviewSelect
           v-model="selectedCategory"
-          title="Category"
+          :title="$t('componentList.category')"
           :options="categoryOptions"
           :is-disabled="controlsDisabled"
           class="category-scrubber"
@@ -247,7 +254,7 @@ function toggleFavorite(key: string, componentKey: string) {
             ref="clearBtnRef"
             type="button"
             class="clear-button"
-            aria-label="Clear filters"
+            :aria-label="$t('componentList.clearFilters')"
             :tabindex="showClear ? 0 : -1"
             @click="clearFilters"
           >

@@ -1,0 +1,112 @@
+{
+  "site": {
+    "title": "Vue Bits",
+    "description": "Animated UI components for Vue.",
+    "tagline": "Animated UI components for Vue."
+  },
+  "nav": {
+    "home": "Vue Bits home",
+    "docs": "Docs",
+    "search": "Search",
+    "preferences": "Preferences",
+    "favorites": "Favorites",
+    "github": "GitHub repository",
+    "menu": "Menu",
+    "githubLabel": "GitHub"
+  },
+  "hero": {
+    "newComponent": "New Component",
+    "headline1": "Vue components for",
+    "headline2": "creative developers",
+    "description": "Highly customizable animated components & backgrounds that drop into your project and instantly make it stand out",
+    "browseComponents": "Browse Components",
+    "resetToDefaults": "Reset to defaults",
+    "editHint": "Drag or click values to edit"
+  },
+  "features": {
+    "title": "What's inside",
+    "cards": {
+      "components": {
+        "title": "130+ Components",
+        "desc": "Backgrounds, text effects, animations, UI patterns. The stuff you'd build from scratch, already done."
+      },
+      "organized": {
+        "title": "Well Organized",
+        "desc": "Four clear categories so you're not scrolling through a wall of unrelated stuff."
+      },
+      "tech": {
+        "title": "TypeScript + Tailwind",
+        "desc": "Every component ships as a typed Vue 3 component styled with Tailwind. One stack, done right."
+      },
+      "ai": {
+        "title": "AI-Ready",
+        "desc": "Works great with Cursor, Copilot, and v0. Describe what you need, drop it in, ship."
+      },
+      "growing": {
+        "title": "Growing Fast",
+        "desc": "Vue's newest creative component library. Star us on GitHub to follow along."
+      }
+    }
+  },
+  "liveDemo": {
+    "title": "See them in action"
+  },
+  "quickStart": {
+    "title": "Get started in seconds",
+    "copyCommand": "Copy command",
+    "hint": "Use {installer1} or {installer2} — components land in your codebase, ready to use, instantly."
+  },
+  "cta": {
+    "headline": "Stop building from scratch.",
+    "description": "Beautiful, animated Vue components you can drop into any project. Open source. Always free.",
+    "browseComponents": "Browse Components",
+    "starOnGitHub": "Star on GitHub"
+  },
+  "footer": {
+    "product": "Product",
+    "docs": "Docs",
+    "cli": "CLI",
+    "community": "Community",
+    "github": "GitHub",
+    "reactBits": "React Bits",
+    "svelteBits": "Svelte Bits",
+    "attribution": "A Vue port of {reactBits} by {author}",
+    "author": "davidhdev",
+    "copyright": "© {year} Vue Bits"
+  },
+  "favorites": {
+    "title": "Favorites",
+    "emptyTitle": "Nothing here yet...",
+    "emptyDescription": "Tap the heart on any component to save it",
+    "docsNav": "Docs navigation"
+  },
+  "index": {
+    "title": "Index",
+    "pageTitle": "Vue Bits - Component Index"
+  },
+  "categories": {
+    "getStarted": "Get Started",
+    "textAnimations": "Text Animations",
+    "animations": "Animations",
+    "components": "Components",
+    "backgrounds": "Backgrounds"
+  },
+  "search": {
+    "placeholder": "Search components, categories, or keywords...",
+    "noResults": "No results found for",
+    "inCategory": "in {category}"
+  },
+  "componentDetail": {
+    "pageTitle": "{name} - Vue Bits"
+  },
+  "sidebar": {
+    "new": "New",
+    "updated": "Updated"
+  },
+  "componentList": {
+    "allComponents": "All Components",
+    "category": "Category",
+    "search": "Search...",
+    "clearFilters": "Clear filters"
+  }
+}

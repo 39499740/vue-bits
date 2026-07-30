@@ -1,0 +1,112 @@
+{
+  "site": {
+    "title": "Vue Bits",
+    "description": "Vue 动画 UI 组件库。",
+    "tagline": "Vue 动画 UI 组件库。"
+  },
+  "nav": {
+    "home": "Vue Bits 首页",
+    "docs": "文档",
+    "search": "搜索",
+    "preferences": "偏好设置",
+    "favorites": "收藏夹",
+    "github": "GitHub 仓库",
+    "menu": "菜单",
+    "githubLabel": "GitHub"
+  },
+  "hero": {
+    "newComponent": "新组件",
+    "headline1": "Vue 组件，为",
+    "headline2": "创意开发者而生",
+    "description": "高度可定制的动画组件与背景效果，一键集成到你的项目，让网站瞬间脱颖而出",
+    "browseComponents": "浏览组件",
+    "resetToDefaults": "重置为默认值",
+    "editHint": "拖动或点击数值进行编辑"
+  },
+  "features": {
+    "title": "有什么",
+    "cards": {
+      "components": {
+        "title": "130+ 组件",
+        "desc": "背景、文字特效、动画、UI 模式。那些本需要从零搭建的东西，现已就绪。"
+      },
+      "organized": {
+        "title": "清晰分类",
+        "desc": "四大分类一目了然，再也不用在一大堆无关内容中翻找。"
+      },
+      "tech": {
+        "title": "TypeScript + Tailwind",
+        "desc": "每个组件都是 TypeScript 编写的 Vue 3 组件，Tailwind 样式。一套技术栈，一步到位。"
+      },
+      "ai": {
+        "title": "AI 友好",
+        "desc": "完美适配 Cursor、Copilot 和 v0。描述你的需求，放入项目，即可发布。"
+      },
+      "growing": {
+        "title": "快速增长",
+        "desc": "Vue 最新的创意组件库。在 GitHub 上为我们 Star，关注后续发展。"
+      }
+    }
+  },
+  "liveDemo": {
+    "title": "查看实际效果"
+  },
+  "quickStart": {
+    "title": "数秒内开始使用",
+    "copyCommand": "复制命令",
+    "hint": "使用 {installer1} 或 {installer2} — 组件直接放入你的代码库，立即可用。"
+  },
+  "cta": {
+    "headline": "别再从头造轮子了。",
+    "description": "精美、动画化的 Vue 组件，可直接放入任何项目。开源，永远免费。",
+    "browseComponents": "浏览组件",
+    "starOnGitHub": "在 GitHub 上 Star"
+  },
+  "footer": {
+    "product": "产品",
+    "docs": "文档",
+    "cli": "CLI",
+    "community": "社区",
+    "github": "GitHub",
+    "reactBits": "React Bits",
+    "svelteBits": "Svelte Bits",
+    "attribution": "Vue 移植自 {reactBits}，作者 {author}",
+    "author": "davidhdev",
+    "copyright": "© {year} Vue Bits"
+  },
+  "favorites": {
+    "title": "收藏夹",
+    "emptyTitle": "这里还没有东西...",
+    "emptyDescription": "点击组件上的心形图标即可收藏",
+    "docsNav": "文档导航"
+  },
+  "index": {
+    "title": "索引",
+    "pageTitle": "Vue Bits - 组件索引"
+  },
+  "categories": {
+    "getStarted": "开始使用",
+    "textAnimations": "文字动画",
+    "animations": "动画效果",
+    "components": "组件",
+    "backgrounds": "背景效果"
+  },
+  "search": {
+    "placeholder": "搜索组件、分类或关键词...",
+    "noResults": "未找到与以下内容相关的结果",
+    "inCategory": "在 {category} 中"
+  },
+  "componentDetail": {
+    "pageTitle": "{name} - Vue Bits"
+  },
+  "sidebar": {
+    "new": "新增",
+    "updated": "已更新"
+  },
+  "componentList": {
+    "allComponents": "所有组件",
+    "category": "分类",
+    "search": "搜索...",
+    "clearFilters": "清除筛选"
+  }
+}
