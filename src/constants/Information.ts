@@ -620,6 +620,14 @@ export const componentMetadata: ComponentMetadata = {
     docsUrl: 'https://vue-bits.dev/components/infinite-menu',
     tags: []
   },
+  'Components/LineSidebar': {
+    videoUrl: '/assets/videos/linesidebar.webm',
+    description: 'Static list navigation with a cursor-proximity effect that shifts and highlights nearby items.',
+    category: 'Components',
+    name: 'LineSidebar',
+    docsUrl: 'https://vue-bits.dev/components/line-sidebar',
+    tags: []
+  },
   'Components/MagicBento': {
     videoUrl: '/assets/videos/magicbento.webm',
     description: 'Interactive bento grid tiles expand + animate with various options.',

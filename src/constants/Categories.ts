@@ -10,6 +10,8 @@ export const NEW = [
   'Ferrofluid',
   'Specular Button',
   'Lightfall',
+  'Plasma Wave',
+  'Line Sidebar',
   'Curved Input',
   'Plasma Wave'
 ];
@@ -110,6 +112,7 @@ export const CATEGORIES = [
       'Glass Surface',
       'Gooey Nav',
       'Infinite Menu',
+      'Line Sidebar',
       'Magic Bento',
       'Masonry',
       'Model Viewer',
