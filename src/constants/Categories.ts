@@ -1,5 +1,6 @@
 // Highlighted sidebar items
 export const NEW = [
+  'Option Wheel',
   'Model Viewer',
   'Dot Field',
   'Shape Grid',
@@ -107,6 +108,7 @@ export const CATEGORIES = [
       'Magic Bento',
       'Masonry',
       'Model Viewer',
+      'Option Wheel',
       'Pill Nav',
       'Pixel Card',
       'Profile Card',

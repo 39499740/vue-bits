@@ -619,6 +619,15 @@ export const componentMetadata: ComponentMetadata = {
     docsUrl: 'https://vue-bits.dev/components/masonry',
     tags: []
   },
+  'Components/OptionWheel': {
+    videoUrl: '/assets/videos/optionwheel.webm',
+    description:
+      'Curved option picker that spins via scroll, drag, or arrow keys, fading and tilting items away from the selection.',
+    category: 'Components',
+    name: 'OptionWheel',
+    docsUrl: 'https://vue-bits.dev/components/option-wheel',
+    tags: []
+  },
   'Components/PillNav': {
     videoUrl: '/assets/videos/pillnav.webm',
     description: 'Minimal pill nav with sliding active highlight + smooth easing.',
