@@ -1,16 +1,16 @@
 <template>
   <section class="prop-table-section">
-    <h2 class="demo-title-extra">Props</h2>
+    <h2 class="demo-title-extra">{{ $t('demo.props') }}</h2>
 
     <!-- Desktop table -->
     <div class="prop-table-wrap">
       <table class="prop-table">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Default</th>
-            <th>Description</th>
+            <th>{{ $t('demo.name') }}</th>
+            <th>{{ $t('demo.type') }}</th>
+            <th>{{ $t('demo.default') }}</th>
+            <th>{{ $t('demo.description') }}</th>
           </tr>
         </thead>
         <tbody>
@@ -22,7 +22,7 @@
               <span class="prop-type">{{ row.type }}</span>
             </td>
             <td>
-              <code class="prop-code">{{ row.default?.length ? row.default : '—' }}</code>
+              <code class="prop-code">{{ row.default?.length ? row.default : $t('demo.placeholder') }}</code>
             </td>
             <td>{{ row.description }}</td>
           </tr>
@@ -39,8 +39,8 @@
         </div>
         <p class="prop-card-desc">{{ row.description }}</p>
         <div class="prop-card-default">
-          <span class="prop-card-label">Default:</span>
-          <code class="prop-code">{{ row.default?.length ? row.default : '—' }}</code>
+          <span class="prop-card-label">{{ $t('demo.defaultLabel') }}</span>
+          <code class="prop-code">{{ row.default?.length ? row.default : $t('demo.placeholder') }}</code>
         </div>
       </div>
     </div>

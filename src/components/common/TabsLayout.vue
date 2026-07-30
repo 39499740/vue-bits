@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
 import { Check, Clipboard, RotateCcw } from 'lucide-vue-next';
@@ -37,6 +38,7 @@ const props = withDefaults(
 
 const toast = useToast();
 const route = useRoute();
+const { t } = useI18n();
 
 const activeTab = ref<'preview' | 'code'>('preview');
 const copied = ref(false);
@@ -81,17 +83,17 @@ function buildPrompt() {
   const sourceShown = stripHeader(props.source);
   const deps = dependencyList.value.join(', ');
 
-  let prompt = `## Integrate the <${promptComponentName.value} /> component from Vue Bits
+  let prompt = `${t('demo.promptTitle', { name: `<${promptComponentName.value} />` })}
 
-You are helping integrate an open-source Vue component into an existing application.
+${t('demo.promptIntro')}
 
-### Component: ${promptComponentName.value}
-### Variant: TypeScript + Tailwind
-${deps ? `### Dependencies: ${deps}` : ''}
+${t('demo.promptComponent', { name: promptComponentName.value })}
+${t('demo.promptVariant')}
+${deps ? t('demo.promptDependencies', { deps }) : ''}
 
 ---
 
-### Usage Example
+${t('demo.promptUsage')}
 \`\`\`vue
 ${props.usage}
 \`\`\`
@@ -99,23 +101,23 @@ ${props.usage}
 
   if (props.propsTable.length > 0) {
     prompt += `
-### Props
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
+${t('demo.promptProps')}
+${t('demo.promptHeader')}
+${t('demo.promptHeaderSep')}
 ${props.propsTable.map(p => `| ${p.name} | ${p.type} | ${p.default || '—'} | ${p.description} |`).join('\n')}
 `;
   }
 
   prompt += `
-### Full Component Source
+${t('demo.promptSource')}
 \`\`\`vue
 ${sourceShown}
 \`\`\`
 
-### Integration Instructions
-1. Copy the component source into the appropriate directory in the project.
-2. Import and render the component using the usage example above as a starting point.
-3. Adjust props as needed for the specific use case.
+${t('demo.promptInstructions')}
+${t('demo.promptStep1')}
+${t('demo.promptStep2')}
+${t('demo.promptStep3')}
 `;
 
   return prompt;
@@ -130,8 +132,8 @@ const handleCopyPrompt = async () => {
 
   toast.add({
     severity: 'success',
-    summary: 'Copied',
-    detail: 'Prompt copied to clipboard',
+    summary: t('demo.toastCopied'),
+    detail: t('demo.toastDetail'),
     life: 2500
   });
 
@@ -177,7 +179,7 @@ function handleTabKey(event: KeyboardEvent) {
     <div
       class="flex justify-between items-center gap-2 mb-4 w-full"
       role="tablist"
-      aria-label="Component example sections"
+      :aria-label="$t('demo.tablistLabel')"
       tabindex="-1"
       @keydown="handleTabKey"
     >
@@ -199,7 +201,7 @@ function handleTabKey(event: KeyboardEvent) {
           }"
         >
           <FiEye :size="16" />
-          Preview
+          {{ $t('demo.preview') }}
         </button>
 
         <!-- Code -->
@@ -219,7 +221,7 @@ function handleTabKey(event: KeyboardEvent) {
           }"
         >
           <FiCode :size="16" />
-          Code
+          {{ $t('demo.code') }}
         </button>
       </div>
 
@@ -236,7 +238,7 @@ function handleTabKey(event: KeyboardEvent) {
 
           <Clipboard v-else :size="14" />
 
-          {{ copied ? 'Copied!' : 'Copy Prompt' }}
+          {{ copied ? $t('demo.copied') : $t('demo.copyPrompt') }}
         </button>
 
         <button
@@ -248,7 +250,7 @@ function handleTabKey(event: KeyboardEvent) {
         >
           <RotateCcw :size="14" />
 
-          Reset
+          {{ $t('demo.reset') }}
         </button>
       </div>
     </div>
