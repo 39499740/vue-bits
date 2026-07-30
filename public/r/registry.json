@@ -1811,6 +1811,22 @@
 			]
 		},
 		{
+			"name": "SpecularButton",
+			"title": "SpecularButton",
+			"description": "Glass button with a shader-driven specular rim light that sweeps around the edge and follows the cursor.",
+			"type": "registry:component",
+			"dependencies": [
+				"ogl@^1.0.11"
+			],
+			"registryDependencies": [],
+			"files": [
+				{
+					"type": "registry:component",
+					"path": "SpecularButton/SpecularButton.vue"
+				}
+			]
+		},
+		{
 			"name": "SplashCursor",
 			"title": "SplashCursor",
 			"description": "Liquid splash burst at cursor with curling ripples and waves.",

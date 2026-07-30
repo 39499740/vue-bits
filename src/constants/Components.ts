@@ -74,6 +74,7 @@ const components = {
   carousel: () => import('../demo/Components/CarouselDemo.vue'),
   'spotlight-card': () => import('../demo/Components/SpotlightCardDemo.vue'),
   'circular-gallery': () => import('../demo/Components/CircularGalleryDemo.vue'),
+  'specular-button': () => import('../demo/Components/SpecularButtonDemo.vue'),
   'flying-posters': () => import('../demo/Components/FlyingPostersDemo.vue'),
   folder: () => import('../demo/Components/FolderDemo.vue'),
   'card-swap': () => import('../demo/Components/CardSwapDemo.vue'),

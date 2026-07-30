@@ -677,6 +677,15 @@ export const componentMetadata: ComponentMetadata = {
     docsUrl: 'https://vue-bits.dev/components/scroll-stack',
     tags: []
   },
+  'Components/SpecularButton': {
+    videoUrl: '/assets/videos/specularbutton.webm',
+    description:
+      'Glass button with a shader-driven specular rim light that sweeps around the edge and follows the cursor.',
+    category: 'Components',
+    name: 'SpecularButton',
+    docsUrl: 'https://vue-bits.dev/components/specular-button',
+    tags: []
+  },
   'Components/SpotlightCard': {
     videoUrl: '/assets/videos/spotlightcard.webm',
     description: 'Dynamic spotlight follows cursor casting gradient illumination.',
