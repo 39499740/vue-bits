@@ -5,14 +5,14 @@
       class="scrubber-track scrubber-track--select"
       aria-haspopup="listbox"
       :aria-expanded="open"
-      :aria-label="title"
+      :aria-label="displayTitle"
       :aria-disabled="isDisabled"
       :data-disabled="isDisabled"
       :data-active="open"
       :tabindex="isDisabled ? -1 : 0"
       @click="!isDisabled && (open = !open)"
     >
-      <span class="scrubber-label">{{ title }}</span>
+      <span class="scrubber-label">{{ displayTitle }}</span>
       <span class="scrubber-select-right">
         <span class="scrubber-value">{{ current?.label ?? modelValue }}</span>
         <svg
@@ -51,6 +51,7 @@
 
 <script setup lang="ts">
 import { computed, onUnmounted, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 type Option = { label: string; value: string };
 
@@ -63,6 +64,13 @@ const {
   isDisabled?: boolean;
   options?: Option[] | string[];
 }>();
+
+const { t, te } = useI18n();
+
+const displayTitle = computed(() => {
+  const key = `controls.${title.replace(/\s+/g, '_')}`;
+  return te(key) ? t(key) : title;
+});
 
 const modelValue = defineModel<string | number>({ default: '' });
 
