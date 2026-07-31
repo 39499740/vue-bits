@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, type ComponentPublicInstance } from 'vue';
+import { computed, onMounted, ref, type ComponentPublicInstance } from 'vue';
 
 import { useI18n } from 'vue-i18n';
 import AITerminal from './AITerminal.vue';
@@ -21,42 +21,30 @@ interface Card {
   span: 7 | 5 | 4 | 3;
 }
 
-const CARDS: Card[] = [
-  {
-    key: 'marquee',
-    title: t('features.cards.components.title'),
-    desc: t('features.cards.components.desc'),
-    span: 7
-  },
-  {
-    key: 'orbit',
-    title: t('features.cards.organized.title'),
-    desc: t('features.cards.organized.desc'),
-    span: 5
-  },
-  {
-    key: 'variants',
-    title: t('features.cards.tech.title'),
-    desc: t('features.cards.tech.desc'),
-    span: 4
-  },
-  {
-    key: 'ai',
-    title: t('features.cards.ai.title'),
-    desc: t('features.cards.ai.desc'),
-    span: 5
-  },
-  {
-    key: 'stars',
-    title: t('features.cards.growing.title'),
-    desc: t('features.cards.growing.desc'),
-    span: 3
-  }
+const CARD_LAYOUT: {
+  key: CardKey;
+  translationKey: 'components' | 'organized' | 'tech' | 'ai' | 'growing';
+  span: Card['span'];
+}[] = [
+  { key: 'marquee', translationKey: 'components', span: 7 },
+  { key: 'orbit', translationKey: 'organized', span: 5 },
+  { key: 'variants', translationKey: 'tech', span: 4 },
+  { key: 'ai', translationKey: 'ai', span: 5 },
+  { key: 'stars', translationKey: 'growing', span: 3 }
 ];
 
-const visible = ref<boolean[]>(Array(CARDS.length).fill(false));
+const cards = computed<Card[]>(() =>
+  CARD_LAYOUT.map(({ key, translationKey, span }) => ({
+    key,
+    title: t(`features.cards.${translationKey}.title`),
+    desc: t(`features.cards.${translationKey}.desc`),
+    span
+  }))
+);
 
-const cardEls = ref<(HTMLElement | null)[]>(Array(CARDS.length).fill(null));
+const visible = ref<boolean[]>(Array(CARD_LAYOUT.length).fill(false));
+
+const cardEls = ref<(HTMLElement | null)[]>(Array(CARD_LAYOUT.length).fill(null));
 
 function setCardRef(el: Element | ComponentPublicInstance | null, index: number) {
   cardEls.value[index] = el as HTMLElement | null;
@@ -102,7 +90,7 @@ onMounted(() => {
 
       <div class="ln-features-grid">
         <div
-          v-for="(card, i) in CARDS"
+          v-for="(card, i) in cards"
           :key="card.key"
           :ref="el => setCardRef(el, i)"
           :class="[

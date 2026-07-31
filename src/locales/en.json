@@ -2,7 +2,8 @@
   "site": {
     "title": "Vue Bits",
     "description": "Animated UI components for Vue.",
-    "tagline": "Animated UI components for Vue."
+    "tagline": "Animated UI components for Vue.",
+    "pageTitle": "Vue Bits - Animated UI Components For Vue"
   },
   "nav": {
     "home": "Vue Bits home",
@@ -81,7 +82,11 @@
     "title": "Favorites",
     "emptyTitle": "Nothing here yet...",
     "emptyDescription": "Tap the heart on any component to save it",
-    "docsNav": "Docs navigation"
+    "docsNav": "Docs navigation",
+    "add": "Add to favorites",
+    "remove": "Remove from favorites",
+    "added": "Added {component} to favorites",
+    "removed": "Removed {component} from favorites"
   },
   "index": {
     "title": "Index",
@@ -100,7 +105,9 @@
     "inCategory": "in {category}"
   },
   "componentDetail": {
-    "pageTitle": "{name} - Vue Bits"
+    "pageTitle": "{name} - Vue Bits",
+    "loading": "Loading component...",
+    "loadError": "Unable to load this component. Please refresh and try again."
   },
   "sidebar": {
     "new": "New",
@@ -110,7 +117,13 @@
     "allComponents": "All Components",
     "category": "Category",
     "search": "Search...",
-    "clearFilters": "Clear filters"
+    "clearFilters": "Clear filters",
+    "noResults": "No results...",
+    "adjustFilters": "Try adjusting your filters",
+    "nothingHere": "Nothing here yet...",
+    "saveHint": "Tap the heart on any component to save it",
+    "browseComponents": "Browse Components",
+    "new": "New"
   },
   "demo": {
     "tablistLabel": "Component example sections",
@@ -132,6 +145,18 @@
     "componentSource": "Component source",
     "utilitySource": "Utility source",
     "customize": "Customize",
+    "dependencies": "Dependencies",
+    "replay": "Replay animation",
+    "background": {
+      "features": "Features",
+      "about": "About",
+      "signUp": "Sign up",
+      "new": "New",
+      "newBackground": "New Background",
+      "retroBackground": "Retro Background",
+      "getStarted": "Get started",
+      "learnMore": "Learn more"
+    },
     "promptTitle": "Integrate the {name} component from Vue Bits",
     "promptIntro": "You are helping integrate an open-source Vue component into an existing application.",
     "promptComponent": "### Component: {name}",
@@ -280,6 +305,9 @@
     "Backgrounds.LightPillar": "Vertical pillar of light with glow effects.",
     "Backgrounds.PixelSnow": "Falling pixelated snow effect with customizable density and speed."
   },
+  "placeholders": {
+    "Enter text...": "Enter text..."
+  },
   "controls": {
     "Accent_Color": "Accent Color",
     "Active_Color": "Active Color",
@@ -415,6 +443,7 @@
     "Damping": "Damping",
     "Decay": "Decay",
     "Default_Value": "Default Value",
+    "Demo_Content": "Demo Content",
     "Delay__ms_": "Delay (ms)",
     "Delay": "Delay",
     "Deleting_Speed": "Deleting Speed",
@@ -1441,9 +1470,10 @@
     },
     "TargetCursor": {
       "targetSelector": "CSS selector for elements that should trigger the cursor targeting effect",
-      "spinDuration": "Whether to hide the default browser cursor when the component is active",
+      "spinDuration": "Duration in seconds for the cursor rotation animation when no target is locked",
       "hoverDuration": "Duration in seconds for the transition when the cursor locks onto a target",
-      "parallaxOn": "Enables a subtle parallax effect on the corners when moving over a target"
+      "parallaxOn": "Enables a subtle parallax effect on the corners when moving over a target",
+      "hideDefaultCursor": "Whether to hide the default browser cursor when the component is active"
     },
     "Aurora": {
       "colorStops": "An array of three hex colors defining the aurora gradient.",

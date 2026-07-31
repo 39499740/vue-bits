@@ -63,7 +63,7 @@ onUnmounted(() => document.removeEventListener('keydown', onKey));
       tabindex="-1"
       role="dialog"
       aria-modal="true"
-      aria-label="Docs navigation"
+      :aria-label="$t('favorites.docsNav')"
       :aria-hidden="!drawerOpen"
       :inert="!drawerOpen || undefined"
     >

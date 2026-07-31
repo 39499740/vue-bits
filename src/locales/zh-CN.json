@@ -2,7 +2,8 @@
   "site": {
     "title": "Vue Bits",
     "description": "Vue 动画 UI 组件库。",
-    "tagline": "Vue 动画 UI 组件库。"
+    "tagline": "Vue 动画 UI 组件库。",
+    "pageTitle": "Vue Bits - Vue 动画 UI 组件"
   },
   "nav": {
     "home": "Vue Bits 首页",
@@ -81,7 +82,11 @@
     "title": "收藏夹",
     "emptyTitle": "这里还没有东西...",
     "emptyDescription": "点击组件上的心形图标即可收藏",
-    "docsNav": "文档导航"
+    "docsNav": "文档导航",
+    "add": "加入收藏",
+    "remove": "取消收藏",
+    "added": "已将 {component} 加入收藏",
+    "removed": "已将 {component} 移出收藏"
   },
   "index": {
     "title": "索引",
@@ -100,7 +105,9 @@
     "inCategory": "在 {category} 中"
   },
   "componentDetail": {
-    "pageTitle": "{name} - Vue Bits"
+    "pageTitle": "{name} - Vue Bits",
+    "loading": "正在加载组件...",
+    "loadError": "组件加载失败，请刷新后重试。"
   },
   "sidebar": {
     "new": "新增",
@@ -110,7 +117,13 @@
     "allComponents": "所有组件",
     "category": "分类",
     "search": "搜索...",
-    "clearFilters": "清除筛选"
+    "clearFilters": "清除筛选",
+    "noResults": "没有找到结果...",
+    "adjustFilters": "请尝试调整筛选条件",
+    "nothingHere": "这里还没有内容...",
+    "saveHint": "点击任意组件上的心形图标即可收藏",
+    "browseComponents": "浏览组件",
+    "new": "新增"
   },
   "demo": {
     "tablistLabel": "组件示例分区",
@@ -132,6 +145,18 @@
     "componentSource": "组件源码",
     "utilitySource": "工具源码",
     "customize": "自定义",
+    "dependencies": "依赖",
+    "replay": "重新播放动画",
+    "background": {
+      "features": "功能",
+      "about": "关于",
+      "signUp": "注册",
+      "new": "新增",
+      "newBackground": "新背景",
+      "retroBackground": "复古背景",
+      "getStarted": "开始使用",
+      "learnMore": "了解更多"
+    },
     "promptTitle": "从 Vue Bits 集成 {name} 组件",
     "promptIntro": "你正在帮助将一个开源 Vue 组件集成到现有应用中。",
     "promptComponent": "### 组件：{name}",
@@ -415,6 +440,7 @@
     "Damping": "阻尼",
     "Decay": "衰减",
     "Default_Value": "默认值",
+    "Demo_Content": "演示内容",
     "Delay__ms_": "延迟（毫秒）",
     "Delay": "延迟",
     "Deleting_Speed": "删除速度",
@@ -1441,9 +1467,10 @@
     },
     "TargetCursor": {
       "targetSelector": "应触发光标瞄准效果的元素的 CSS 选择器。",
-      "spinDuration": "组件激活时是否隐藏默认浏览器光标。",
+      "spinDuration": "未锁定目标时光标旋转动画的持续时间（秒）。",
       "hoverDuration": "光标锁定目标时过渡的持续时间（秒）。",
-      "parallaxOn": "在目标上移动时，在边角启用微妙的视差效果。"
+      "parallaxOn": "在目标上移动时，在边角启用微妙的视差效果。",
+      "hideDefaultCursor": "组件激活时是否隐藏默认浏览器光标。"
     },
     "Aurora": {
       "colorStops": "定义极光渐变的三个十六进制颜色数组。",
@@ -2689,6 +2716,9 @@
       "radius": "影响半径。",
       "falloff": "效果的衰减类型。"
     }
+  },
+  "placeholders": {
+    "Enter text...": "输入文本..."
   },
   "optionLabels": {
     "words": "单词 (words)",

@@ -1,12 +1,18 @@
 <template>
-  <button type="button" class="replay-button" :aria-label="label" :title="label" @click="$emit('click')">
+  <button type="button" class="replay-button" :aria-label="displayLabel" :title="displayLabel" @click="$emit('click')">
     <i class="pi pi-refresh"></i>
   </button>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
 const { label = 'Replay animation' } = defineProps<{ label?: string }>();
 defineEmits<{ click: [] }>();
+
+const { t } = useI18n();
+const displayLabel = computed(() => (label === 'Replay animation' ? t('demo.replay') : label));
 </script>
 
 <style scoped>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { ComponentPublicInstance } from 'vue';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import DemoPlaceholder from './DemoPlaceholder.vue';
 
@@ -10,7 +11,7 @@ type Variant = 'shapegrid' | 'magicrings' | 'shinytext' | 'dock';
 
 type Card = {
   variant: Variant;
-  category: string;
+  categoryKey: 'backgrounds' | 'animations' | 'textAnimations' | 'components';
   component: string;
   href: string;
   span: 7 | 5 | 4 | 8;
@@ -20,7 +21,7 @@ type Card = {
 const CARDS: Card[] = [
   {
     variant: 'shapegrid',
-    category: 'Backgrounds',
+    categoryKey: 'backgrounds',
     component: 'ShapeGrid',
     href: '/backgrounds/shape-grid',
     span: 7,
@@ -28,7 +29,7 @@ const CARDS: Card[] = [
   },
   {
     variant: 'magicrings',
-    category: 'Animations',
+    categoryKey: 'animations',
     component: 'MagicRings',
     href: '/animations/magic-rings',
     span: 5,
@@ -36,19 +37,30 @@ const CARDS: Card[] = [
   },
   {
     variant: 'shinytext',
-    category: 'Text Animations',
+    categoryKey: 'textAnimations',
     component: 'ShinyText',
     href: '/text-animations/shiny-text',
     span: 4
   },
   {
     variant: 'dock',
-    category: 'Components',
+    categoryKey: 'components',
     component: 'Dock',
     href: '/components/dock',
     span: 8
   }
 ];
+
+const { t, te } = useI18n();
+const localizedCards = computed(() =>
+  CARDS.map(card => ({
+    ...card,
+    category: t(`categories.${card.categoryKey}`),
+    component: te(`componentNames.${card.component.replace(/\s+/g, '_')}`)
+      ? t(`componentNames.${card.component.replace(/\s+/g, '_')}`)
+      : card.component
+  }))
+);
 
 const visible = ref<boolean[]>(Array(CARDS.length).fill(false));
 
@@ -98,7 +110,7 @@ onMounted(() => {
 
       <div class="ln-demo-grid">
         <div
-          v-for="(card, i) in CARDS"
+          v-for="(card, i) in localizedCards"
           :key="card.variant"
           :ref="el => setCardRef(el, i)"
           :class="[

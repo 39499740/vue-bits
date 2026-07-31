@@ -1,7 +1,7 @@
 <template>
   <div class="scrubber" ref="wrapRef" style="position: relative">
     <div class="scrubber-track scrubber-track--color" @click="open = !open" style="cursor: pointer">
-      <span class="scrubber-label">{{ title }}</span>
+      <span class="scrubber-label">{{ displayTitle }}</span>
       <div class="scrubber-color-controls">
         <span class="scrubber-color-swatch-preview" :style="{ background: currentHex }" />
         <input
@@ -11,7 +11,7 @@
           @input="handleTextInput"
           @click.stop
           maxlength="7"
-          :aria-label="`${title} hex value`"
+          :aria-label="`${displayTitle} hex value`"
         />
       </div>
     </div>
@@ -56,10 +56,16 @@
 
 <script setup lang="ts">
 import { computed, onUnmounted, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 type HSV = { h: number; s: number; v: number };
 
 const { title = '' } = defineProps<{ title?: string }>();
+const { t, te } = useI18n();
+const displayTitle = computed(() => {
+  const key = `controls.${title.replace(/\s+/g, '_')}`;
+  return te(key) ? t(key) : title;
+});
 
 const modelValue = defineModel<string>({ default: '#ffffff' });
 

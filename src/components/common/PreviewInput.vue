@@ -1,15 +1,15 @@
 <template>
   <div class="scrubber">
     <div class="scrubber-track scrubber-track--input" :data-disabled="isDisabled">
-      <span class="scrubber-label">{{ title }}</span>
+      <span class="scrubber-label">{{ displayTitle }}</span>
       <input
         class="scrubber-input"
         type="text"
         :value="modelValue"
-        :placeholder="placeholder"
+        :placeholder="displayPlaceholder"
         :maxlength="maxlength"
         :disabled="isDisabled"
-        :aria-label="title"
+        :aria-label="displayTitle"
         @input="modelValue = ($event.target as HTMLInputElement).value"
       />
     </div>
@@ -17,6 +17,9 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
 const {
   title = '',
   placeholder = '',
@@ -30,4 +33,13 @@ const {
 }>();
 
 const modelValue = defineModel<string>({ default: '' });
+const { t, te } = useI18n();
+const displayTitle = computed(() => {
+  const key = `controls.${title.replace(/\s+/g, '_')}`;
+  return te(key) ? t(key) : title;
+});
+const displayPlaceholder = computed(() => {
+  const key = `placeholders.${placeholder}`;
+  return te(key) ? t(key) : placeholder;
+});
 </script>

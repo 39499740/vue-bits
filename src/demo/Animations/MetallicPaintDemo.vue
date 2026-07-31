@@ -53,7 +53,7 @@
         <PreviewSlider title="Noise Scale" :min="0" :max="2" :step="0.05" v-model="noiseScale" />
         <PreviewSlider title="Chromatic Spread" :min="0" :max="5" :step="0.1" v-model="chromaticSpread" />
         <PreviewSlider title="Distortion" :min="0" :max="3" :step="0.05" v-model="distortion" />
-        <PreviewSlider title="Contour" :min="0" :max="1" :step="0.05" v-model]="contour" />
+        <PreviewSlider title="Contour" :min="0" :max="1" :step="0.05" v-model="contour" />
         <PreviewSwitch title="Mouse Animation" v-model="mouseAnimation" />
       </Customize>
     </template>

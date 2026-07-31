@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
 const toSlug = (s: string) => s.toLowerCase().replace(/\s+/g, '-');
 
 type Item = { name: string; cat: 'backgrounds' | 'animations' };
@@ -32,6 +35,17 @@ const ROW_B: Item[] = [
 const HREF = '/get-started/index';
 const rowADoubled = [...ROW_A, ...ROW_A];
 const rowBDoubled = [...ROW_B, ...ROW_B];
+const { t, te } = useI18n();
+
+const localize = (name: string) => {
+  const key = `componentNames.${name.replace(/\s+/g, '_')}`;
+  return te(key) ? t(key) : name;
+};
+
+const localizedRows = computed(() => ({
+  a: rowADoubled.map(item => ({ ...item, label: localize(item.name) })),
+  b: rowBDoubled.map(item => ({ ...item, label: localize(item.name) }))
+}));
 </script>
 
 <template>
@@ -39,28 +53,28 @@ const rowBDoubled = [...ROW_B, ...ROW_B];
     <div class="ln-feat-marquee-track">
       <div class="ln-feat-marquee-scroll">
         <a
-          v-for="(c, i) in rowADoubled"
+          v-for="(c, i) in localizedRows.a"
           :key="i"
           :href="HREF"
           :data-slug="toSlug(c.name)"
           :data-cat="c.cat"
           class="ln-feat-pill"
         >
-          {{ c.name }}
+          {{ c.label }}
         </a>
       </div>
     </div>
     <div class="ln-feat-marquee-track">
       <div class="ln-feat-marquee-scroll--rev ln-feat-marquee-scroll">
         <a
-          v-for="(c, i) in rowBDoubled"
+          v-for="(c, i) in localizedRows.b"
           :key="i"
           :href="HREF"
           :data-slug="toSlug(c.name)"
           :data-cat="c.cat"
           class="ln-feat-pill"
         >
-          {{ c.name }}
+          {{ c.label }}
         </a>
       </div>
     </div>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { gsap } from 'gsap';
+import { ArrowUpRight } from 'lucide-vue-next';
 import { nextTick, onBeforeUpdate, onMounted, onUnmounted, ref, watch, type VNodeRef } from 'vue';
 
 type CardNavLink = {
@@ -246,7 +247,7 @@ watch(
               :href="lnk.href"
               :aria-label="lnk.ariaLabel"
             >
-              <v-icon name="go-arrow-up-right" class="nav-card-link-icon shrink-0" aria-hidden="true" />
+              <ArrowUpRight :size="16" class="nav-card-link-icon shrink-0" aria-hidden="true" />
               {{ lnk.label }}
             </a>
           </div>

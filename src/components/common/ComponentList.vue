@@ -14,10 +14,12 @@ const { t, te } = useI18n();
 
 const CARD_RADIUS = 16;
 const CLEAR_APPEAR_DEBOUNCE_MS = 300;
+const ALL_CATEGORIES = '__all__';
 
 const slug = (str: string) => (str || '').replace(/\s+/g, '-').toLowerCase();
 const fromPascal = (str: string) =>
   (str || '')
+    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')
     .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
     .replace(/_/g, ' ')
     .trim();
@@ -114,15 +116,17 @@ const items = computed(() => {
 
 // ── categories ────────────────────────────────────────────────────────────────
 const categoryOptions = computed(() => [
-  'All Components',
-  ...Array.from(new Set(items.value.map(i => i.categoryLabel))).sort((a, b) => a.localeCompare(b))
+  { label: t('componentList.allComponents'), value: ALL_CATEGORIES },
+  ...Array.from(new Map(items.value.map(item => [item.categoryKey, item.categoryLabel])).entries())
+    .sort(([, a], [, b]) => a.localeCompare(b))
+    .map(([value, label]) => ({ label, value }))
 ]);
 
 const search = ref('');
-const selectedCategory = ref('All Components');
+const selectedCategory = ref(ALL_CATEGORIES);
 
 watch(categoryOptions, opts => {
-  if (!opts.includes(selectedCategory.value)) selectedCategory.value = 'All Components';
+  if (!opts.some(option => option.value === selectedCategory.value)) selectedCategory.value = ALL_CATEGORIES;
 });
 
 // ── saved set ─────────────────────────────────────────────────────────────────
@@ -146,9 +150,9 @@ onBeforeUnmount(() => {
 // ── filtering ─────────────────────────────────────────────────────────────────
 const filtered = computed(() => {
   const term = search.value.trim();
-  const all = selectedCategory.value === 'All Components';
-  return items.value.filter(({ title, categoryLabel }) => {
-    const categoryOk = all || categoryLabel === selectedCategory.value;
+  const all = selectedCategory.value === ALL_CATEGORIES;
+  return items.value.filter(({ title, categoryKey }) => {
+    const categoryOk = all || categoryKey === selectedCategory.value;
     if (!term) return categoryOk;
     return categoryOk && fuzzyMatch(title, term);
   });
@@ -168,7 +172,7 @@ watchEffect(onCleanup => {
 
 const showClear = computed(
   () =>
-    !controlsDisabled.value && (selectedCategory.value !== 'All Components' || debouncedSearch.value.trim().length > 0)
+    !controlsDisabled.value && (selectedCategory.value !== ALL_CATEGORIES || debouncedSearch.value.trim().length > 0)
 );
 
 // ── GSAP clear button ─────────────────────────────────────────────────────────
@@ -199,7 +203,7 @@ watch(showClear, newVal => {
 // ── actions ───────────────────────────────────────────────────────────────────
 function clearFilters() {
   search.value = '';
-  selectedCategory.value = 'All Components';
+  selectedCategory.value = ALL_CATEGORIES;
 }
 
 function removeFavorite(key: string) {
@@ -211,7 +215,7 @@ function toggleFavorite(key: string, componentKey: string) {
   savedSet.value = new Set(next);
   toast.add({
     severity: saved ? 'success' : 'error',
-    summary: saved ? `Added <${componentKey} /> to favorites` : `Removed <${componentKey} /> from favorites`,
+    summary: t(saved ? 'favorites.added' : 'favorites.removed', { component: `<${componentKey} />` }),
     life: 3000
   });
 }
@@ -240,13 +244,13 @@ function toggleFavorite(key: string, componentKey: string) {
             <circle cx="11" cy="11" r="8" />
             <path d="m21 21-4.35-4.35" />
           </svg>
-          <input v-model="search" placeholder="Search..." :disabled="controlsDisabled" />
+          <input v-model="search" :placeholder="$t('componentList.search')" :disabled="controlsDisabled" />
         </label>
 
         <!-- Category select -->
         <PreviewSelect
           v-model="selectedCategory"
-          title="Category"
+          :title="$t('componentList.category')"
           :options="categoryOptions"
           :is-disabled="controlsDisabled"
           class="category-scrubber"
@@ -258,7 +262,7 @@ function toggleFavorite(key: string, componentKey: string) {
             ref="clearBtnRef"
             type="button"
             class="clear-button"
-            aria-label="Clear filters"
+            :aria-label="$t('componentList.clearFilters')"
             :tabindex="showClear ? 0 : -1"
             @click="clearFilters"
           >
@@ -283,16 +287,16 @@ function toggleFavorite(key: string, componentKey: string) {
 
     <!-- Empty state -->
     <div v-if="filtered.length === 0" class="component-list-empty" role="status">
-      <h2>{{ items.length > 0 ? 'No results...' : (emptyTitle ?? 'Nothing here yet...') }}</h2>
+      <h2>{{ items.length > 0 ? $t('componentList.noResults') : (emptyTitle ?? $t('componentList.nothingHere')) }}</h2>
       <p>
-        {{
-          items.length > 0
-            ? 'Try adjusting your filters'
-            : (emptyDescription ?? 'Tap the heart on any component to save it')
-        }}
+        {{ items.length > 0 ? $t('componentList.adjustFilters') : (emptyDescription ?? $t('componentList.saveHint')) }}
       </p>
-      <button v-if="items.length > 0" type="button" class="pill-button" @click="clearFilters">Clear Filters</button>
-      <RouterLink v-else class="pill-button" to="/get-started/index">Browse Components</RouterLink>
+      <button v-if="items.length > 0" type="button" class="pill-button" @click="clearFilters">
+        {{ $t('componentList.clearFilters') }}
+      </button>
+      <RouterLink v-else class="pill-button" to="/get-started/index">
+        {{ $t('componentList.browseComponents') }}
+      </RouterLink>
     </div>
 
     <!-- Grid -->
@@ -305,7 +309,7 @@ function toggleFavorite(key: string, componentKey: string) {
           @mouseenter="hoveredKey = item.key"
           @mouseleave="hoveredKey === item.key && (hoveredKey = null)"
         >
-          <div v-if="item.isNew" class="new-badge">New</div>
+          <div v-if="item.isNew" class="new-badge">{{ $t('componentList.new') }}</div>
 
           <LazyCardMedia :video-url="item.videoUrl" :playing="hoveredKey === item.key" />
 
@@ -325,10 +329,10 @@ function toggleFavorite(key: string, componentKey: string) {
           }"
           :aria-label="
             hasDeleteButton
-              ? 'Remove from favorites'
+              ? $t('favorites.remove')
               : savedSet.has(item.key)
-                ? 'Remove from favorites'
-                : 'Add to favorites'
+                ? $t('favorites.remove')
+                : $t('favorites.add')
           "
           @click.prevent.stop="hasDeleteButton ? removeFavorite(item.key) : toggleFavorite(item.key, item.componentKey)"
         >

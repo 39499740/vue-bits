@@ -28,9 +28,9 @@
             </svg>
           </div>
           <div class="bg-content-nav-links">
-            <span>Features</span>
-            <span>About</span>
-            <span class="bg-content-signup">Sign up</span>
+            <span>{{ t('demo.background.features') }}</span>
+            <span>{{ t('demo.background.about') }}</span>
+            <span class="bg-content-signup">{{ t('demo.background.signUp') }}</span>
           </div>
         </div>
       </div>
@@ -38,15 +38,15 @@
       <!-- Hero -->
       <div class="bg-content-hero">
         <div class="bg-content-glass bg-content-tag">
-          <span class="bg-content-tag-new">New</span>
-          <span>Just shipped v2.0</span>
+          <span class="bg-content-tag-new">{{ t('demo.background.new') }}</span>
+          <span>{{ translatedPillText }}</span>
         </div>
 
         <h2>{{ headline }}</h2>
 
         <div class="bg-content-actions">
-          <span class="bg-content-primary">Get started</span>
-          <span class="bg-content-glass bg-content-secondary">Learn more</span>
+          <span class="bg-content-primary">{{ t('demo.background.getStarted') }}</span>
+          <span class="bg-content-glass bg-content-secondary">{{ t('demo.background.learnMore') }}</span>
         </div>
       </div>
     </template>
@@ -55,13 +55,23 @@
 
 <script setup lang="ts">
 import logo from '@/assets/logos/vue-bits-logo-small.svg';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import PreviewSwitch from './PreviewSwitch.vue';
 
-const { headline = 'Build interfaces that feel alive' } = defineProps<{
+const { headline = 'Build interfaces that feel alive', pillText = 'Just shipped v2.0' } = defineProps<{
   headline?: string;
+  pillText?: string;
 }>();
 
+const { t } = useI18n();
+const translatedPillText = computed(() =>
+  pillText === 'Retro Background'
+    ? t('demo.background.retroBackground')
+    : pillText === 'New Background'
+      ? t('demo.background.newBackground')
+      : pillText
+);
 const showContent = ref(true);
 </script>
 

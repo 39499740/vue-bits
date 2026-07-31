@@ -24,12 +24,22 @@ import LiveDemo from '@/components/landing/LiveDemo/LiveDemo.vue';
 import Navbar from '@/components/landing/Navbar/Navbar.vue';
 import QuickStart from '@/components/landing/QuickStart/QuickStart.vue';
 import { onMounted, onUnmounted, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const MIN_LOADER_MS = 800;
 
 const loaded = ref(false);
 const hiding = ref(false);
 const revealed = ref(false);
+const { t, locale } = useI18n();
+
+watch(
+  locale,
+  () => {
+    document.title = t('site.pageTitle');
+  },
+  { immediate: true }
+);
 
 function reveal() {
   hiding.value = true;

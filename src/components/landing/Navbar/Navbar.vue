@@ -19,7 +19,7 @@ const LANGUAGES = [
   { code: 'zh-CN', label: '简体中文' }
 ] as const;
 
-const NAV_LINKS = [{ label: t('nav.docs'), to: '/get-started/index', match: '/get-started' }] as const;
+const NAV_LINKS = computed(() => [{ label: t('nav.docs'), to: '/get-started/index', match: '/get-started' }] as const);
 
 const route = useRoute();
 const stars = useStars();
@@ -107,17 +107,6 @@ function handlePrefsLeave() {
 
 // ── language ──────────────────────────────────────────────────────────────────
 const langOpen = ref(false);
-let langCloseTimer: ReturnType<typeof setTimeout> | null = null;
-
-function handleLangEnter() {
-  if (langCloseTimer) clearTimeout(langCloseTimer);
-  langOpen.value = true;
-}
-function handleLangLeave() {
-  langCloseTimer = setTimeout(() => {
-    langOpen.value = false;
-  }, 150);
-}
 
 function switchLanguage(code: string) {
   locale.value = code;
@@ -145,8 +134,11 @@ watch(menuOpen, open => {
 
 // ── outside click closes landing mobile menu ──────────────────────────────────
 function onPointerDown(e: PointerEvent) {
-  if (showDocs || !menuOpen.value) return;
   const target = e.target;
+  if (langOpen.value && !(target instanceof Element && target.closest('.ln-navbar-lang-wrapper'))) {
+    langOpen.value = false;
+  }
+  if (showDocs || !menuOpen.value) return;
   if (target instanceof Node && navbarInnerEl.value?.contains(target)) return;
   menuOpen.value = false;
 }
@@ -278,17 +270,14 @@ onUnmounted(() => {
         </div>
 
         <!-- Language switcher -->
-        <div
-          class="ln-navbar-prefs-wrapper"
-          role="presentation"
-          @mouseenter="handleLangEnter"
-          @mouseleave="handleLangLeave"
-        >
+        <div class="ln-navbar-prefs-wrapper ln-navbar-lang-wrapper" role="presentation">
           <button
             type="button"
             class="ln-navbar-icon-btn ln-navbar-lang-trigger"
             :aria-label="$t('nav.language')"
             :aria-expanded="langOpen"
+            aria-haspopup="menu"
+            @click.stop="langOpen = !langOpen"
           >
             <svg
               width="16"
@@ -309,11 +298,12 @@ onUnmounted(() => {
           </button>
 
           <Transition name="prefs">
-            <div v-if="langOpen" class="ln-navbar-prefs-menu ln-navbar-lang-menu">
+            <div v-if="langOpen" class="ln-navbar-prefs-menu ln-navbar-lang-menu" role="menu">
               <button
                 v-for="lang in LANGUAGES"
                 :key="lang.code"
                 type="button"
+                role="menuitem"
                 :class="['ln-navbar-prefs-fav', { 'ln-navbar-lang-active': lang.code === locale }]"
                 @click="switchLanguage(lang.code)"
               >

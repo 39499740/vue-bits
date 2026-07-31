@@ -46,6 +46,7 @@ import Customize from '@/components/common/Customize.vue';
 import DemoCodeTab from '@/components/common/DemoCodeTab.vue';
 import PreviewSelect from '@/components/common/PreviewSelect.vue';
 import PreviewSlider from '@/components/common/PreviewSlider.vue';
+import RefreshButton from '@/components/common/RefreshButton.vue';
 import PropTable, { type PropRow } from '@/components/common/PropTable.vue';
 import TabsLayout from '@/components/common/TabsLayout.vue';
 import { useForceRerender } from '@/composables/useForceRerender';
