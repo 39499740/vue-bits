@@ -1,14 +1,22 @@
 <script setup lang="ts">
-import { computed, provide, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, provide, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
-import { Check, Clipboard, RotateCcw } from 'lucide-vue-next';
+import { Check, ChevronDown, FileCode2, FileText, MoreHorizontal, Sparkles, Terminal } from 'lucide-vue-next';
 import { FiCode, FiEye } from 'vue-icons-plus/fi';
+import { PiShareFat } from 'vue-icons-plus/pi';
+import { RiHeartFill, RiHeartLine } from 'vue-icons-plus/ri';
+import { SiAnthropic, SiOpenai, SiVercel } from 'vue-icons-plus/si';
 
+import { registryUrl, shadcnAddSnippet } from '@/constants/cli';
 import { colors } from '@/constants/colors.ts';
 import { dependenciesForSlug } from '@/constants/componentDependencies';
+import { buildCompactPrompt, copyText, openInAI } from '@/utils/aiExport';
+import { isComponentSaved, toggleSavedComponent } from '@/utils/favorites';
 import { useToast } from 'primevue/usetoast';
+import { CUSTOMIZE_ACTIONS } from './customizeActions';
+import ComponentPager from './ComponentPager.vue';
 import Dependencies from './Dependencies.vue';
 
 type PropRow = {
@@ -37,43 +45,51 @@ const props = withDefaults(
 );
 
 const toast = useToast();
-const route = useRoute();
 const { t } = useI18n();
 
-provide('componentSlug', props.componentName || '');
+provide(CUSTOMIZE_ACTIONS, {
+  reset: () => props.onreset?.(),
+  canReset: computed(() => Boolean(props.onreset) && props.hasChanges)
+});
+const route = useRoute();
 
 const activeTab = ref<'preview' | 'code'>('preview');
-const copied = ref(false);
 
 const TAB_STYLE_PROPS = {
-  border: `1px solid ${colors.borderSecondary}`,
+  border: '1px solid transparent',
   borderRadius: '10px',
   fontSize: '14px',
-  color: '#ffffff'
+  color: '#ffffff',
+  background: 'var(--surface-ghost-track)'
 };
 
-const subcategory = computed(() => route.params.subcategory as string);
+const category = computed(() => (route.params.category as string) ?? '');
+const subcategory = computed(() => (route.params.subcategory as string) ?? '');
+
+function toPascal(str: string) {
+  return (str || '')
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join('');
+}
 
 const promptComponentName = computed(() => {
   if (props.componentName) return props.componentName;
 
-  return subcategory.value
-    ?.split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join('');
+  return toPascal(subcategory.value);
 });
 
 const hasPrompt = computed(() => {
   return Boolean(promptComponentName.value && props.source);
 });
 
-const previewTabId = computed(() => `${subcategory.value ?? 'component'}-preview-tab`);
+const previewTabId = computed(() => `${subcategory.value || 'component'}-preview-tab`);
 
-const codeTabId = computed(() => `${subcategory.value ?? 'component'}-code-tab`);
+const codeTabId = computed(() => `${subcategory.value || 'component'}-code-tab`);
 
-const previewPanelId = computed(() => `${subcategory.value ?? 'component'}-preview-panel`);
+const previewPanelId = computed(() => `${subcategory.value || 'component'}-preview-panel`);
 
-const codePanelId = computed(() => `${subcategory.value ?? 'component'}-code-panel`);
+const codePanelId = computed(() => `${subcategory.value || 'component'}-code-panel`);
 
 function stripHeader(source: string) {
   return source.replace(/^['"][^'"]+['"];\s*/gm, '').trim();
@@ -81,11 +97,75 @@ function stripHeader(source: string) {
 
 const dependencyList = computed(() => dependenciesForSlug(route.params.subcategory as string));
 
-function buildPrompt() {
+// ── Favorites ──────────────────────────────────────────────────────────────
+const favoriteKey = computed(() => {
+  if (!category.value || !subcategory.value) return null;
+  return `${toPascal(category.value)}/${toPascal(subcategory.value)}`;
+});
+
+const showFavorite = computed(() => Boolean(favoriteKey.value) && category.value !== 'get-started');
+
+const hasOverflowActions = computed(() => showFavorite.value || hasPrompt.value);
+
+const isSaved = ref(false);
+
+function refreshSaved() {
+  isSaved.value = favoriteKey.value ? isComponentSaved(favoriteKey.value) : false;
+}
+
+watch(favoriteKey, refreshSaved, { immediate: true });
+
+function toggleFavorite() {
+  if (!favoriteKey.value) return;
+
+  const { saved } = toggleSavedComponent(favoriteKey.value);
+  isSaved.value = saved;
+
+  const name = promptComponentName.value;
+
+  toast.add({
+    severity: saved ? 'success' : 'error',
+    summary: saved ? `Added <${name} /> to favorites` : `Removed <${name} /> from favorites`,
+    life: 3000
+  });
+
+  overflowOpen.value = false;
+}
+
+// ── Share ──────────────────────────────────────────────────────────────────
+async function copyShareLink() {
+  if (await copyText(window.location.href)) {
+    toast.add({ severity: 'success', summary: t('demo.toastShareLinkCopied'), life: 2500 });
+  } else {
+    toast.add({ severity: 'error', summary: 'Could not copy the link', life: 2500 });
+  }
+
+  overflowOpen.value = false;
+}
+
+// ── Copy for AI ────────────────────────────────────────────────────────────
+const menuOpen = ref(false);
+const done = ref<string | null>(null);
+const aiMenuRootRef = ref<HTMLElement | null>(null);
+
+// ── Mobile overflow menu ─────────────────────────────────────────────────────
+const overflowOpen = ref(false);
+const overflowMenuRootRef = ref<HTMLElement | null>(null);
+
+function toggleOverflowMenu() {
+  overflowOpen.value = !overflowOpen.value;
+}
+
+const installCommand = computed(() => {
+  if (!subcategory.value) return '';
+  return shadcnAddSnippet(subcategory.value, 'npm');
+});
+
+function buildFullPrompt() {
   const sourceShown = stripHeader(props.source);
   const deps = dependencyList.value.join(', ');
 
-  let prompt = `${t('demo.promptTitle', { name: `<${promptComponentName.value} />` })}
+  let prompt = `## ${t('demo.promptTitle', { name: `<${promptComponentName.value} />` })}
 
 ${t('demo.promptIntro')}
 
@@ -125,24 +205,94 @@ ${t('demo.promptStep3')}
   return prompt;
 }
 
-const handleCopyPrompt = async () => {
-  if (!hasPrompt.value) return;
+async function runCopy(key: string, text: string, message: string) {
+  if (!text) {
+    toast.add({ severity: 'error', summary: t('demo.toastNothingToCopy'), life: 2500 });
+    menuOpen.value = false;
+    overflowOpen.value = false;
+    return;
+  }
 
-  await navigator.clipboard.writeText(buildPrompt());
+  if (await copyText(text)) {
+    done.value = key;
+    toast.add({ severity: 'success', summary: message, life: 2500 });
+    setTimeout(() => {
+      if (done.value === key) done.value = null;
+    }, 2000);
+  } else {
+    toast.add({ severity: 'error', summary: t('demo.toastCopyFailed'), life: 2500 });
+  }
 
-  copied.value = true;
+  menuOpen.value = false;
+  overflowOpen.value = false;
+}
 
-  toast.add({
-    severity: 'success',
-    summary: t('demo.toastCopied'),
-    detail: t('demo.toastDetail'),
-    life: 2500
+const copyItems = computed(() => [
+  {
+    key: 'prompt',
+    label: t('demo.copyPrompt'),
+    icon: Sparkles,
+    run: () => runCopy('prompt', buildFullPrompt(), t('demo.toastPromptCopied'))
+  },
+  {
+    key: 'usage',
+    label: t('demo.copyUsage'),
+    icon: FileText,
+    run: () => runCopy('usage', props.usage, t('demo.toastUsageCopied'))
+  },
+  {
+    key: 'source',
+    label: t('demo.copySource'),
+    icon: FileCode2,
+    run: () => runCopy('source', stripHeader(props.source), t('demo.toastSourceCopied'))
+  },
+  {
+    key: 'install',
+    label: t('demo.copyInstallCommand'),
+    icon: Terminal,
+    run: () => runCopy('install', installCommand.value, t('demo.toastInstallCopied'))
+  }
+]);
+
+function openAIProvider(providerKey: 'chatgpt' | 'claude' | 'v0') {
+  const compactPrompt = buildCompactPrompt({
+    componentName: promptComponentName.value,
+    category: category.value,
+    subcategory: subcategory.value,
+    installCommand: installCommand.value,
+    usage: props.usage
   });
 
-  setTimeout(() => {
-    copied.value = false;
-  }, 2000);
-};
+  menuOpen.value = false;
+  overflowOpen.value = false;
+  openInAI(providerKey, { prompt: compactPrompt, registryUrl: registryUrl(subcategory.value) });
+}
+
+function toggleAiMenu() {
+  menuOpen.value = !menuOpen.value;
+}
+
+function handleOutsideClick(event: MouseEvent) {
+  if (!aiMenuRootRef.value?.contains(event.target as Node)) menuOpen.value = false;
+  if (!overflowMenuRootRef.value?.contains(event.target as Node)) overflowOpen.value = false;
+}
+
+function handleEscape(event: KeyboardEvent) {
+  if (event.key === 'Escape') {
+    menuOpen.value = false;
+    overflowOpen.value = false;
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleOutsideClick);
+  document.addEventListener('keydown', handleEscape);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleOutsideClick);
+  document.removeEventListener('keydown', handleEscape);
+});
 
 function selectTab(tab: 'preview' | 'code') {
   activeTab.value = tab;
@@ -179,13 +329,13 @@ function handleTabKey(event: KeyboardEvent) {
   <div class="w-full" :class="className">
     <!-- Tabs -->
     <div
-      class="flex justify-between items-center gap-2 mb-4 w-full"
+      class="flex flex-wrap justify-between items-center gap-2 mb-4 w-full"
       role="tablist"
-      :aria-label="$t('demo.tablistLabel')"
+      :aria-label="t('demo.sectionsLabel')"
       tabindex="-1"
       @keydown="handleTabKey"
     >
-      <div class="flex gap-2">
+      <div class="flex flex-1 md:flex-none gap-2 min-w-0">
         <!-- Preview -->
         <button
           :id="previewTabId"
@@ -195,15 +345,16 @@ function handleTabKey(event: KeyboardEvent) {
           :aria-controls="previewPanelId"
           :tabindex="activeTab === 'preview' ? 0 : -1"
           @click="selectTab('preview')"
-          class="flex justify-center items-center gap-2 px-4 border rounded-[10px] h-10 transition-all"
+          class="flex flex-1 md:flex-none justify-center items-center gap-2 px-4 border rounded-[10px] h-10 transition-all"
           :style="{
             ...TAB_STYLE_PROPS,
-            background: activeTab === 'preview' ? colors.bgElevated : 'transparent',
-            color: activeTab === 'preview' ? colors.accent : '#fff'
+            background: activeTab === 'preview' ? 'var(--surface-ghost)' : TAB_STYLE_PROPS.background,
+            color: activeTab === 'preview' ? colors.accent : 'var(--text-muted)',
+            boxShadow: activeTab === 'preview' ? 'var(--surface-ghost-highlight)' : 'none'
           }"
         >
           <FiEye :size="16" />
-          {{ $t('demo.preview') }}
+          {{ t('demo.preview') }}
         </button>
 
         <!-- Code -->
@@ -215,45 +366,252 @@ function handleTabKey(event: KeyboardEvent) {
           :aria-controls="codePanelId"
           :tabindex="activeTab === 'code' ? 0 : -1"
           @click="selectTab('code')"
-          class="flex justify-center items-center gap-2 px-4 border rounded-[10px] h-10 transition-all"
+          class="flex flex-1 md:flex-none justify-center items-center gap-2 px-4 border rounded-[10px] h-10 transition-all"
           :style="{
             ...TAB_STYLE_PROPS,
-            background: activeTab === 'code' ? colors.bgElevated : 'transparent',
-            color: activeTab === 'code' ? colors.accent : '#fff'
+            background: activeTab === 'code' ? 'var(--surface-ghost)' : TAB_STYLE_PROPS.background,
+            color: activeTab === 'code' ? colors.accent : 'var(--text-muted)',
+            boxShadow: activeTab === 'code' ? 'var(--surface-ghost-highlight)' : 'none'
           }"
         >
           <FiCode :size="16" />
-          {{ $t('demo.code') }}
+          {{ t('demo.code') }}
         </button>
       </div>
 
       <!-- Actions -->
-      <div class="flex items-center gap-2">
-        <button
-          v-if="hasPrompt"
-          @click="handleCopyPrompt"
-          type="button"
-          class="flex items-center gap-2 px-4 border rounded-[10px] h-10"
-          :style="TAB_STYLE_PROPS"
-        >
-          <Check v-if="copied" :size="14" :color="colors.accent" />
+      <div class="flex flex-wrap items-center gap-2">
+        <!-- Desktop: full action buttons -->
+        <div class="hidden md:flex items-center gap-2">
+          <div v-if="showFavorite" class="group relative">
+            <button
+              type="button"
+              :aria-pressed="isSaved"
+              :aria-label="isSaved ? t('favorites.remove') : t('favorites.add')"
+              @click="toggleFavorite"
+              class="flex justify-center items-center border rounded-[10px] w-10 h-10 transition-colors duration-200"
+              :class="isSaved ? 'hover:bg-[rgba(160,255,188,0.26)]' : 'hover:bg-(--bg-hover)'"
+              :style="{
+                ...TAB_STYLE_PROPS,
+                background: isSaved ? 'rgba(160,255,188,0.18)' : TAB_STYLE_PROPS.background
+              }"
+            >
+              <RiHeartFill v-if="isSaved" :size="16" :color="colors.accent" />
+              <RiHeartLine v-else :size="16" color="#fff" />
+            </button>
 
-          <Clipboard v-else :size="14" />
+            <span
+              class="top-1/2 right-full z-10 absolute flex items-center opacity-0 group-hover:opacity-100 mr-2 px-4 rounded-[10px] h-10 font-medium text-xs whitespace-nowrap transition-opacity -translate-y-1/2 duration-150 pointer-events-none"
+              :style="{ background: colors.bgBody, border: `1px solid ${colors.borderPrimary}`, color: colors.accent }"
+            >
+              {{ isSaved ? t('favorites.remove') : t('favorites.add') }}
+            </span>
+          </div>
 
-          {{ copied ? $t('demo.copied') : $t('demo.copyPrompt') }}
-        </button>
+          <div v-if="showFavorite" class="group relative">
+            <button
+              type="button"
+              :aria-label="t('demo.copyShareLink')"
+              @click="copyShareLink"
+              class="flex justify-center items-center w-10 h-10 border rounded-[10px] transition-colors duration-200 hover:bg-(--bg-hover)"
+              :style="TAB_STYLE_PROPS"
+            >
+              <PiShareFat :size="16" color="#fff" />
+            </button>
 
-        <button
-          v-if="onreset && activeTab === 'preview' && hasChanges"
-          @click="onreset"
-          type="button"
-          class="flex items-center gap-2 px-4 border rounded-[10px] h-10"
-          :style="TAB_STYLE_PROPS"
-        >
-          <RotateCcw :size="14" />
+            <span
+              class="top-1/2 right-full z-10 absolute flex items-center opacity-0 group-hover:opacity-100 mr-2 px-4 rounded-[10px] h-10 font-medium text-xs whitespace-nowrap transition-opacity -translate-y-1/2 duration-150 pointer-events-none"
+              :style="{ background: colors.bgBody, border: `1px solid ${colors.borderPrimary}`, color: colors.accent }"
+            >
+              {{ t('demo.copyShareLink') }}
+            </span>
+          </div>
 
-          {{ $t('demo.reset') }}
-        </button>
+          <div v-if="hasPrompt" ref="aiMenuRootRef" class="relative">
+            <button
+              type="button"
+              aria-haspopup="menu"
+              :aria-expanded="menuOpen"
+              :aria-label="t('demo.copyForAI')"
+              @click="toggleAiMenu"
+              class="flex items-center gap-1.5 px-4 border rounded-[10px] h-10 transition-colors duration-200 hover:bg-(--bg-hover)"
+              :style="TAB_STYLE_PROPS"
+            >
+              <Check v-if="done" :size="14" :color="colors.accent" />
+              {{ done ? t('demo.copied') : t('demo.copyForAI') }}
+              <ChevronDown :size="14" color="#fff" />
+            </button>
+
+            <div
+              v-if="menuOpen"
+              role="menu"
+              class="top-[calc(100%+8px)] right-0 z-1500 absolute p-1 rounded-[10px] min-w-58.75"
+              :style="{
+                background: colors.bgBody,
+                border: `1px solid ${colors.borderPrimary}`,
+                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.5)'
+              }"
+            >
+              <button
+                v-for="item in copyItems"
+                :key="item.key"
+                type="button"
+                role="menuitem"
+                class="w-full flex items-center gap-3 px-3 py-2 text-sm text-left whitespace-nowrap rounded-sm cursor-pointer bg-transparent border-0 transition-colors duration-150 hover:bg-(--bg-hover)"
+                style="color: #fff"
+                @click="item.run"
+              >
+                <Check v-if="done === item.key" :size="16" :color="colors.accent" />
+                <component :is="item.icon" v-else :size="16" :color="colors.textMuted" />
+                {{ item.label }}
+              </button>
+
+              <div class="my-1 h-px" :style="{ background: colors.borderPrimary }" />
+
+              <button
+                type="button"
+                role="menuitem"
+                class="w-full flex items-center gap-3 px-3 py-2 text-sm text-left whitespace-nowrap rounded-sm cursor-pointer bg-transparent border-0 transition-colors duration-150 hover:bg-(--bg-hover)"
+                style="color: #fff"
+                @click="openAIProvider('chatgpt')"
+              >
+                <SiOpenai :size="16" :color="colors.textMuted" />
+                {{ t('demo.openInChatGPT') }}
+              </button>
+
+              <button
+                type="button"
+                role="menuitem"
+                class="w-full flex items-center gap-3 px-3 py-2 text-sm text-left whitespace-nowrap rounded-sm cursor-pointer bg-transparent border-0 transition-colors duration-150 hover:bg-(--bg-hover)"
+                style="color: #fff"
+                @click="openAIProvider('claude')"
+              >
+                <SiAnthropic :size="16" :color="colors.textMuted" />
+                {{ t('demo.openInClaude') }}
+              </button>
+
+              <button
+                type="button"
+                role="menuitem"
+                class="w-full flex items-center gap-3 px-3 py-2 text-sm text-left whitespace-nowrap rounded-sm cursor-pointer bg-transparent border-0 transition-colors duration-150 hover:bg-(--bg-hover)"
+                style="color: #fff"
+                @click="openAIProvider('v0')"
+              >
+                <SiVercel :size="16" :color="colors.textMuted" />
+                {{ t('demo.openInV0') }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobile: overflow menu -->
+        <div v-if="hasOverflowActions" ref="overflowMenuRootRef" class="relative flex md:hidden">
+          <button
+            type="button"
+            :aria-label="t('demo.moreActions')"
+            aria-haspopup="menu"
+            :aria-expanded="overflowOpen"
+            @click="toggleOverflowMenu"
+            class="flex justify-center items-center relative border rounded-[10px] w-10 h-10 transition-colors duration-200 hover:bg-(--bg-hover)"
+            :style="TAB_STYLE_PROPS"
+          >
+            <MoreHorizontal :size="18" />
+            <span
+              v-if="isSaved"
+              class="top-1.5 right-1.5 absolute w-1.5 h-1.5 rounded-full"
+              :style="{ background: colors.accent }"
+            />
+          </button>
+
+          <div
+            v-if="overflowOpen"
+            role="menu"
+            class="top-[calc(100%+8px)] right-0 z-1500 absolute p-1 rounded-[10px] min-w-58.75"
+            :style="{
+              background: colors.bgBody,
+              border: `1px solid ${colors.borderPrimary}`,
+              boxShadow: '0 10px 30px rgba(0, 0, 0, 0.5)'
+            }"
+          >
+            <button
+              v-if="showFavorite"
+              type="button"
+              role="menuitem"
+              class="w-full flex items-center gap-3 px-3 py-2 text-sm text-left whitespace-nowrap rounded-sm cursor-pointer bg-transparent border-0 transition-colors duration-150 hover:bg-(--bg-hover)"
+              style="color: #fff"
+              @click="toggleFavorite"
+            >
+              <RiHeartFill v-if="isSaved" :size="16" :color="colors.accent" />
+              <RiHeartLine v-else :size="16" color="#fff" />
+              {{ isSaved ? t('favorites.remove') : t('favorites.add') }}
+            </button>
+
+            <button
+              v-if="showFavorite"
+              type="button"
+              role="menuitem"
+              class="w-full flex items-center gap-3 px-3 py-2 text-sm text-left whitespace-nowrap rounded-sm cursor-pointer bg-transparent border-0 transition-colors duration-150 hover:bg-(--bg-hover)"
+              style="color: #fff"
+              @click="copyShareLink"
+            >
+              <PiShareFat :size="16" color="#fff" />
+              {{ t('demo.copyShareLink') }}
+            </button>
+
+            <div v-if="showFavorite && hasPrompt" class="my-1 h-px" :style="{ background: colors.borderPrimary }" />
+
+            <template v-if="hasPrompt">
+              <button
+                v-for="item in copyItems"
+                :key="item.key"
+                type="button"
+                role="menuitem"
+                class="w-full flex items-center gap-3 px-3 py-2 text-sm text-left whitespace-nowrap rounded-sm cursor-pointer bg-transparent border-0 transition-colors duration-150 hover:bg-(--bg-hover)"
+                style="color: #fff"
+                @click="item.run"
+              >
+                <Check v-if="done === item.key" :size="16" :color="colors.accent" />
+                <component :is="item.icon" v-else :size="16" :color="colors.textMuted" />
+                {{ item.label }}
+              </button>
+
+              <div class="my-1 h-px" :style="{ background: colors.borderPrimary }" />
+
+              <button
+                type="button"
+                role="menuitem"
+                class="w-full flex items-center gap-3 px-3 py-2 text-sm text-left whitespace-nowrap rounded-sm cursor-pointer bg-transparent border-0 transition-colors duration-150 hover:bg-(--bg-hover)"
+                style="color: #fff"
+                @click="openAIProvider('chatgpt')"
+              >
+                <SiOpenai :size="16" :color="colors.textMuted" />
+                {{ t('demo.openInChatGPT') }}
+              </button>
+
+              <button
+                type="button"
+                role="menuitem"
+                class="w-full flex items-center gap-3 px-3 py-2 text-sm text-left whitespace-nowrap rounded-sm cursor-pointer bg-transparent border-0 transition-colors duration-150 hover:bg-(--bg-hover)"
+                style="color: #fff"
+                @click="openAIProvider('claude')"
+              >
+                <SiAnthropic :size="16" :color="colors.textMuted" />
+                {{ t('demo.openInClaude') }}
+              </button>
+
+              <button
+                type="button"
+                role="menuitem"
+                class="w-full flex items-center gap-3 px-3 py-2 text-sm text-left whitespace-nowrap rounded-sm cursor-pointer bg-transparent border-0 transition-colors duration-150 hover:bg-(--bg-hover)"
+                style="color: #fff"
+                @click="openAIProvider('v0')"
+              >
+                <SiVercel :size="16" :color="colors.textMuted" />
+                {{ t('demo.openInV0') }}
+              </button>
+            </template>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -272,5 +630,7 @@ function handleTabKey(event: KeyboardEvent) {
     <div v-else :id="codePanelId" role="tabpanel" :aria-labelledby="codeTabId">
       <slot name="code" />
     </div>
+
+    <ComponentPager v-if="category !== 'get-started'" :category="category" :subcategory="subcategory" />
   </div>
 </template>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import CliInstall from './CliInstall.vue';
 import CodeBlock from './CodeBlock.vue';
+import CodeSection from './CodeSection.vue';
 
 type Props = {
   slug: string;
@@ -14,12 +15,13 @@ defineProps<Props>();
 
 <template>
   <CliInstall :slug="slug" />
-  <h3 class="demo-title-extra">{{ $t('demo.usage') }}</h3>
-  <CodeBlock :code="usage" language="html" />
-  <h3 class="demo-title-extra">{{ $t('demo.componentSource') }}</h3>
-  <CodeBlock :code="source" language="html" />
-  <template v-if="utility">
-    <h3 class="demo-title-extra">{{ $t('demo.utilitySource') }}</h3>
-    <CodeBlock :code="utility" language="ts" />
-  </template>
+  <CodeSection :title="$t('demo.usage')" :copy="usage">
+    <CodeBlock :code="usage" language="html" :show-copy="false" :max-lines="25" />
+  </CodeSection>
+  <CodeSection :title="$t('demo.code')" :copy="source">
+    <CodeBlock :code="source" language="html" :show-copy="false" :max-lines="25" />
+  </CodeSection>
+  <CodeSection v-if="utility" :title="$t('demo.utilitySource')" :copy="utility">
+    <CodeBlock :code="utility" language="ts" :show-copy="false" :max-lines="25" />
+  </CodeSection>
 </template>

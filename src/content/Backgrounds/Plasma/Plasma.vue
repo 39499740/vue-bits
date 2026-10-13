@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Mesh, Program, Renderer, Triangle } from 'ogl';
-import { onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue';
+import { onBeforeUnmount, onMounted, useTemplateRef, watch } from 'vue';
 
 interface PlasmaProps {
   color?: string;
@@ -9,6 +9,10 @@ interface PlasmaProps {
   scale?: number;
   opacity?: number;
   mouseInteractive?: boolean;
+  renderScale?: number;
+  maxDpr?: number;
+  targetFps?: number;
+  iterations?: number;
 }
 
 const props = withDefaults(defineProps<PlasmaProps>(), {
@@ -17,8 +21,14 @@ const props = withDefaults(defineProps<PlasmaProps>(), {
   direction: 'forward',
   scale: 1,
   opacity: 1,
-  mouseInteractive: true
+  mouseInteractive: true,
+  renderScale: 0.55,
+  maxDpr: 1.5,
+  targetFps: 60,
+  iterations: 60
 });
+
+const ORIGINAL_ITERATIONS = 60;
 
 const hexToRgb = (hex: string): [number, number, number] => {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -49,6 +59,8 @@ uniform float uScale;
 uniform float uOpacity;
 uniform vec2 uMouse;
 uniform float uMouseInteractive;
+uniform float uIterations;
+uniform float uStepScale;
 out vec4 fragColor;
 
 void mainImage(out vec4 o, vec2 C) {
@@ -69,8 +81,9 @@ void mainImage(out vec4 o, vec2 C) {
     
     p.x += .4*(1.+p.y)*sin(d + p.x*0.1)*cos(.34*d + p.x*0.05); 
     Q = p.xz *= mat2(cos(p.y+vec4(0,11,33,0)-T)); 
-    z+= d = abs(sqrt(length(Q*Q)) - .25*(5.+S.y))/3.+8e-4; 
+    z+= d = (abs(sqrt(length(Q*Q)) - .25*(5.+S.y))/3.+8e-4)*uStepScale; 
     o = 1.+sin(S.y+p.z*.5+S.z-length(S-p)+vec4(2,1,0,8));
+    if (i >= uIterations) break;
   }
   
   o.xyz = tanh(O/1e4);
@@ -99,30 +112,37 @@ void main() {
 }`;
 
 const containerRef = useTemplateRef('containerRef');
-const mousePos = ref({ x: 0, y: 0 });
 
 let cleanup: (() => void) | null = null;
 
 const setup = () => {
   if (!containerRef.value) return;
 
+  const container = containerRef.value;
+
+  const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+
   const useCustomColor = props.color ? 1.0 : 0.0;
   const customColorRgb = props.color ? hexToRgb(props.color) : [1, 1, 1];
 
   const directionMultiplier = props.direction === 'reverse' ? -1.0 : 1.0;
 
+  const renderScale = Math.min(Math.max(props.renderScale, 0.1), 1);
+  const iterations = Math.round(Math.min(Math.max(props.iterations, 1), ORIGINAL_ITERATIONS));
+  const frameInterval = props.targetFps > 0 ? 1000 / props.targetFps : 0;
+
   const renderer = new Renderer({
     webgl: 2,
     alpha: true,
     antialias: false,
-    dpr: Math.min(window.devicePixelRatio || 1, 2)
+    dpr: Math.min(window.devicePixelRatio || 1, Math.max(props.maxDpr, 0.1))
   });
   const gl = renderer.gl;
   const canvas = gl.canvas as HTMLCanvasElement;
   canvas.style.display = 'block';
   canvas.style.width = '100%';
   canvas.style.height = '100%';
-  containerRef.value.appendChild(canvas);
+  container.appendChild(canvas);
 
   const geometry = new Triangle(gl);
 
@@ -139,65 +159,150 @@ const setup = () => {
       uScale: { value: props.scale },
       uOpacity: { value: props.opacity },
       uMouse: { value: new Float32Array([0, 0]) },
-      uMouseInteractive: { value: props.mouseInteractive ? 1.0 : 0.0 }
+      uMouseInteractive: { value: props.mouseInteractive ? 1.0 : 0.0 },
+      uIterations: { value: iterations },
+      uStepScale: { value: ORIGINAL_ITERATIONS / iterations }
     }
   });
 
   const mesh = new Mesh(gl, { geometry, program });
 
+  let pendingMouse: { x: number; y: number } | null = null;
+
   const handleMouseMove = (e: MouseEvent) => {
-    if (!props.mouseInteractive) return;
-    const rect = containerRef.value!.getBoundingClientRect();
-    mousePos.value.x = e.clientX - rect.left;
-    mousePos.value.y = e.clientY - rect.top;
-    const mouseUniform = program.uniforms.uMouse.value as Float32Array;
-    mouseUniform[0] = mousePos.value.x;
-    mouseUniform[1] = mousePos.value.y;
+    const rect = container.getBoundingClientRect();
+    pendingMouse = { x: e.clientX - rect.left, y: e.clientY - rect.top };
   };
 
   if (props.mouseInteractive) {
-    containerRef.value.addEventListener('mousemove', handleMouseMove);
+    container.addEventListener('mousemove', handleMouseMove, { passive: true });
   }
 
   const setSize = () => {
-    const rect = containerRef.value!.getBoundingClientRect();
-    const width = Math.max(1, Math.floor(rect.width));
-    const height = Math.max(1, Math.floor(rect.height));
+    const rect = container.getBoundingClientRect();
+    const width = Math.max(1, Math.floor(rect.width * renderScale));
+    const height = Math.max(1, Math.floor(rect.height * renderScale));
     renderer.setSize(width, height);
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
     const res = program.uniforms.iResolution.value as Float32Array;
     res[0] = gl.drawingBufferWidth;
     res[1] = gl.drawingBufferHeight;
+    if (prefersReducedMotion) renderer.render({ scene: mesh });
   };
 
-  const ro = new ResizeObserver(setSize);
-  ro.observe(containerRef.value);
+  let resizePending = false;
+  const ro = new ResizeObserver(() => {
+    if (resizePending) return;
+    resizePending = true;
+    requestAnimationFrame(() => {
+      resizePending = false;
+      setSize();
+    });
+  });
+  ro.observe(container);
   setSize();
 
   let raf = 0;
-  const t0 = performance.now();
+  let contextLost = false;
+  let isVisible = true;
+  let tabVisible = document.visibilityState !== 'hidden';
+  let lastFrameTime = 0;
+  let elapsedTime = 0;
+
+  const applyPendingMouse = () => {
+    if (!pendingMouse) return;
+    const mouseUniform = program.uniforms.uMouse.value as Float32Array;
+    mouseUniform[0] = pendingMouse.x;
+    mouseUniform[1] = pendingMouse.y;
+    pendingMouse = null;
+  };
+
   const loop = (t: number) => {
-    const timeValue = (t - t0) * 0.001;
+    if (contextLost || !isVisible || !tabVisible) {
+      raf = 0;
+      return;
+    }
+
+    raf = requestAnimationFrame(loop);
+
+    // A one millisecond tolerance keeps the target frame rate from being halved by rAF jitter.
+    if (frameInterval > 0 && lastFrameTime !== 0 && t - lastFrameTime < frameInterval - 1) return;
+
+    // Time is accumulated instead of derived from the start, so pauses don't make the animation jump.
+    elapsedTime += (lastFrameTime === 0 ? 0 : t - lastFrameTime) * 0.001;
+    lastFrameTime = t;
+
+    applyPendingMouse();
 
     if (props.direction === 'pingpong') {
-      const cycle = Math.sin(timeValue * 0.5) * directionMultiplier;
+      const cycle = Math.sin(elapsedTime * 0.5) * directionMultiplier;
       (program.uniforms.uDirection as { value: number }).value = cycle;
     }
 
-    (program.uniforms.iTime as { value: number }).value = timeValue;
+    (program.uniforms.iTime as { value: number }).value = elapsedTime;
     renderer.render({ scene: mesh });
+  };
+
+  const start = () => {
+    if (raf || contextLost || !isVisible || !tabVisible || prefersReducedMotion) return;
+    lastFrameTime = 0;
     raf = requestAnimationFrame(loop);
   };
-  raf = requestAnimationFrame(loop);
+
+  const stop = () => {
+    if (!raf) return;
+    cancelAnimationFrame(raf);
+    raf = 0;
+  };
+
+  const handleContextLost = (e: Event) => {
+    e.preventDefault();
+    contextLost = true;
+    stop();
+  };
+
+  const handleContextRestored = () => {
+    contextLost = false;
+    start();
+  };
+
+  canvas.addEventListener('webglcontextlost', handleContextLost);
+  canvas.addEventListener('webglcontextrestored', handleContextRestored);
+
+  const io = new IntersectionObserver(
+    entries => {
+      isVisible = entries.some(entry => entry.isIntersecting);
+      if (isVisible) start();
+      else stop();
+    },
+    { threshold: 0 }
+  );
+  io.observe(container);
+
+  const handleVisibilityChange = () => {
+    tabVisible = document.visibilityState !== 'hidden';
+    if (tabVisible) start();
+    else stop();
+  };
+  document.addEventListener('visibilitychange', handleVisibilityChange);
+
+  if (!prefersReducedMotion) start();
 
   cleanup = () => {
-    cancelAnimationFrame(raf);
+    stop();
     ro.disconnect();
-    if (props.mouseInteractive && containerRef.value) {
-      containerRef.value.removeEventListener('mousemove', handleMouseMove);
+    io.disconnect();
+    document.removeEventListener('visibilitychange', handleVisibilityChange);
+    canvas.removeEventListener('webglcontextlost', handleContextLost);
+    canvas.removeEventListener('webglcontextrestored', handleContextRestored);
+    if (props.mouseInteractive) {
+      container.removeEventListener('mousemove', handleMouseMove);
     }
     try {
-      containerRef.value?.removeChild(canvas);
+      container.removeChild(canvas);
     } catch {}
+    gl.getExtension('WEBGL_lose_context')?.loseContext();
   };
 };
 

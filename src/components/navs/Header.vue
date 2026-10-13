@@ -16,7 +16,9 @@ const LANGUAGES = [
   { code: 'zh-CN', label: '简体中文' }
 ] as const;
 
-const NAV_LINKS = computed(() => [{ label: t('nav.docs'), to: '/get-started/index', match: '/get-started' }] as const);
+const NAV_LINKS = computed(
+  () => [{ label: t('nav.docs'), to: '/get-started/introduction', match: '/get-started' }] as const
+);
 
 const route = useRoute();
 const stars = useStars();
@@ -28,6 +30,7 @@ const prefsOpen = ref(false);
 
 const linksEl = ref<HTMLElement | null>(null);
 const highlightEl = ref<HTMLElement | null>(null);
+
 let prefsCloseTimer: ReturnType<typeof setTimeout> | null = null;
 
 // ── stars ─────────────────────────────────────────────────────────────────────
@@ -204,7 +207,6 @@ onUnmounted(() => {
             <span class="ln-navbar-search-text">{{ $t('nav.search') }}</span>
             <kbd class="ln-navbar-kbd">/</kbd>
           </button>
-
           <div class="ln-navbar-prefs-wrapper" @mouseenter="handlePrefsEnter" @mouseleave="handlePrefsLeave">
             <button
               type="button"

@@ -52,9 +52,11 @@ Please review the [Contribution Guide](https://github.com/DavidHDev/vue-bits/blo
 
 ## Contributors
 
-<a href="https://github.com/davidhdev/vue-bits/graphs/contributors">
+<!-- <a href="https://github.com/davidhdev/vue-bits/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=davidhdev/vue-bits" />
-</a>
+</a> -->
+
+![Contributors](https://contrib-circles.vercel.app/DavidHDev/vue-bits?padding=1&rmax=60&transparent=true)
 
 ## Maintainers
 

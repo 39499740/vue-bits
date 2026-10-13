@@ -45,7 +45,7 @@ onBeforeUnmount(() => io?.disconnect());
         <nav class="ln-footer-nav">
           <div class="ln-footer-col">
             <span class="ln-footer-col-title">{{ $t('footer.product') }}</span>
-            <RouterLink to="/get-started/index" class="ln-footer-link">{{ $t('footer.docs') }}</RouterLink>
+            <RouterLink to="/get-started/introduction" class="ln-footer-link">{{ $t('footer.docs') }}</RouterLink>
             <a href="https://www.jsrepo.com/" target="_blank" rel="noopener noreferrer" class="ln-footer-link">
               {{ $t('footer.cli') }}
             </a>
@@ -75,8 +75,8 @@ onBeforeUnmount(() => io?.disconnect());
               </a>
             </template>
             <template #author>
-              <a href="https://x.com/davidhdev" target="_blank" rel="noopener noreferrer" class="ln-footer-creator">
-                davidhdev
+              <a href="https://x.com/davidhaz" target="_blank" rel="noopener noreferrer" class="ln-footer-creator">
+                davidhaz
               </a>
             </template>
           </i18n-t>

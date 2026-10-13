@@ -50,7 +50,7 @@ onUnmounted(() => document.removeEventListener('keydown', onKey));
 
 <template>
   <div class="docs-app">
-    <Navbar :show-docs="true" @hamburger="toggle" />
+    <Navbar :show-docs="true" :drawer-open="drawerOpen" @hamburger="toggle" />
 
     <!-- Mobile drawer backdrop -->
     <div class="docs-drawer-backdrop" :data-open="drawerOpen" role="presentation" @click="close" />
@@ -67,7 +67,7 @@ onUnmounted(() => document.removeEventListener('keydown', onKey));
       :aria-hidden="!drawerOpen"
       :inert="!drawerOpen || undefined"
     >
-      <Sidebar @navigate="close" />
+      <Sidebar variant="drawer" @navigate="close" />
     </div>
 
     <!-- Main content -->
@@ -88,25 +88,15 @@ onUnmounted(() => document.removeEventListener('keydown', onKey));
 </template>
 
 <style scoped>
-/* ─── Docs drawer sidebar override ────────────────────────────────────────── */
-.docs-drawer .sidebar {
-  position: static;
-  padding: 0;
-  margin-left: 0;
-  max-width: none;
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
 .docs-content {
+  grid-column: 2;
   min-width: 0;
   flex: 1;
 }
 
 @media only screen and (max-width: 967px) {
   .docs-content {
-    padding: 6em 1.25em 5.5em;
+    padding: 4em 0.65em 5em;
   }
 }
 </style>

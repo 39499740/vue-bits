@@ -25,7 +25,19 @@
     "description": "Highly customizable animated components & backgrounds that drop into your project and instantly make it stand out",
     "browseComponents": "Browse Components",
     "resetToDefaults": "Reset to defaults",
-    "editHint": "Drag or click values to edit"
+    "editHint": "Every value is editable",
+    "newCategory": "New Category",
+    "microInteractions": "MICRO-INTERACTIONS",
+    "starOnGithub": "Star on GitHub",
+    "componentCount": "{count}+ components",
+    "freeForever": "Free forever",
+    "presetsLabel": "Presets",
+    "presets": {
+      "Mint": "Mint",
+      "Aurora": "Aurora",
+      "Ember": "Ember",
+      "Ice": "Ice"
+    }
   },
   "features": {
     "title": "What's inside",
@@ -36,7 +48,7 @@
       },
       "organized": {
         "title": "Well Organized",
-        "desc": "Four clear categories so you're not scrolling through a wall of unrelated stuff."
+        "desc": "Five clear categories so you're not scrolling through a wall of unrelated stuff."
       },
       "tech": {
         "title": "TypeScript + Tailwind",
@@ -58,7 +70,16 @@
   "quickStart": {
     "title": "Get started in seconds",
     "copyCommand": "Copy command",
-    "hint": "Use {installer1} or {installer2} — components land in your codebase, ready to use, instantly."
+    "hint": "Use {installer1} or {installer2} — components land in your codebase, ready to use, instantly.",
+    "subtitle": "One command drops the component's source straight into your project. Choose jsrepo or shadcn, pick your package manager, and you're set.",
+    "installationGuide": "Installation guide",
+    "worksWith": "Works with Vite, Nuxt, Astro and Vitesse.",
+    "copyStep": "Copy: {step}",
+    "steps": {
+      "add": "Add the component",
+      "import": "Import it",
+      "render": "Render it"
+    }
   },
   "cta": {
     "headline": "Stop building from scratch.",
@@ -75,7 +96,7 @@
     "reactBits": "React Bits",
     "svelteBits": "Svelte Bits",
     "attribution": "A Vue port of {reactBits} by {author}",
-    "author": "davidhdev",
+    "author": "davidhaz",
     "copyright": "© {year} Vue Bits"
   },
   "favorites": {
@@ -97,7 +118,9 @@
     "textAnimations": "Text Animations",
     "animations": "Animations",
     "components": "Components",
-    "backgrounds": "Backgrounds"
+    "backgrounds": "Backgrounds",
+    "micro": "Micro",
+    "label": "Category"
   },
   "search": {
     "placeholder": "Search components, categories, or keywords...",
@@ -111,7 +134,10 @@
   },
   "sidebar": {
     "new": "New",
-    "updated": "Updated"
+    "updated": "Updated",
+    "filterPlaceholder": "Filter {count} components...",
+    "filterLabel": "Filter sidebar navigation",
+    "noResults": "No matching pages"
   },
   "componentList": {
     "allComponents": "All Components",
@@ -170,7 +196,30 @@
     "promptInstructions": "### Integration Instructions",
     "promptStep1": "1. Copy the component source into the appropriate directory in the project.",
     "promptStep2": "2. Import and render the component using the usage example above as a starting point.",
-    "promptStep3": "3. Adjust props as needed for the specific use case."
+    "promptStep3": "3. Adjust props as needed for the specific use case.",
+    "property": "Property",
+    "properties": "Properties",
+    "package": "required package",
+    "packages": "required packages",
+    "copy": "Copy",
+    "copyInstallCommand": "Copy install command",
+    "installCommandCopied": "Install command copied",
+    "sectionsLabel": "Component example sections",
+    "copyShareLink": "Copy share link",
+    "copyForAI": "Copy for AI",
+    "moreActions": "More actions",
+    "openInChatGPT": "Open in ChatGPT",
+    "openInClaude": "Open in Claude",
+    "openInV0": "Open in v0",
+    "copyUsage": "Copy usage example",
+    "copySource": "Copy component source",
+    "toastShareLinkCopied": "Share link copied",
+    "toastNothingToCopy": "Nothing to copy for this component",
+    "toastPromptCopied": "Prompt copied — paste into any AI assistant",
+    "toastUsageCopied": "Usage example copied",
+    "toastSourceCopied": "Component source copied",
+    "toastInstallCopied": "Install command copied",
+    "toastCopyFailed": "Could not copy to clipboard"
   },
   "components": {
     "Animations.AnimatedContent": "Wrapper that animates any children on scroll or mount with configurable direction, distance, duration, easing and disappear options.",

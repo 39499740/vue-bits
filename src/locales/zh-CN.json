@@ -25,7 +25,19 @@
     "description": "高度可定制的动画组件与背景效果，一键集成到你的项目，让网站瞬间脱颖而出",
     "browseComponents": "浏览组件",
     "resetToDefaults": "重置为默认值",
-    "editHint": "拖动或点击数值进行编辑"
+    "editHint": "每个数值都可编辑",
+    "newCategory": "新分类",
+    "microInteractions": "微交互",
+    "starOnGithub": "在 GitHub 上 Star",
+    "componentCount": "{count}+ 个组件",
+    "freeForever": "永久免费",
+    "presetsLabel": "预设",
+    "presets": {
+      "Mint": "薄荷",
+      "Aurora": "极光",
+      "Ember": "余烬",
+      "Ice": "冰蓝"
+    }
   },
   "features": {
     "title": "有什么",
@@ -36,7 +48,7 @@
       },
       "organized": {
         "title": "清晰分类",
-        "desc": "四大分类一目了然，再也不用在一大堆无关内容中翻找。"
+        "desc": "五大分类一目了然，再也不用在一大堆无关内容中翻找。"
       },
       "tech": {
         "title": "TypeScript + Tailwind",
@@ -58,7 +70,16 @@
   "quickStart": {
     "title": "数秒内开始使用",
     "copyCommand": "复制命令",
-    "hint": "使用 {installer1} 或 {installer2} — 组件直接放入你的代码库，立即可用。"
+    "hint": "使用 {installer1} 或 {installer2} — 组件直接放入你的代码库，立即可用。",
+    "subtitle": "一条命令即可把组件源码直接放入你的项目。选择 jsrepo 或 shadcn，挑好包管理器，一切就绪。",
+    "installationGuide": "安装指南",
+    "worksWith": "支持 Vite、Nuxt、Astro 与 Vitesse。",
+    "copyStep": "复制：{step}",
+    "steps": {
+      "add": "添加组件",
+      "import": "导入组件",
+      "render": "渲染组件"
+    }
   },
   "cta": {
     "headline": "别再从头造轮子了。",
@@ -75,7 +96,7 @@
     "reactBits": "React Bits",
     "svelteBits": "Svelte Bits",
     "attribution": "Vue 移植自 {reactBits}，作者 {author}",
-    "author": "davidhdev",
+    "author": "davidhaz",
     "copyright": "© {year} Vue Bits"
   },
   "favorites": {
@@ -97,7 +118,9 @@
     "textAnimations": "文字动画",
     "animations": "动画效果",
     "components": "组件",
-    "backgrounds": "背景效果"
+    "backgrounds": "背景效果",
+    "micro": "微交互",
+    "label": "分类"
   },
   "search": {
     "placeholder": "搜索组件、分类或关键词...",
@@ -111,7 +134,10 @@
   },
   "sidebar": {
     "new": "新增",
-    "updated": "已更新"
+    "updated": "已更新",
+    "filterPlaceholder": "筛选 {count} 个组件...",
+    "filterLabel": "筛选侧边栏导航",
+    "noResults": "没有匹配的页面"
   },
   "componentList": {
     "allComponents": "所有组件",
@@ -170,7 +196,30 @@
     "promptInstructions": "### 集成说明",
     "promptStep1": "1. 将组件源码复制到项目中适当的目录。",
     "promptStep2": "2. 以上述使用示例为起点，导入并渲染组件。",
-    "promptStep3": "3. 根据需要调整 props 以适配具体使用场景。"
+    "promptStep3": "3. 根据需要调整 props 以适配具体使用场景。",
+    "property": "属性",
+    "properties": "个属性",
+    "package": "个依赖包",
+    "packages": "个依赖包",
+    "copy": "复制",
+    "copyInstallCommand": "复制安装命令",
+    "installCommandCopied": "安装命令已复制",
+    "sectionsLabel": "组件示例分区",
+    "copyShareLink": "复制分享链接",
+    "copyForAI": "复制给 AI",
+    "moreActions": "更多操作",
+    "openInChatGPT": "在 ChatGPT 中打开",
+    "openInClaude": "在 Claude 中打开",
+    "openInV0": "在 v0 中打开",
+    "copyUsage": "复制用法示例",
+    "copySource": "复制组件源码",
+    "toastShareLinkCopied": "分享链接已复制",
+    "toastNothingToCopy": "此组件没有可复制的内容",
+    "toastPromptCopied": "Prompt 已复制 — 粘贴到任意 AI 助手中",
+    "toastUsageCopied": "用法示例已复制",
+    "toastSourceCopied": "组件源码已复制",
+    "toastInstallCopied": "安装命令已复制",
+    "toastCopyFailed": "无法复制到剪贴板"
   },
   "components": {
     "Animations.AnimatedContent": "一个包装器，在滚动或挂载时对子元素进行动画，支持可配置的方向、距离、时长、缓动和消失选项。",

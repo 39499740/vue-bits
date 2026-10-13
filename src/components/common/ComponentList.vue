@@ -7,6 +7,7 @@ import gsap from 'gsap';
 import { useToast } from 'primevue/usetoast';
 import { computed, onBeforeUnmount, onMounted, ref, watch, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
 import LazyCardMedia from './LazyCardMedia.vue';
 import PreviewSelect from './PreviewSelect.vue';
 
@@ -122,6 +123,7 @@ const categoryOptions = computed(() => [
     .map(([value, label]) => ({ label, value }))
 ]);
 
+const route = useRoute();
 const search = ref('');
 const selectedCategory = ref(ALL_CATEGORIES);
 
@@ -159,6 +161,35 @@ const filtered = computed(() => {
 });
 
 const controlsDisabled = computed(() => items.value.length === 0);
+
+function findMatchingCategory(input: string | undefined): string | null {
+  if (!input) return null;
+  const normalizedInput = slug(input);
+  if (normalizedInput === 'get-started') return null;
+
+  const match = categoryOptions.value.find(
+    option =>
+      option.value !== ALL_CATEGORIES &&
+      (option.value === input || slug(option.value) === normalizedInput || slug(option.label) === normalizedInput)
+  );
+
+  return match ? match.value : null;
+}
+
+const hasCategoryInUrl = computed(() => {
+  const fromQuery = findMatchingCategory(route.query.category as string);
+  const fromParam = findMatchingCategory(route.params.category as string);
+  return Boolean(fromQuery || fromParam);
+});
+
+watch(
+  [() => route.query.category, () => route.params.category, categoryOptions],
+  ([queryCat, paramCat]) => {
+    const matchedCat = findMatchingCategory(queryCat as string) || findMatchingCategory(paramCat as string);
+    selectedCategory.value = matchedCat ?? ALL_CATEGORIES;
+  },
+  { immediate: true }
+);
 
 // ── debounced search for clear button ─────────────────────────────────────────
 const debouncedSearch = ref(search.value);
@@ -249,6 +280,7 @@ function toggleFavorite(key: string, componentKey: string) {
 
         <!-- Category select -->
         <PreviewSelect
+          v-if="!hasCategoryInUrl"
           v-model="selectedCategory"
           :title="$t('componentList.category')"
           :options="categoryOptions"
@@ -257,7 +289,7 @@ function toggleFavorite(key: string, componentKey: string) {
         />
 
         <!-- Clear button -->
-        <div ref="clearSlotRef" class="clear-slot" :class="{ show: showClear }">
+        <div v-if="!hasCategoryInUrl" ref="clearSlotRef" class="clear-slot" :class="{ show: showClear }">
           <button
             ref="clearBtnRef"
             type="button"

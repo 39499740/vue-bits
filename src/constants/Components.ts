@@ -28,7 +28,15 @@ const animations = {
   'pixel-trail': () => import('../demo/Animations/PixelTrailDemo.vue'),
   'orbit-images': () => import('../demo/Animations/OrbitImagesDemo.vue'),
   'magic-rings': () => import('../demo/Animations/MagicRingsDemo.vue'),
-  strands: () => import('../demo/Animations/StrandsDemo.vue')
+  strands: () => import('../demo/Animations/StrandsDemo.vue'),
+  'cursor-grid': () => import('../demo/Animations/CursorGridDemo.vue'),
+  'elastic-mesh': () => import('../demo/Animations/ElasticMeshDemo.vue'),
+  'halftone-reveal': () => import('../demo/Animations/HalftoneRevealDemo.vue'),
+  'ripple-distortion': () => import('../demo/Animations/RippleDistortionDemo.vue'),
+  'scroll-expand': () => import('../demo/Animations/ScrollExpandDemo.vue'),
+  'swarm-cursor': () => import('../demo/Animations/SwarmCursorDemo.vue'),
+  'glow-cursor': () => import('../demo/Animations/GlowCursorDemo.vue'),
+  'pixel-swap': () => import('../demo/Animations/PixelSwapDemo.vue')
 };
 
 const textAnimations = {
@@ -54,7 +62,16 @@ const textAnimations = {
   'scroll-velocity': () => import('../demo/TextAnimations/ScrollVelocityDemo.vue'),
   'text-type': () => import('../demo/TextAnimations/TextTypeDemo.vue'),
   'variable-proximity': () => import('../demo/TextAnimations/VariableProximityDemo.vue'),
-  shuffle: () => import('../demo/TextAnimations/ShuffleDemo.vue')
+  shuffle: () => import('../demo/TextAnimations/ShuffleDemo.vue'),
+  'depth-text': () => import('../demo/TextAnimations/DepthTextDemo.vue'),
+  'echo-text': () => import('../demo/TextAnimations/EchoTextDemo.vue'),
+  'fold-text': () => import('../demo/TextAnimations/FoldTextDemo.vue'),
+  'masked-heading': () => import('../demo/TextAnimations/MaskedHeadingDemo.vue'),
+  'particle-text': () => import('../demo/TextAnimations/ParticleTextDemo.vue'),
+  'split-flap-text': () => import('../demo/TextAnimations/SplitFlapTextDemo.vue'),
+  'stroke-text': () => import('../demo/TextAnimations/StrokeTextDemo.vue'),
+  'text-loop': () => import('../demo/TextAnimations/TextLoopDemo.vue'),
+  'warp-text': () => import('../demo/TextAnimations/WarpTextDemo.vue')
 };
 
 const components = {
@@ -62,16 +79,19 @@ const components = {
   masonry: () => import('../demo/Components/MasonryDemo.vue'),
   'glass-surface': () => import('../demo/Components/GlassSurfaceDemo.vue'),
   'magic-bento': () => import('../demo/Components/MagicBentoDemo.vue'),
+  'option-wheel': () => import('../demo/Components/OptionWheelDemo.vue'),
   'profile-card': () => import('../demo/Components/ProfileCardDemo.vue'),
   'reflective-card': () => import('../demo/Components/ReflectiveCardDemo.vue'),
   dock: () => import('../demo/Components/DockDemo.vue'),
   'card-nav': () => import('../demo/Components/CardNavDemo.vue'),
   'pill-nav': () => import('../demo/Components/PillNavDemo.vue'),
   'gooey-nav': () => import('../demo/Components/GooeyNavDemo.vue'),
+  'curved-input': () => import('../demo/Components/CurvedInputDemo.vue'),
   'pixel-card': () => import('../demo/Components/PixelCardDemo.vue'),
   carousel: () => import('../demo/Components/CarouselDemo.vue'),
   'spotlight-card': () => import('../demo/Components/SpotlightCardDemo.vue'),
   'circular-gallery': () => import('../demo/Components/CircularGalleryDemo.vue'),
+  'specular-button': () => import('../demo/Components/SpecularButtonDemo.vue'),
   'flying-posters': () => import('../demo/Components/FlyingPostersDemo.vue'),
   folder: () => import('../demo/Components/FolderDemo.vue'),
   'card-swap': () => import('../demo/Components/CardSwapDemo.vue'),
@@ -91,7 +111,13 @@ const components = {
   'staggered-menu': () => import('../demo/Components/StaggeredMenuDemo.vue'),
   'infinite-menu': () => import('../demo/Components/InfiniteMenuDemo.vue'),
   'border-glow': () => import('../demo/Components/BorderGlowDemo.vue'),
-  'model-viewer': () => import('../demo/Components/ModelViewerDemo.vue')
+  'model-viewer': () => import('../demo/Components/ModelViewerDemo.vue'),
+  'line-sidebar': () => import('../demo/Components/LineSidebarDemo.vue'),
+  'accordion-gallery': () => import('../demo/Components/AccordionGalleryDemo.vue'),
+  'depth-carousel': () => import('../demo/Components/DepthCarouselDemo.vue'),
+  'drift-wall': () => import('../demo/Components/DriftWallDemo.vue'),
+  'morph-slider': () => import('../demo/Components/MorphSliderDemo.vue'),
+  'infinite-spiral': () => import('../demo/Components/InfiniteSpiralDemo.vue')
 };
 
 const backgrounds = {
@@ -139,14 +165,67 @@ const backgrounds = {
   'side-rays': () => import('../demo/Backgrounds/SideRaysDemo.vue'),
   ferrofluid: () => import('../demo/Backgrounds/FerrofluidDemo.vue'),
   lightfall: () => import('../demo/Backgrounds/LightfallDemo.vue'),
-  'plasma-wave': () => import('../demo/Backgrounds/PlasmaWaveDemo.vue')
+  'plasma-wave': () => import('../demo/Backgrounds/PlasmaWaveDemo.vue'),
+  'acid-squares': () => import('../demo/Backgrounds/AcidSquaresDemo.vue'),
+  'gradient-waves': () => import('../demo/Backgrounds/GradientWavesDemo.vue'),
+  'light-tunnel': () => import('../demo/Backgrounds/LightTunnelDemo.vue'),
+  'molten-metal': () => import('../demo/Backgrounds/MoltenMetalDemo.vue'),
+  'sliced-waves': () => import('../demo/Backgrounds/SlicedWavesDemo.vue'),
+  topography: () => import('../demo/Backgrounds/TopographyDemo.vue'),
+  'web-threads': () => import('../demo/Backgrounds/WebThreadsDemo.vue'),
+  'crt-warp': () => import('../demo/Backgrounds/CRTWarpDemo.vue'),
+  scanner: () => import('../demo/Backgrounds/ScannerDemo.vue'),
+  'aero-shards': () => import('../demo/Backgrounds/AeroShardsDemo.vue'),
+  'ghost-fibers': () => import('../demo/Backgrounds/GhostFibersDemo.vue'),
+  'shape-waves': () => import('../demo/Backgrounds/ShapeWavesDemo.vue')
 };
 
+const micro = {
+  'squish-switch': () => import('../demo/Micro/SquishSwitchDemo.vue'),
+  'hold-button': () => import('../demo/Micro/HoldButtonDemo.vue'),
+  'peek-rating': () => import('../demo/Micro/PeekRatingDemo.vue'),
+  'spring-check': () => import('../demo/Micro/SpringCheckDemo.vue'),
+  'pulse-heart': () => import('../demo/Micro/PulseHeartDemo.vue'),
+  'rubber-segment': () => import('../demo/Micro/RubberSegmentDemo.vue'),
+  'slide-commit': () => import('../demo/Micro/SlideCommitDemo.vue'),
+  'warm-tooltip': () => import('../demo/Micro/WarmTooltipDemo.vue'),
+  'fuse-button': () => import('../demo/Micro/FuseButtonDemo.vue'),
+  'scrub-field': () => import('../demo/Micro/ScrubFieldDemo.vue'),
+  'lattice-loader': () => import('../demo/Micro/LatticeLoaderDemo.vue'),
+  'dodge-field': () => import('../demo/Micro/DodgeFieldDemo.vue'),
+  'code-slots': () => import('../demo/Micro/CodeSlotsDemo.vue'),
+  'wake-slider': () => import('../demo/Micro/WakeSliderDemo.vue'),
+  'comet-dial': () => import('../demo/Micro/CometDialDemo.vue'),
+  'jelly-radio': () => import('../demo/Micro/JellyRadioDemo.vue'),
+  'swipe-row': () => import('../demo/Micro/SwipeRowDemo.vue'),
+  'glide-select': () => import('../demo/Micro/GlideSelectDemo.vue'),
+  'status-mark': () => import('../demo/Micro/StatusMarkDemo.vue'),
+  'call-chip': () => import('../demo/Micro/CallChipDemo.vue'),
+  'bell-toggle': () => import('../demo/Micro/BellToggleDemo.vue'),
+  'sling-button': () => import('../demo/Micro/SlingButtonDemo.vue'),
+  'swipe-toast': () => import('../demo/Micro/SwipeToastDemo.vue'),
+  'prompt-bar': () => import('../demo/Micro/PromptBarDemo.vue'),
+  'slosh-gauge': () => import('../demo/Micro/SloshGaugeDemo.vue'),
+  'voice-pill': () => import('../demo/Micro/VoicePillDemo.vue'),
+  'thought-line': () => import('../demo/Micro/ThoughtLineDemo.vue'),
+  'refine-frame': () => import('../demo/Micro/RefineFrameDemo.vue'),
+  'folder-float': () => import('../demo/Micro/FolderFloatDemo.vue'),
+  'branched-menu': () => import('../demo/Micro/BranchedMenuDemo.vue'),
+  'flip-card': () => import('../demo/Micro/FlipCardDemo.vue'),
+  'tear-ticket': () => import('../demo/Micro/TearTicketDemo.vue'),
+  'paper-crumple': () => import('../demo/Micro/PaperCrumpleDemo.vue')
+};
+
+
 export const componentMap = {
+  introduction: () => import('../docs/Introduction.vue'),
+  installation: () => import('../docs/Installation.vue'),
+  mcp: () => import('../docs/McpServer.vue'),
   index: () => import('../pages/IndexPage.vue'),
 
   ...animations,
   ...textAnimations,
+  ...micro,
   ...components,
   ...backgrounds
 };

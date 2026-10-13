@@ -1,173 +1,90 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+import { getSavedComponents } from '@/utils/favorites';
+import {
+  DashboardSquare01Icon,
+  Image01Icon,
+  Motion01Icon,
+  MousePointerClickIcon,
+  PuzzleIcon,
+  TextFontIcon
+} from '@hugeicons/core-free-icons';
+import { HugeiconsIcon } from '@hugeicons/vue';
+import { Search } from 'lucide-vue-next';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
-import { getSavedComponents } from '@/utils/favorites';
-import { CATEGORIES, NEW, UPDATED } from '../../constants/Categories';
+import { CATEGORIES, NEW, TOTAL_COMPONENTS, UPDATED, slug } from '../../constants/Categories';
+import { componentMap } from '../../constants/Components';
+import { componentMetadata } from '../../constants/Information';
+
+withDefaults(defineProps<{ variant?: 'desktop' | 'drawer' }>(), { variant: 'desktop' });
 
 const emit = defineEmits<{ navigate: [] }>();
-const { t } = useI18n();
+
+const { t, te } = useI18n();
 
 const route = useRoute();
 const router = useRouter();
 
-const slug = (str: string) => str.replace(/\s+/g, '-').toLowerCase();
-
 const activeCategory = computed(() => (route.params.category as string) ?? '');
 const activeSub = computed(() => (route.params.subcategory as string) ?? '');
 
+// ── i18n helpers ─────────────────────────────────────────────────────────────
 const CATEGORY_I18N_KEY: Record<string, string> = {
   'Get Started': 'categories.getStarted',
   'Text Animations': 'categories.textAnimations',
   Animations: 'categories.animations',
+  Micro: 'categories.micro',
   Components: 'categories.components',
   Backgrounds: 'categories.backgrounds'
 };
 
 function catName(cat: string): string {
   const key = CATEGORY_I18N_KEY[cat];
-  return key ? t(key) : cat;
+  return key && te(key) ? t(key) : cat;
 }
 
-const SUB_CATEGORY_I18N_KEY: Record<string, string> = {
-  Index: 'categories.getStarted',
-  'ASCII Text': 'componentNames.ASCII_Text',
-  'Blur Text': 'componentNames.Blur_Text',
-  'Circular Text': 'componentNames.Circular_Text',
-  'Count Up': 'componentNames.Count_Up',
-  'Curved Loop': 'componentNames.Curved_Loop',
-  'Decrypted Text': 'componentNames.Decrypted_Text',
-  'Falling Text': 'componentNames.Falling_Text',
-  'Fuzzy Text': 'componentNames.Fuzzy_Text',
-  'Glitch Text': 'componentNames.Glitch_Text',
-  'Gradient Text': 'componentNames.Gradient_Text',
-  'Rotating Text': 'componentNames.Rotating_Text',
-  'Scramble Text': 'componentNames.Scramble_Text',
-  'Scroll Float': 'componentNames.Scroll_Float',
-  'Scroll Reveal': 'componentNames.Scroll_Reveal',
-  'Scroll Velocity': 'componentNames.Scroll_Velocity',
-  'Shiny Text': 'componentNames.Shiny_Text',
-  Shuffle: 'componentNames.Shuffle',
-  'Split Text': 'componentNames.Split_Text',
-  'Text Cursor': 'componentNames.Text_Cursor',
-  'Text Pressure': 'componentNames.Text_Pressure',
-  'Text Type': 'componentNames.Text_Type',
-  'True Focus': 'componentNames.True_Focus',
-  'Variable Proximity': 'componentNames.Variable_Proximity',
-  'Animated Content': 'componentNames.Animated_Content',
-  Antigravity: 'componentNames.Antigravity',
-  'Blob Cursor': 'componentNames.Blob_Cursor',
-  'Click Spark': 'componentNames.Click_Spark',
-  Crosshair: 'componentNames.Crosshair',
-  Cubes: 'componentNames.Cubes',
-  'Electric Border': 'componentNames.Electric_Border',
-  'Fade Content': 'componentNames.Fade_Content',
-  'Ghost Cursor': 'componentNames.Ghost_Cursor',
-  'Glare Hover': 'componentNames.Glare_Hover',
-  'Gradual Blur': 'componentNames.Gradual_Blur',
-  'Image Trail': 'componentNames.Image_Trail',
-  'Laser Flow': 'componentNames.Laser_Flow',
-  'Logo Loop': 'componentNames.Logo_Loop',
-  'Magic Rings': 'componentNames.Magic_Rings',
-  Magnet: 'componentNames.Magnet',
-  'Magnet Lines': 'componentNames.Magnet_Lines',
-  'Meta Balls': 'componentNames.Meta_Balls',
-  'Metallic Paint': 'componentNames.Metallic_Paint',
-  Noise: 'componentNames.Noise',
-  'Orbit Images': 'componentNames.Orbit_Images',
-  'Pixel Trail': 'componentNames.Pixel_Trail',
-  'Pixel Transition': 'componentNames.Pixel_Transition',
-  Ribbons: 'componentNames.Ribbons',
-  'Shape Blur': 'componentNames.Shape_Blur',
-  'Splash Cursor': 'componentNames.Splash_Cursor',
-  'Star Border': 'componentNames.Star_Border',
-  'Sticker Peel': 'componentNames.Sticker_Peel',
-  Strands: 'componentNames.Strands',
-  'Target Cursor': 'componentNames.Target_Cursor',
-  'Animated List': 'componentNames.Animated_List',
-  'Border Glow': 'componentNames.Border_Glow',
-  'Bounce Cards': 'componentNames.Bounce_Cards',
-  'Bubble Menu': 'componentNames.Bubble_Menu',
-  'Card Nav': 'componentNames.Card_Nav',
-  'Card Swap': 'componentNames.Card_Swap',
-  Carousel: 'componentNames.Carousel',
-  'Chroma Grid': 'componentNames.Chroma_Grid',
-  'Circular Gallery': 'componentNames.Circular_Gallery',
-  Counter: 'componentNames.Counter',
-  'Decay Card': 'componentNames.Decay_Card',
-  Dock: 'componentNames.Dock',
-  'Dome Gallery': 'componentNames.Dome_Gallery',
-  'Elastic Slider': 'componentNames.Elastic_Slider',
-  'Flowing Menu': 'componentNames.Flowing_Menu',
-  'Flying Posters': 'componentNames.Flying_Posters',
-  Folder: 'componentNames.Folder',
-  'Glass Icons': 'componentNames.Glass_Icons',
-  'Glass Surface': 'componentNames.Glass_Surface',
-  'Gooey Nav': 'componentNames.Gooey_Nav',
-  'Infinite Menu': 'componentNames.Infinite_Menu',
-  'Magic Bento': 'componentNames.Magic_Bento',
-  Masonry: 'componentNames.Masonry',
-  'Model Viewer': 'componentNames.Model_Viewer',
-  'Pill Nav': 'componentNames.Pill_Nav',
-  'Pixel Card': 'componentNames.Pixel_Card',
-  'Profile Card': 'componentNames.Profile_Card',
-  'Reflective Card': 'componentNames.Reflective_Card',
-  'Scroll Stack': 'componentNames.Scroll_Stack',
-  'Spotlight Card': 'componentNames.Spotlight_Card',
-  Stack: 'componentNames.Stack',
-  'Staggered Menu': 'componentNames.Staggered_Menu',
-  Stepper: 'componentNames.Stepper',
-  'Tilted Card': 'componentNames.Tilted_Card',
-  Aurora: 'componentNames.Aurora',
-  Balatro: 'componentNames.Balatro',
-  Ballpit: 'componentNames.Ballpit',
-  Beams: 'componentNames.Beams',
-  'Color Bends': 'componentNames.Color_Bends',
-  'Dark Veil': 'componentNames.Dark_Veil',
-  Dither: 'componentNames.Dither',
-  'Dot Field': 'componentNames.Dot_Field',
-  'Dot Grid': 'componentNames.Dot_Grid',
-  'Faulty Terminal': 'componentNames.Faulty_Terminal',
-  Ferrofluid: 'componentNames.Ferrofluid',
-  'Floating Lines': 'componentNames.Floating_Lines',
-  Galaxy: 'componentNames.Galaxy',
-  'Gradient Blinds': 'componentNames.Gradient_Blinds',
-  Grainient: 'componentNames.Grainient',
-  'Grid Distortion': 'componentNames.Grid_Distortion',
-  'Grid Motion': 'componentNames.Grid_Motion',
-  'Grid Scan': 'componentNames.Grid_Scan',
-  Hyperspeed: 'componentNames.Hyperspeed',
-  Iridescence: 'componentNames.Iridescence',
-  'Letter Glitch': 'componentNames.Letter_Glitch',
-  'Light Pillar': 'componentNames.Light_Pillar',
-  'Light Rays': 'componentNames.Light_Rays',
-  Lightfall: 'componentNames.Lightfall',
-  Lightning: 'componentNames.Lightning',
-  'Line Waves': 'componentNames.Line_Waves',
-  'Liquid Chrome': 'componentNames.Liquid_Chrome',
-  'Liquid Ether': 'componentNames.Liquid_Ether',
-  Orb: 'componentNames.Orb',
-  Particles: 'componentNames.Particles',
-  'Pixel Blast': 'componentNames.Pixel_Blast',
-  'Pixel Snow': 'componentNames.Pixel_Snow',
-  Plasma: 'componentNames.Plasma',
-  'Plasma Wave': 'componentNames.Plasma_Wave',
-  Prism: 'componentNames.Prism',
-  'Prismatic Burst': 'componentNames.Prismatic_Burst',
-  Radar: 'componentNames.Radar',
-  'Ripple Grid': 'componentNames.Ripple_Grid',
-  'Shape Grid': 'componentNames.Shape_Grid',
-  'Side Rays': 'componentNames.Side_Rays',
-  Silk: 'componentNames.Silk',
-  'Soft Aurora': 'componentNames.Soft_Aurora',
-  Threads: 'componentNames.Threads',
-  Waves: 'componentNames.Waves',
-  'Evil Eye': 'componentNames.Evil_Eye'
-};
-
 function subName(sub: string): string {
-  const key = SUB_CATEGORY_I18N_KEY[sub];
-  return key ? t(key) : sub;
+  const key = `componentNames.${sub.replace(/\s+/g, '_')}`;
+  return te(key) ? t(key) : sub;
+}
+
+// ── category picker ──────────────────────────────────────────────────────────
+const PICKER = [
+  { key: 'all', label: 'All', icon: DashboardSquare01Icon },
+  { key: 'text-animations', label: 'Text Animations', icon: TextFontIcon },
+  { key: 'components', label: 'Components', icon: PuzzleIcon },
+  { key: 'micro', label: 'Micro', icon: MousePointerClickIcon },
+  { key: 'animations', label: 'Animations', icon: Motion01Icon },
+  { key: 'backgrounds', label: 'Backgrounds', icon: Image01Icon }
+] as const;
+
+const pickerActiveKey = computed(() => {
+  const queryCategory = route.query.category as string | undefined;
+  if (queryCategory) {
+    const found = CATEGORIES.find(cat => cat.name === queryCategory);
+    return found ? slug(found.name) : 'all';
+  }
+
+  const found = CATEGORIES.find(cat => cat.name !== 'Get Started' && slug(cat.name) === activeCategory.value);
+  return found ? slug(found.name) : 'all';
+});
+
+const pickerIndex = computed(() =>
+  Math.max(
+    0,
+    PICKER.findIndex(option => option.key === pickerActiveKey.value)
+  )
+);
+
+function pickCategory(key: string) {
+  if (key === 'all') {
+    router.push('/get-started/index');
+    return;
+  }
+  if (key === pickerActiveKey.value) return;
+  const category = CATEGORIES.find(cat => slug(cat.name) === key);
+  if (category) router.push({ path: '/get-started/index', query: { category: category.name } });
 }
 
 function isActive(cat: string, sub: string) {
@@ -184,70 +101,655 @@ const onStorage = (e: StorageEvent) => {
   if (!e.key || e.key === 'savedComponents') loadSaved();
 };
 
+// ── filter ────────────────────────────────────────────────────────────────────
+const filterQuery = ref('');
+const normalizedQuery = computed(() => filterQuery.value.trim().toLowerCase());
+
+const filteredCategories = computed(() => {
+  const q = normalizedQuery.value;
+  if (!q) return CATEGORIES;
+  return CATEGORIES.map(cat => ({
+    ...cat,
+    subcategories: cat.name.toLowerCase().includes(q)
+      ? cat.subcategories
+      : cat.subcategories.filter(
+          s => s.toLowerCase().includes(q) || subName(s).toLowerCase().includes(q) || catName(cat.name).toLowerCase().includes(q)
+        )
+  }));
+});
+
+const showFavorites = computed(() => !normalizedQuery.value || 'favorites saved'.includes(normalizedQuery.value));
+
+const hasResults = computed(
+  () => showFavorites.value || filteredCategories.value.some(cat => cat.subcategories.length > 0)
+);
+
+// ── item refs (scroll-into-view + active line) ──────────────────────────────────
+const itemRefs = new Map<string, HTMLElement>();
+function setItemRef(el: Element | null, path: string) {
+  if (el) itemRefs.set(path, el as HTMLElement);
+  else itemRefs.delete(path);
+}
+
+// ── scroll shell (edge fades) ────────────────────────────────────────────────
+const scrollRef = ref<HTMLElement | null>(null);
+const isAtTop = ref(true);
+const isAtBottom = ref(false);
+
+function updateScrollEdges() {
+  const el = scrollRef.value;
+  if (!el) return;
+  const remaining = el.scrollHeight - el.scrollTop - el.clientHeight;
+  isAtTop.value = el.scrollTop <= 2;
+  isAtBottom.value = remaining <= 8;
+}
+
+// ── active indicator line ────────────────────────────────────────────────────
+const activeLineTop = ref(0);
+const activeLineVisible = ref(false);
+const activeCategoryEntry = computed(() =>
+  CATEGORIES.find(cat => cat.subcategories.some(sub => isActive(cat.name, sub)))
+);
+
+function updateActiveLine() {
+  nextTick(() => {
+    const path = `/${activeCategory.value}/${activeSub.value}`;
+    const el = itemRefs.get(path);
+    const stack = el?.closest('.sidebar-stack') as HTMLElement | null;
+    if (!el || !stack) {
+      activeLineVisible.value = false;
+      return;
+    }
+    const stackRect = stack.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+    activeLineTop.value = elRect.top - stackRect.top + (elRect.height - 18) / 2;
+    activeLineVisible.value = true;
+  });
+}
+
+function scrollActiveIntoView() {
+  nextTick(() => {
+    const path = `/${activeCategory.value}/${activeSub.value}`;
+    const el = itemRefs.get(path);
+    const container = scrollRef.value;
+    if (!el || !container) return;
+
+    const containerRect = container.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+    const OFFSET = 32;
+    const outOfView = elRect.top < containerRect.top + OFFSET || elRect.bottom > containerRect.bottom - OFFSET;
+
+    if (outOfView) {
+      container.scrollTo({
+        top: container.scrollTop + (elRect.top - containerRect.top) - OFFSET,
+        behavior: 'smooth'
+      });
+    }
+  });
+}
+
+// ── hover preview ─────────────────────────────────────────────────────────────
+const previewMediaAllowed = ref(false);
+function computePreviewAllowed() {
+  if (typeof window === 'undefined') return;
+  const precisePointer = window.matchMedia('(min-width: 968px) and (hover: hover) and (pointer: fine)').matches;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  previewMediaAllowed.value = precisePointer && !reducedMotion;
+}
+
+interface PreviewState {
+  key: string;
+  title: string;
+  videoBase: string;
+}
+
+const preview = ref<PreviewState | null>(null);
+const previewX = ref(0);
+const previewY = ref(0);
+const PREVIEW_WIDTH = 280;
+const PREVIEW_HEIGHT = 190;
+let showTimer: ReturnType<typeof setTimeout> | undefined;
+let hideTimer: ReturnType<typeof setTimeout> | undefined;
+
+function updatePreviewPosition(event: MouseEvent) {
+  const target = event.currentTarget as HTMLElement | null;
+  const sidebarRect = target?.closest('.sidebar')?.getBoundingClientRect();
+  const itemRect = target?.getBoundingClientRect();
+  const pointerY = event.clientY ?? (itemRect ? itemRect.top + itemRect.height / 2 : 100);
+  const sidebarRight = sidebarRect?.right ?? (itemRect ? itemRect.right + 20 : 260);
+
+  previewX.value = Math.min(window.innerWidth - PREVIEW_WIDTH - 16, sidebarRight + 16);
+  const minY = sidebarRect?.top ?? 76;
+  const maxY = Math.max(minY, window.innerHeight - PREVIEW_HEIGHT - 16);
+  previewY.value = Math.max(minY, Math.min(maxY, pointerY - PREVIEW_HEIGHT / 2));
+}
+
+function handlePreviewEnter(categoryName: string, subName: string, event: MouseEvent) {
+  if (!previewMediaAllowed.value || categoryName === 'Get Started') return;
+
+  const key = `${categoryName.replace(/\s+/g, '')}/${subName.replace(/\s+/g, '')}`;
+  const meta = componentMetadata[key];
+  if (!meta?.videoUrl) return;
+
+  clearTimeout(showTimer);
+  clearTimeout(hideTimer);
+  updatePreviewPosition(event);
+
+  const videoBase = meta.videoUrl.replace(/\.(webm|mp4)$/i, '');
+  const delay = preview.value ? 70 : 260;
+  showTimer = setTimeout(() => {
+    preview.value = { key, title: subName, videoBase };
+  }, delay);
+}
+
+function handlePreviewMove(event: MouseEvent) {
+  if (previewMediaAllowed.value) updatePreviewPosition(event);
+}
+
+function handlePreviewLeave() {
+  clearTimeout(showTimer);
+  clearTimeout(hideTimer);
+  hideTimer = setTimeout(() => (preview.value = null), 90);
+}
+
+// ── navigation (with prefetch + view-transition when available) ─────────────
+async function navigate(path: string, subName?: string) {
+  emit('navigate');
+  if (route.path === path) return;
+
+  if (subName) {
+    const loader = componentMap[slug(subName) as keyof typeof componentMap];
+    loader?.();
+  }
+
+  const doNav = async () => {
+    await router.push(path);
+    window.scrollTo(0, 0);
+  };
+
+  const supportsViewTransition = typeof document !== 'undefined' && 'startViewTransition' in document;
+  const reducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (supportsViewTransition && !reducedMotion) {
+    (document as Document & { startViewTransition: (cb: () => void | Promise<void>) => void }).startViewTransition(
+      doNav
+    );
+  } else {
+    await doNav();
+  }
+}
+
+watch([activeCategory, activeSub], () => {
+  scrollActiveIntoView();
+  updateActiveLine();
+});
+
 onMounted(() => {
   loadSaved();
   window.addEventListener('favorites:updated', loadSaved);
   window.addEventListener('storage', onStorage);
-});
-onBeforeUnmount(() => {
-  window.removeEventListener('favorites:updated', loadSaved);
-  window.removeEventListener('storage', onStorage);
-});
 
-// ── navigation ────────────────────────────────────────────────────────────────
-async function navigate(path: string) {
-  emit('navigate');
-  if (route.path === path) return;
-  await router.push(path);
-  window.scrollTo(0, 0);
-}
+  computePreviewAllowed();
+  const pointerQuery = window.matchMedia('(min-width: 968px) and (hover: hover) and (pointer: fine)');
+  const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+  pointerQuery.addEventListener?.('change', computePreviewAllowed);
+  motionQuery.addEventListener?.('change', computePreviewAllowed);
+
+  scrollRef.value?.addEventListener('scroll', updateScrollEdges, { passive: true });
+  updateScrollEdges();
+  window.addEventListener('resize', updateActiveLine);
+
+  nextTick(() => {
+    scrollActiveIntoView();
+    updateActiveLine();
+  });
+
+  onBeforeUnmount(() => {
+    window.removeEventListener('favorites:updated', loadSaved);
+    window.removeEventListener('storage', onStorage);
+    pointerQuery.removeEventListener?.('change', computePreviewAllowed);
+    motionQuery.removeEventListener?.('change', computePreviewAllowed);
+    scrollRef.value?.removeEventListener('scroll', updateScrollEdges);
+    window.removeEventListener('resize', updateActiveLine);
+    clearTimeout(showTimer);
+    clearTimeout(hideTimer);
+  });
+});
 </script>
 
 <template>
-  <aside class="sidebar" :aria-label="$t('favorites.docsNav')">
-    <div class="sidebar-inner">
-      <div class="sidebar-cat-list">
-        <div v-for="cat in CATEGORIES" :key="cat.name">
-          <p :id="`sidebar-${slug(cat.name)}`" class="category-name">{{ catName(cat.name) }}</p>
-          <div class="sidebar-stack" role="list" :aria-labelledby="`sidebar-${slug(cat.name)}`">
-            <a
-              v-for="sub in cat.subcategories"
-              :key="sub"
-              class="sidebar-item"
-              :class="{
-                active: isActive(cat.name, sub)
-              }"
-              :href="`/${slug(cat.name)}/${slug(sub)}`"
-              :aria-current="isActive(cat.name, sub) ? 'page' : undefined"
-              role="listitem"
-              @click.prevent="navigate(`/${slug(cat.name)}/${slug(sub)}`)"
-            >
-              <span>{{ subName(sub) }}</span>
-              <svg
-                v-if="savedSet.has(`${cat.name}/${sub}`)"
-                class="favorite-sidebar-icon"
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-              >
-                <path
-                  d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"
-                />
-              </svg>
-              <span v-if="(NEW as string[]).includes(sub)" class="new-tag">{{ $t('sidebar.new') }}</span>
-              <span v-else-if="(UPDATED as string[]).includes(sub)" class="updated-tag">
-                {{ $t('sidebar.updated') }}
-              </span>
-            </a>
+  <aside class="sidebar" :class="{ 'sidebar--drawer': variant === 'drawer' }" :aria-label="t('favorites.docsNav')">
+    <div
+      v-if="variant === 'desktop'"
+      class="sidebar-picker"
+      role="tablist"
+      :aria-label="t('categories.label')"
+      :style="{ '--sp-i': pickerIndex, '--sp-n': PICKER.length }"
+    >
+      <span class="sidebar-picker__pill" aria-hidden="true" />
+      <button
+        v-for="(option, i) in PICKER"
+        :key="option.key"
+        type="button"
+        role="tab"
+        :aria-selected="i === pickerIndex"
+        :aria-label="catName(option.label)"
+        :title="catName(option.label)"
+        class="sidebar-picker__item"
+        :class="{ 'is-active': i === pickerIndex }"
+        @click="pickCategory(option.key)"
+      >
+        <HugeiconsIcon :icon="option.icon" :size="18" :stroke-width="1.8" aria-hidden="true" />
+      </button>
+    </div>
+
+    <label class="sidebar-filter">
+      <Search :size="13" aria-hidden="true" />
+      <input
+        v-model="filterQuery"
+        type="text"
+        :placeholder="t('sidebar.filterPlaceholder', { count: TOTAL_COMPONENTS, total: TOTAL_COMPONENTS })"
+        :aria-label="t('sidebar.filterLabel')"
+      />
+    </label>
+
+    <div class="sidebar-scroll-shell" :class="{ 'is-at-top': isAtTop, 'is-at-bottom': isAtBottom }">
+      <div ref="scrollRef" class="sidebar-scroll">
+        <div class="sidebar-inner">
+          <div class="sidebar-cat-list">
+            <div v-for="cat in filteredCategories" :key="cat.name">
+              <template v-if="cat.subcategories.length > 0 || (cat.name === 'Get Started' && showFavorites)">
+                <p :id="`sidebar-${slug(cat.name)}`" class="category-name">{{ catName(cat.name) }}</p>
+                <div class="sidebar-stack" role="list" :aria-labelledby="`sidebar-${slug(cat.name)}`">
+                  <span
+                    v-if="activeLineVisible && activeCategoryEntry?.name === cat.name"
+                    class="sidebar-active-line"
+                    :style="{ transform: `translateY(${activeLineTop}px)`, opacity: 1 }"
+                  />
+
+                  <a
+                    v-for="sub in cat.subcategories"
+                    :key="sub"
+                    :ref="el => setItemRef(el as Element | null, `/${slug(cat.name)}/${slug(sub)}`)"
+                    class="sidebar-item"
+                    :class="{ active: isActive(cat.name, sub) }"
+                    :href="`/${slug(cat.name)}/${slug(sub)}`"
+                    :aria-current="isActive(cat.name, sub) ? 'page' : undefined"
+                    role="listitem"
+                    @click.prevent="navigate(`/${slug(cat.name)}/${slug(sub)}`, sub)"
+                    @mouseenter="event => handlePreviewEnter(cat.name, sub, event)"
+                    @mousemove="handlePreviewMove"
+                    @mouseleave="handlePreviewLeave"
+                    @focus="event => handlePreviewEnter(cat.name, sub, event as unknown as MouseEvent)"
+                    @blur="handlePreviewLeave"
+                  >
+                    <span>{{ subName(sub) }}</span>
+                    <svg
+                      v-if="savedSet.has(`${cat.name}/${sub}`)"
+                      class="favorite-sidebar-icon"
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"
+                      />
+                    </svg>
+                    <span v-if="(NEW as string[]).includes(sub)" class="new-tag">{{ $t('sidebar.new') }}</span>
+                    <span v-else-if="(UPDATED as string[]).includes(sub)" class="updated-tag">{{ $t('sidebar.updated') }}</span>
+                  </a>
+
+                  <a
+                    v-if="cat.name === 'Get Started' && showFavorites"
+                    :ref="el => setItemRef(el as Element | null, '/favorites')"
+                    class="sidebar-item"
+                    :class="{ active: route.path === '/favorites' }"
+                    href="/favorites"
+                    :aria-current="route.path === '/favorites' ? 'page' : undefined"
+                    role="listitem"
+                    @click.prevent="navigate('/favorites')"
+                  >
+                    <span>{{ $t('nav.favorites') }}</span>
+                  </a>
+                </div>
+              </template>
+            </div>
+
+            <p v-if="!hasResults" class="sidebar-filter-empty">{{ $t('sidebar.noResults') }}</p>
           </div>
         </div>
       </div>
     </div>
+
+    <Teleport to="body">
+      <div
+        v-if="preview && previewMediaAllowed"
+        class="sidebar-hover-preview"
+        :style="{ transform: `translate(${previewX}px, ${previewY}px)` }"
+        aria-hidden="true"
+      >
+        <div class="sidebar-hover-preview-media">
+          <video :key="preview.key" autoplay loop muted playsinline preload="metadata">
+            <source :src="`${preview.videoBase}.webm`" type="video/webm" />
+            <source :src="`${preview.videoBase}.mp4`" type="video/mp4" />
+          </video>
+        </div>
+        <div class="sidebar-hover-preview-caption">{{ preview.title }}</div>
+      </div>
+    </Teleport>
   </aside>
 </template>
+
+<style scoped>
+.sidebar {
+  position: fixed;
+  top: 76px;
+  left: 16px;
+  height: calc(100vh - 92px);
+  width: 240px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 14px 0 0;
+  gap: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  background: rgba(17, 20, 14, 0.78);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.14);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  isolation: isolate;
+}
+
+.sidebar-picker {
+  position: relative;
+  flex: 0 0 auto;
+  display: flex;
+  gap: 2px;
+  margin: 0 14px;
+  padding: 3px;
+  border: 1px solid var(--border-primary);
+  border-radius: 11px;
+  background: var(--bg-body);
+}
+
+.sidebar-picker__pill {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: calc((100% - 6px) / var(--sp-n));
+  height: calc(100% - 6px);
+  border-radius: 8px;
+  background: var(--bg-hover);
+  transform: translateX(calc(var(--sp-i) * 100%));
+  transition: transform var(--transition-base);
+}
+
+.sidebar-picker__item {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.sidebar-picker__item:hover {
+  color: var(--text-primary);
+}
+
+.sidebar-picker__item.is-active {
+  color: var(--color-accent);
+}
+
+.sidebar-filter {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 34px;
+  margin: 0 14px;
+  padding: 0 10px;
+  border: 1px solid var(--border-primary);
+  border-radius: 9px;
+  background: var(--bg-body);
+  color: var(--text-muted);
+  transition:
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.sidebar-filter:focus-within {
+  border-color: color-mix(in srgb, var(--color-accent-muted) 45%, transparent);
+  color: var(--text-primary);
+}
+
+.sidebar-filter input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 12px;
+}
+
+.sidebar-filter input::placeholder {
+  color: var(--text-muted);
+}
+
+.sidebar-scroll-shell {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+.sidebar-scroll-shell::before,
+.sidebar-scroll-shell::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  left: 0;
+  z-index: 3;
+  height: 24px;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 180ms ease;
+}
+
+.sidebar-scroll-shell::before {
+  top: 0;
+  background: linear-gradient(to bottom, var(--bg-body), transparent);
+}
+
+.sidebar-scroll-shell::after {
+  bottom: 0;
+  background: linear-gradient(to top, var(--bg-body), transparent);
+}
+
+.sidebar-scroll-shell.is-at-top::before,
+.sidebar-scroll-shell.is-at-bottom::after {
+  opacity: 0;
+}
+
+.sidebar-scroll {
+  height: 100%;
+  overflow-y: auto;
+  padding: 0 14px 6em;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.sidebar-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.sidebar-stack {
+  position: relative;
+}
+
+.sidebar-filter-empty {
+  padding: 20px 0;
+  color: var(--text-muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+/* ── Hover preview panel ─────────────────────────────────────────────────── */
+.sidebar-hover-preview {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 40;
+  width: 280px;
+  padding: 5px;
+  overflow: hidden;
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-lg);
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-dropdown);
+  pointer-events: none;
+  transition: transform 0.16s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sidebar-hover-preview-media {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: calc(var(--radius-lg) - 4px);
+  background: var(--bg-body);
+  filter: grayscale(100%);
+}
+
+.sidebar-hover-preview-media video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sidebar-hover-preview-caption {
+  padding: 9px 6px 5px;
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 550;
+}
+
+@media only screen and (max-width: 967px) {
+  .sidebar-hover-preview {
+    display: none;
+  }
+
+  .sidebar:not(.sidebar--drawer) {
+    display: none;
+  }
+}
+
+/* ── Drawer variant ───────────────────────────────────────────────────────── */
+.sidebar--drawer {
+  position: static;
+  left: auto;
+  top: auto;
+  padding: 14px 0 0 0;
+  margin: 0;
+  max-width: none;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.sidebar--drawer .sidebar-scroll-shell {
+  flex: none;
+  overflow: visible;
+}
+
+.sidebar--drawer .sidebar-scroll {
+  height: auto;
+  overflow: visible;
+  padding-bottom: 0;
+}
+
+.sidebar--drawer .sidebar-scroll-shell::before,
+.sidebar--drawer .sidebar-scroll-shell::after {
+  display: none;
+}
+
+.sidebar--drawer .sidebar-active-line {
+  display: none;
+}
+
+.sidebar--drawer .sidebar-stack {
+  gap: 2px;
+  padding-left: 0;
+  border-left: 0;
+}
+
+.sidebar--drawer .sidebar-cat-list {
+  gap: 14px;
+}
+
+.sidebar--drawer .category-name {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.sidebar--drawer .sidebar-filter {
+  height: 36px;
+  padding: 0 11px;
+  margin: 0 14px 10px;
+}
+
+.sidebar--drawer .sidebar-filter input {
+  font-size: 13px;
+}
+
+.sidebar--drawer .sidebar-item {
+  font-size: 13px;
+  color: var(--text-muted);
+  border-radius: 7px;
+  padding: 6px 9px;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-base),
+    transform var(--transition-base);
+}
+
+.sidebar--drawer .sidebar-item:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--text-primary);
+}
+
+.sidebar--drawer .sidebar-item.active {
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.sidebar--drawer .new-tag,
+.sidebar--drawer .updated-tag,
+.sidebar--drawer .favorite-sidebar-icon {
+  display: none;
+}
+</style>

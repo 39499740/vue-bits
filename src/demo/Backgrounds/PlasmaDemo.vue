@@ -139,6 +139,30 @@ const props: PropRow[] = [
     type: 'boolean',
     default: 'false',
     description: 'Whether the plasma responds to mouse movement.'
+  },
+  {
+    name: 'renderScale',
+    type: 'number',
+    default: '0.55',
+    description: 'Resolution multiplier for the WebGL buffer (0.1-1). Lower values render fewer pixels.'
+  },
+  {
+    name: 'maxDpr',
+    type: 'number',
+    default: '1.5',
+    description: 'Upper limit for the device pixel ratio used by the renderer.'
+  },
+  {
+    name: 'targetFps',
+    type: 'number',
+    default: '60',
+    description: 'Frame rate cap for the animation. Lower values reduce GPU usage.'
+  },
+  {
+    name: 'iterations',
+    type: 'number',
+    default: '60',
+    description: 'Number of raymarching steps per pixel (1-60). Lower values are cheaper but less detailed.'
   }
 ];
 </script>
