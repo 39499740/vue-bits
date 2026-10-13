@@ -53,8 +53,9 @@
 </template>
 
 <script setup lang="ts">
-import { inject } from 'vue';
+import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
 
 export type PropRow = {
   name: string;
@@ -66,11 +67,23 @@ export type PropRow = {
 defineProps<{ data: PropRow[] }>();
 
 const { t, te } = useI18n();
-const componentSlug = inject('componentSlug', '');
+const route = useRoute();
+
+// TabsLayout injects the exact component name. As a safety net for pages that
+// forget to pass `component-name`, derive it from the route slug instead of
+// silently rendering the English source text.
+const injectedSlug = inject('componentSlug', '');
+const routeSlug = computed(() => {
+  const sub = (route.params.subcategory as string) ?? '';
+  return sub
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join('');
+});
+const componentSlug = computed(() => injectedSlug || routeSlug.value);
 
 function translatedDesc(row: PropRow): string {
-  if (!componentSlug) return row.description;
-  const key = `propDescs.${componentSlug}.${row.name}`;
-  return te(key) ? t(key) : row.description;
+  const key = componentSlug.value ? `propDescs.${componentSlug.value}.${row.name}` : '';
+  return key && te(key) ? t(key) : row.description;
 }
 </script>

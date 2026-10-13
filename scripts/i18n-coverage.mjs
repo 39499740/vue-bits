@@ -155,7 +155,22 @@ if (optionShadowed.length) {
 }
 console.log(list(propMissing, `propDescs.* (${src.propRows.length} prop rows)`));
 
-console.log(`\n[3] code-referenced keys`);
+console.log(`\n[3] runtime reachability`);
+{
+  const undeclared = src.demos.filter(d => !d.declared);
+  const reachable = src.demos.filter(
+    d => !propMissing.some(k => k.startsWith(`propDescs.${d.slug}.`))
+  );
+  console.log(`  demos scanned ${src.demos.length} · propDescs reachable ${reachable.length}`);
+  if (undeclared.length) {
+    console.log(`  ! demos that do not declare component-name (rely on the route fallback): ${undeclared.length}`);
+    for (const d of undeclared.slice(0, LIMIT)) console.log(`      - ${d.slug}  (${d.file})`);
+  } else {
+    console.log('  ✓ every demo declares its component name');
+  }
+}
+
+console.log(`\n[4] code-referenced keys`);
 console.log(`  ${referencedKeys.size} static $t()/t() keys found in src/`);
 console.log(list(unresolvedKeys, 'referenced in code but absent from BOTH locales'));
 if (src.unresolved.length) {

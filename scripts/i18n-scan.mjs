@@ -179,11 +179,17 @@ export function scanSource(root) {
   const controls = new Map(); // title -> file
   const options = new Map(); // label -> file
   const propRows = []; // { component, prop, en }
+  const demos = []; // { file, slug, declared }
   const unresolved = [];
 
   for (const file of demoFiles) {
     const src = readFileSync(file, 'utf8');
-    const component = (src.match(/component-name="([^"]+)"/) || [])[1] || basename(file).replace(/Demo\.vue$/, '');
+    // demos pass the name as either `component-name` or camelCase `componentName`;
+    // when neither is declared the runtime falls back to the route slug, which is
+    // reported so a missing declaration is visible instead of silently untranslated
+    const declared = (src.match(/\bcomponent-name="([^"]+)"/) || [])[1] || (src.match(/\bcomponentName="([^"]+)"/) || [])[1] || '';
+    const component = declared || basename(file).replace(/Demo\.vue$/, '');
+    demos.push({ file, slug: component, declared: Boolean(declared) });
 
     for (const m of src.matchAll(/<Preview[A-Za-z]*\b[^>]*?\btitle="([^"]+)"/g)) {
       if (!controls.has(m[1])) controls.set(m[1], file);
@@ -232,6 +238,7 @@ export function scanSource(root) {
     controls: [...controls.keys()],
     optionLabels: [...options.keys()],
     propRows,
+    demos,
     unresolved
   };
 }
