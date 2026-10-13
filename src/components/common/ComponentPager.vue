@@ -32,7 +32,7 @@ const next = computed(() => (index.value >= 0 ? routes[index.value + 1] : undefi
     <span v-else class="component-pager-empty component-pager-previous">
       <span>
         <span class="component-pager-label">Collection</span>
-        <span class="component-pager-name">Start of library</span>
+        <span class="component-pager-name">{{ $t('componentPager.start') }}</span>
       </span>
     </span>
 
@@ -46,7 +46,7 @@ const next = computed(() => (index.value >= 0 ? routes[index.value + 1] : undefi
     <span v-else class="component-pager-empty component-pager-next">
       <span>
         <span class="component-pager-label">Collection</span>
-        <span class="component-pager-name">End of library</span>
+        <span class="component-pager-name">{{ $t('componentPager.end') }}</span>
       </span>
     </span>
   </nav>

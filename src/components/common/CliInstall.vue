@@ -81,7 +81,7 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onOutside));
             <ChevronDown :size="14" />
           </button>
           <div v-if="menuOpen" class="cli-menu" role="menu">
-            <p class="cli-menu-label">Package manager</p>
+            <p class="cli-menu-label">{{ $t('cli.packageManager') }}</p>
             <button
               v-for="m in PKG_MANAGERS"
               :key="m"

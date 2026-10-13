@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { FiEdit3, FiPackage, FiShield } from 'vue-icons-plus/fi';
 
 import './Ownership.css';
+
+const { t } = useI18n();
 
 type TokenKind = 'kw' | 'comp' | 'attr' | 'str' | 'num' | 'punc';
 type Token = [string, TokenKind];
@@ -15,23 +18,23 @@ interface TreeRow {
   active?: boolean;
 }
 
-const POINTS = [
+const POINTS = computed(() => [
   {
     icon: FiPackage,
-    title: 'No wrapper library',
-    desc: 'Components use ogl, GSAP and friends directly, no vue-bits dependency.'
+    title: t('own.points.noWrapper.title'),
+    desc: t('own.points.noWrapper.desc')
   },
   {
     icon: FiEdit3,
-    title: 'Edit anything',
-    desc: 'It is your source now. Change the shader, the props, the styling, all of it.'
+    title: t('own.points.editAnything.title'),
+    desc: t('own.points.editAnything.desc')
   },
   {
     icon: FiShield,
-    title: 'No lock-in',
-    desc: 'If this site vanished tomorrow, everything you already added keeps working.'
+    title: t('own.points.noLockIn.title'),
+    desc: t('own.points.noLockIn.desc')
   }
-];
+]);
 
 const TREE: TreeRow[] = [
   { depth: 0, name: 'your-project', kind: 'dir' },
@@ -135,7 +138,7 @@ onUnmounted(() => {
           <div
             class="ln-own-window"
             role="img"
-            aria-label="An editor showing Aurora.vue added to your own project as plain, editable source that imports ogl directly"
+            :aria-label="t('own.visualAria')"
           >
             <div class="ln-own-tabs">
               <span class="ln-own-tab is-active">Aurora.vue</span>
@@ -165,16 +168,16 @@ onUnmounted(() => {
             </div>
 
             <div class="ln-own-status">
-              <span class="ln-own-status-item">uses ogl directly</span>
-              <span class="ln-own-status-item">no vue-bits package</span>
+              <span class="ln-own-status-item">{{ t('own.statusOgl') }}</span>
+              <span class="ln-own-status-item">{{ t('own.statusNoPackage') }}</span>
             </div>
           </div>
         </div>
 
         <div class="ln-own-copy">
-          <h2 class="ln-own-title">The code is yours</h2>
+          <h2 class="ln-own-title">{{ t('own.title') }}</h2>
           <p class="ln-own-subtitle">
-            Vue Bits isn't a package you depend on. Each component lands in your repo as source you own.
+            {{ t('own.subtitle') }}
           </p>
 
           <ul class="ln-own-points">

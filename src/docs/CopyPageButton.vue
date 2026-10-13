@@ -85,12 +85,12 @@ onBeforeUnmount(() => {
     <button
       type="button"
       class="inline-flex items-center gap-2 pl-3.5 pr-3 h-9 rounded-l-[10px] text-sm font-medium whitespace-nowrap text-(--text-primary) bg-(--bg-elevated) border border-(--border-primary) border-r-0 cursor-pointer transition-colors duration-200 hover:bg-white/7"
-      aria-label="Copy this page as Markdown"
+      :aria-label="$t('docs.copyPage.aria')"
       @click="handleCopy"
     >
       <Check v-if="copied" :size="15" aria-hidden="true" />
       <Copy v-else :size="15" aria-hidden="true" />
-      <span>{{ copied ? 'Copied' : 'Copy as Markdown' }}</span>
+      <span>{{ copied ? $t('docs.copyPage.copied') : $t('docs.copyPage.button') }}</span>
     </button>
 
     <button
@@ -98,7 +98,7 @@ onBeforeUnmount(() => {
       class="inline-flex items-center justify-center w-8 h-9 rounded-r-[10px] text-(--text-muted) bg-(--bg-elevated) border border-(--border-primary) cursor-pointer transition-colors duration-200 hover:bg-white/7 hover:text-(--text-primary)"
       aria-haspopup="menu"
       :aria-expanded="menuOpen"
-      aria-label="More AI actions"
+      :aria-label="$t('docs.copyPage.moreAria')"
       @click="toggleMenu"
     >
       <ChevronDown :size="14" aria-hidden="true" />

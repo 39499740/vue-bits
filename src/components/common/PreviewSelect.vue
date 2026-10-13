@@ -96,7 +96,7 @@ const normalized = computed<NormalizedOption[]>(() =>
     } else if (typeof o === 'object' && o !== null) {
       return {
         ...o,
-        label: o.label != null ? o.label : translatedLabel(String(o.value))
+        label: translatedLabel(o.label != null ? String(o.label) : String(o.value))
       };
     }
     return { value: String(o), label: String(o) };

@@ -6,7 +6,7 @@ const stars = useStars();
 
 <template>
   <div class="ln-feat-stars">
-    <span class="ln-feat-stars-label">GitHub Stars</span>
+    <span class="ln-feat-stars-label">{{ $t('features.starsLabel') }}</span>
     <span class="ln-feat-stars-count">{{ stars }}</span>
     <div class="ln-feat-stars-chart">
       <svg viewBox="0 0 200 50" fill="none" preserveAspectRatio="none">

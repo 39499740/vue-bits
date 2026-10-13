@@ -2,22 +2,19 @@
 /**
  * i18n coverage checker for vue-bits (en ↔ zh-CN).
  *
- * Reports four things:
- *   1. key parity      — every en leaf key must exist in zh-CN
- *   2. real translation — zh values that are byte-identical to en (candidates for "not translated")
- *   3. dynamic lookups  — keys built at runtime from source strings:
- *        controls.<Title_With_Underscores>      (Preview* `title="..."`)
- *        propDescs.<Component>.<propName>       (each demo's PropsTable rows)
- *        componentNames.<Name_With_Underscores> (every Category subcategory)
- *        categories.<camelCase>                 (every Category)
- *        optionLabels.<Label>                   (PreviewSelect string options)
- *   4. extras          — keys present in zh-CN but not in en (dead keys)
+ * Reports:
+ *   1. locale key parity   — every en leaf key must exist in zh-CN
+ *   2. real translation    — zh values still byte-identical to en
+ *   3. dynamic lookups     — runtime-composed keys, via scripts/i18n-scan.mjs
+ *   4. dead keys           — present in zh-CN but not en
+ *   5. code references     — $t()/t() keys used in code but absent from both locales
  *
  * Usage: node scripts/i18n-coverage.mjs [--json] [--limit N]
  */
-import { readFileSync, readdirSync, statSync } from 'node:fs';
-import { join, relative, basename } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { scanSource, walk, underscore, camel, resolveState } from './i18n-scan.mjs';
 
 const ROOT = join(fileURLToPath(new URL('.', import.meta.url)), '..');
 const LOCALES = join(ROOT, 'src/locales');
@@ -31,54 +28,29 @@ const LIMIT = (() => {
 const en = JSON.parse(readFileSync(join(LOCALES, 'en.json'), 'utf8'));
 const zh = JSON.parse(readFileSync(join(LOCALES, 'zh-CN.json'), 'utf8'));
 
-/* ── helpers ──────────────────────────────────────────────────────────────── */
 function flatten(obj, prefix = '') {
   const out = new Map();
   for (const [k, v] of Object.entries(obj)) {
     const key = prefix ? `${prefix}.${k}` : k;
-    if (v && typeof v === 'object' && !Array.isArray(v)) {
-      for (const [kk, vv] of flatten(v, key)) out.set(kk, vv);
-    } else {
-      out.set(key, v);
-    }
+    if (v && typeof v === 'object' && !Array.isArray(v)) for (const [kk, vv] of flatten(v, key)) out.set(kk, vv);
+    else out.set(key, v);
   }
   return out;
 }
 const flatEn = flatten(en);
 const flatZh = flatten(zh);
 
-const has = (map, key) => map.has(key);
-const ctrlKey = title => `controls.${String(title).replace(/\s+/g, '_')}`;
-
-function walk(dir, filter = () => true) {
-  const out = [];
-  for (const entry of readdirSync(dir)) {
-    const p = join(dir, entry);
-    const st = statSync(p);
-    if (st.isDirectory()) out.push(...walk(p, filter));
-    else if (filter(p)) out.push(p);
-  }
-  return out;
-}
-
 /* ── 1/2/4: locale parity ─────────────────────────────────────────────────── */
-const missingInZh = [...flatEn.keys()].filter(k => !has(flatZh, k));
-const extraInZh = [...flatZh.keys()].filter(k => !has(flatEn, k));
+const missingInZh = [...flatEn.keys()].filter(k => !flatZh.has(k));
+const extraInZh = [...flatZh.keys()].filter(k => !flatEn.has(k));
 
-// Values that are translatable sentences but still byte-identical to English.
-// Brand names / identifiers / code-ish values are expected to match.
-const IDENTICAL_OK = /^(?:[\w.@+\-/ ]*)$/;
 function looksTranslatable(key, value) {
   if (typeof value !== 'string') return false;
   const v = value.trim();
-  if (!v || v.length < 2) return false;
-  if (!/[A-Za-z]/.test(v)) return false; // numbers/symbols only
-  if (!/\s/.test(v) && v.length < 12) return false; // single short token = probably a name
+  if (!v || v.length < 2 || !/[A-Za-z]/.test(v)) return false;
+  if (!/\s/.test(v) && v.length < 12) return false; // single short token = a name
   if (key.startsWith('componentNames.') || key.startsWith('optionLabels.')) return false;
-  if (/^[{A-Za-z0-9_ .\-+/]*$/.test(v) && IDENTICAL_OK.test(v) && !/[.!?]/.test(v) && v.split(/\s+/).length <= 2) {
-    // short phrase with no sentence punctuation: usually a proper noun / tech term
-    return false;
-  }
+  if (!/[.!?]/.test(v) && v.split(/\s+/).length <= 2) return false; // proper noun / tech term
   return true;
 }
 const identical = [...flatEn.entries()]
@@ -86,68 +58,30 @@ const identical = [...flatEn.entries()]
   .map(([k, v]) => ({ key: k, value: v }));
 
 /* ── 3: dynamic lookups ───────────────────────────────────────────────────── */
-// categories / subcategories
-const categoriesSrc = readFileSync(join(ROOT, 'src/constants/Categories.ts'), 'utf8');
-const categoryNames = [...categoriesSrc.matchAll(/\bname:\s*'([^']+)'/g)].map(m => m[1]);
-const camel = s => s.charAt(0).toLowerCase() + s.slice(1).replace(/\s+(.)/g, (_, c) => c.toUpperCase());
+const src = scanSource(ROOT);
 
-const categoryMissing = categoryNames.filter(n => !flatZh.has(`categories.${camel(n)}`)).map(n => `categories.${camel(n)}`);
-
-// every subcategory listed inside CATEGORIES[].subcategories
-const subcategories = [];
-for (const block of categoriesSrc.split(/name:\s*'/).slice(1)) {
-  const subBlock = block.match(/subcategories:\s*\[([\s\S]*?)\]/);
-  if (!subBlock) continue;
-  for (const m of subBlock[1].matchAll(/'([^']+)'/g)) subcategories.push(m[1]);
-}
-const componentNameMissing = [...new Set(subcategories)]
-  .filter(s => !flatZh.has(`componentNames.${s.replace(/\s+/g, '_')}`))
-  .map(s => `componentNames.${s.replace(/\s+/g, '_')}`);
-
-// demo files: control titles, prop rows, select options
-const demoFiles = walk(join(ROOT, 'src/demo'), p => p.endsWith('.vue'));
-const controlTitles = new Set();
-const optionLabels = new Set();
-const propRows = []; // {component, prop}
-
-for (const file of demoFiles) {
-  const src = readFileSync(file, 'utf8');
-  const component =
-    (src.match(/component-name="([^"]+)"/) || [])[1] || basename(file).replace(/Demo\.vue$/, '');
-
-  // Preview* title="..." (sliders, switches, inputs, color pickers, selects)
-  for (const m of src.matchAll(/<Preview[A-Za-z]*\b[^>]*?\btitle="([^"]+)"/g)) controlTitles.add(m[1]);
-  // PreviewSelect / PreviewInput option labels
-  for (const m of src.matchAll(/<Preview(?:Select|Input)\b[^>]*?:options="\[([^\]]*)\]"/g)) {
-    for (const o of m[1].matchAll(/'([^']+)'/g)) optionLabels.add(o[1]);
-  }
-  for (const m of src.matchAll(/<PreviewSelect\b[^>]*?:options="\[([^\]]*)\]"/g)) {
-    for (const o of m[1].matchAll(/'([^']+)'/g)) optionLabels.add(o[1]);
-  }
-  // PropRow entries inside the `props` array
-  const propsBlock = src.match(/const props\s*(?::[^=]+)?=\s*\[([\s\S]*?)\n\];/);
-  if (propsBlock) {
-    for (const m of propsBlock[1].matchAll(/name:\s*'([^']+)'/g)) propRows.push({ component, prop: m[1] });
-  }
-}
-
-const controlsMissing = [...controlTitles].filter(t => !flatZh.has(ctrlKey(t))).map(ctrlKey);
-const optionMissing = [...optionLabels].filter(l => !flatZh.has(`optionLabels.${l}`)).map(l => `optionLabels.${l}`);
-const propMissing = propRows.filter(r => !flatZh.has(`propDescs.${r.component}.${r.prop}`)).map(r => `propDescs.${r.component}.${r.prop}`);
-
-const untranslatedControls = [...controlTitles].filter(t => flatZh.has(ctrlKey(t)) && flatZh.get(ctrlKey(t)) === en.controls?.[ctrlKey(t).slice('controls.'.length)]);
-const untranslatedOptions = [...optionLabels].filter(l => flatZh.get(`optionLabels.${l}`) === l);
+const categoryMissing = src.categories.filter(n => !flatZh.has(`categories.${camel(n)}`)).map(n => `categories.${camel(n)}`);
+const componentNameMissing = src.componentNames
+  .filter(n => !flatZh.has(`componentNames.${underscore(n)}`))
+  .map(n => `componentNames.${underscore(n)}`);
+const controlsMissing = src.controls.filter(t => !flatZh.has(`controls.${underscore(t)}`)).map(t => `controls.${underscore(t)}`);
+// optionLabels can additionally be SHADOWED: the key exists only as an internal
+// node because a sibling label contains a dot (e.g. `elastic` under `elastic.out`).
+const optionStates = src.optionLabels.map(l => [l, resolveState(zh, `optionLabels.${l}`).state]);
+const optionMissing = optionStates.filter(([, st]) => st === 'missing').map(([l]) => `optionLabels.${l}`);
+const optionShadowed = optionStates.filter(([, st]) => st === 'shadowed').map(([l]) => `optionLabels.${l}`);
+const propMissing = src.propRows
+  .filter(r => !flatZh.has(`propDescs.${r.component}.${r.prop}`))
+  .map(r => `propDescs.${r.component}.${r.prop}`);
 
 /* ── 5: keys referenced in code that exist in neither locale ───────────────── */
 const VAR_KEY = /(?<![\w$])\$?t\(\s*'([^'\\]+)'/g;
-const referencedKeys = new Map(); // key -> file
+const referencedKeys = new Map();
 for (const file of walk(join(ROOT, 'src'), p => p.endsWith('.vue') || p.endsWith('.ts'))) {
-  const src = readFileSync(file, 'utf8');
-  for (const m of src.matchAll(VAR_KEY)) {
+  for (const m of readFileSync(file, 'utf8').matchAll(VAR_KEY)) {
     if (!referencedKeys.has(m[1])) referencedKeys.set(m[1], relative(ROOT, file));
   }
 }
-// dynamic namespaces referenced as t(`prefix.${...}`) are checked by section 3 instead
 const unresolvedKeys = [...referencedKeys.entries()]
   .filter(([k]) => !flatEn.has(k) && !flatZh.has(k))
   .map(([k, f]) => `${k}  (${f})`);
@@ -163,25 +97,27 @@ const report = {
     extraInZh
   },
   dynamic: {
-    categories: { total: categoryNames.length, missing: categoryMissing },
-    componentNames: { total: new Set(subcategories).size, missing: componentNameMissing },
-    controls: { total: controlTitles.size, missing: controlsMissing, untranslated: untranslatedControls },
-    optionLabels: { total: optionLabels.size, missing: optionMissing, untranslated: untranslatedOptions },
-    propDescs: { total: propRows.length, missing: propMissing }
+    categories: { total: src.categories.length, missing: categoryMissing },
+    componentNames: { total: src.componentNames.length, missing: componentNameMissing },
+    controls: { total: src.controls.length, missing: controlsMissing },
+    optionLabels: { total: src.optionLabels.length, missing: optionMissing, shadowed: optionShadowed },
+    propDescs: { total: src.propRows.length, missing: propMissing }
   },
   code: { referenced: referencedKeys.size, unresolved: unresolvedKeys }
 };
+const dynamicTotal =
+  src.categories.length + src.componentNames.length + src.controls.length + src.optionLabels.length + src.propRows.length;
+const dynamicMissing =
+  categoryMissing.length + componentNameMissing.length + controlsMissing.length + optionMissing.length + propMissing.length;
 report.summary = {
   keyCoverage: report.locale.keyCoverage,
-  dynamicTotal:
-    categoryNames.length + new Set(subcategories).size + controlTitles.size + optionLabels.size + propRows.length,
-  dynamicMissing:
-    categoryMissing.length + componentNameMissing.length + controlsMissing.length + optionMissing.length + propMissing.length
+  dynamicTotal,
+  dynamicMissing,
+  dynamicCoverage: dynamicTotal === 0 ? 100 : +(((dynamicTotal - dynamicMissing) / dynamicTotal) * 100).toFixed(2)
 };
-report.summary.dynamicCoverage =
-  report.summary.dynamicTotal === 0
-    ? 100
-    : +(((report.summary.dynamicTotal - report.summary.dynamicMissing) / report.summary.dynamicTotal) * 100).toFixed(2);
+report.summary.combinedCoverage = +(
+  ((flatEn.size - missingInZh.length + dynamicTotal - dynamicMissing) / (flatEn.size + dynamicTotal)) * 100
+).toFixed(2);
 
 if (AS_JSON) {
   console.log(JSON.stringify(report, null, 2));
@@ -191,7 +127,11 @@ if (AS_JSON) {
 const list = (arr, label) => {
   if (!arr.length) return `  ✓ ${label}: 0`;
   const shown = arr.slice(0, LIMIT);
-  return [`  ✗ ${label}: ${arr.length}`, ...shown.map(x => `      - ${x}`), arr.length > LIMIT ? `      … +${arr.length - LIMIT} more` : '']
+  return [
+    `  ✗ ${label}: ${arr.length}`,
+    ...shown.map(x => `      - ${x}`),
+    arr.length > LIMIT ? `      … +${arr.length - LIMIT} more` : ''
+  ]
     .filter(Boolean)
     .join('\n');
 };
@@ -203,24 +143,28 @@ console.log(list(missingInZh, 'missing in zh-CN'));
 console.log(`  ! identical to English (candidates): ${identical.length}`);
 for (const i of identical.slice(0, LIMIT)) console.log(`      - ${i.key} = ${JSON.stringify(i.value)}`);
 console.log(`  ! extra keys in zh-CN (dead): ${extraInZh.length}`);
-for (const k of extraInZh.slice(0, 10)) console.log(`      - ${k}`);
 
 console.log(`\n[2] dynamic lookups (source-driven)`);
-console.log(list(categoryMissing, `categories.* (${categoryNames.length} categories)`));
-console.log(list(componentNameMissing, `componentNames.* (${new Set(subcategories).size} subcategories)`));
-console.log(list(controlsMissing, `controls.* (${controlTitles.size} control titles)`));
-console.log(list(optionMissing, `optionLabels.* (${optionLabels.size} select options)`));
-console.log(list(propMissing, `propDescs.* (${propRows.length} prop rows)`));
+console.log(list(categoryMissing, `categories.* (${src.categories.length} categories)`));
+console.log(list(componentNameMissing, `componentNames.* (${src.componentNames.length} subcategories)`));
+console.log(list(controlsMissing, `controls.* (${src.controls.length} control titles)`));
+console.log(list(optionMissing, `optionLabels.* (${src.optionLabels.length} select options)`));
+if (optionShadowed.length) {
+  console.log(`  ! shadowed by a dotted sibling key (falls back to English): ${optionShadowed.length}`);
+  for (const k of optionShadowed.slice(0, LIMIT)) console.log(`      - ${k}`);
+}
+console.log(list(propMissing, `propDescs.* (${src.propRows.length} prop rows)`));
 
 console.log(`\n[3] code-referenced keys`);
 console.log(`  ${referencedKeys.size} static $t()/t() keys found in src/`);
 console.log(list(unresolvedKeys, 'referenced in code but absent from BOTH locales'));
+if (src.unresolved.length) {
+  console.log(`  ! heuristic option sources: ${src.unresolved.length}`);
+  for (const u of src.unresolved) console.log(`      - ${u}`);
+}
 
 console.log(`\n──── summary ────`);
 console.log(`key coverage      : ${report.locale.keyCoverage}%`);
-console.log(`dynamic coverage  : ${report.summary.dynamicCoverage}%  (${report.summary.dynamicMissing} missing / ${report.summary.dynamicTotal})`);
-console.log(`combined          : ${(
-  ((report.locale.enLeaves - missingInZh.length + report.summary.dynamicTotal - report.summary.dynamicMissing) /
-    (report.locale.enLeaves + report.summary.dynamicTotal)) *
-  100
-).toFixed(2)}%`);
+console.log(`dynamic coverage  : ${report.summary.dynamicCoverage}%  (${dynamicMissing} missing / ${dynamicTotal})`);
+console.log(`combined          : ${report.summary.combinedCoverage}%`);
+if (optionShadowed.length) console.log(`note              : ${optionShadowed.length} optionLabels fall back to English (key path shadowed by a dotted sibling)`);
