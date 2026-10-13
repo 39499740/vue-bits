@@ -45,68 +45,88 @@ onMounted(() => window.scrollTo(0, 0));
   <section class="mx-auto pb-24 max-w-168.75 docs-page">
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
       <h1 class="m-0 text-4xl md:text-[2.75rem] font-bold leading-[1.04] tracking-tight text-(--text-primary)">
-        Installation
+        {{ $t('docs.installation.title') }}
       </h1>
       <CopyPageButton />
     </div>
 
     <p class="max-w-[60ch] mt-4 mb-5 text-lg leading-relaxed text-(--text-secondary)">
-      Add Vue Bits components two ways - copy the source by hand, or pull them in with a CLI.
+      {{ $t('docs.installation.lead') }}
     </p>
 
-    <h2 class="mt-14 mb-3 text-xl font-semibold text-(--text-primary)">Pick the method</h2>
+    <h2 class="mt-14 mb-3 text-xl font-semibold text-(--text-primary)">
+      {{ $t('docs.installation.pickMethod') }}
+    </h2>
     <MethodSelector
       :methods="[
-        { key: 'manual', label: 'Manual', icon: Copy },
+        { key: 'manual', label: $t('docs.installation.methods.manual'), icon: Copy },
         { key: 'cli', label: 'CLI', icon: TerminalSquare }
       ]"
       :selected="installMode"
-      aria-label="Installation method"
+      :aria-label="$t('docs.installation.methods.manualAria')"
       @select="key => (installMode = key as 'manual' | 'cli')"
     />
 
-    <h2 class="mt-14 mb-3 text-xl font-semibold text-(--text-primary)">Steps</h2>
+    <h2 class="mt-14 mb-3 text-xl font-semibold text-(--text-primary)">
+      {{ $t('docs.installation.stepsHeading') }}
+    </h2>
 
     <template v-if="installMode === 'manual'">
       <p class="text-[15px] leading-relaxed mb-5 text-(--text-muted)">
-        Copy a component's source straight into your project.
-      </p>
-
-      <h3 class="mt-8 mb-2 text-[1.0625rem] font-semibold text-(--text-secondary)">1. Pick a component</h3>
-      <p class="text-[15px] leading-relaxed mb-5 text-(--text-secondary)">
-        Browse the library, open a component you like, and switch to its
-        <span class="font-semibold text-(--color-accent)">Code</span>
-        tab.
-      </p>
-
-      <h3 class="mt-8 mb-2 text-[1.0625rem] font-semibold text-(--text-secondary)">2. Copy the code</h3>
-      <p class="text-[15px] leading-relaxed mb-5 text-(--text-secondary)">
-        Every component ships as a single
-        <span class="font-semibold text-(--color-accent)">.vue</span>
-        file written in TypeScript and styled with Tailwind - copy it into a new file in your project.
+        {{ $t('docs.installation.manual.intro') }}
       </p>
 
       <h3 class="mt-8 mb-2 text-[1.0625rem] font-semibold text-(--text-secondary)">
-        3. Install dependencies &amp; use it
+        {{ $t('docs.installation.manual.step1.title') }}
+      </h3>
+      <i18n-t
+        keypath="docs.installation.manual.step1.body"
+        tag="p"
+        class="text-[15px] leading-relaxed mb-5 text-(--text-secondary)"
+      >
+        <template #tab>
+          <span class="font-semibold text-(--color-accent)">
+            {{ $t('docs.installation.manual.step1.tab') }}
+          </span>
+        </template>
+      </i18n-t>
+
+      <h3 class="mt-8 mb-2 text-[1.0625rem] font-semibold text-(--text-secondary)">
+        {{ $t('docs.installation.manual.step2.title') }}
+      </h3>
+      <i18n-t
+        keypath="docs.installation.manual.step2.body"
+        tag="p"
+        class="text-[15px] leading-relaxed mb-5 text-(--text-secondary)"
+      >
+        <template #file>
+          <span class="font-semibold text-(--color-accent)">.vue</span>
+        </template>
+      </i18n-t>
+
+      <h3 class="mt-8 mb-2 text-[1.0625rem] font-semibold text-(--text-secondary)">
+        {{ $t('docs.installation.manual.step3.title') }}
       </h3>
       <p class="text-[15px] leading-relaxed mb-3 text-(--text-secondary)">
-        If a component relies on external libraries, its Code tab lists them. Install what it needs:
+        {{ $t('docs.installation.manual.step3.body1') }}
       </p>
       <CodeBlock code="npm install gsap" language="bash" />
       <p class="text-[15px] leading-relaxed my-3 text-(--text-secondary)">
-        Then import and render it like any other component:
+        {{ $t('docs.installation.manual.step3.body2') }}
       </p>
       <CodeBlock :code="usageExample" language="html" />
     </template>
 
     <template v-else>
       <p class="text-[15px] leading-relaxed mb-5 text-(--text-muted)">
-        Pull a component into your project with a single command.
+        {{ $t('docs.installation.cli.intro') }}
       </p>
 
-      <h3 class="mt-8 mb-2 text-[1.0625rem] font-semibold text-(--text-secondary)">1. Choose a CLI</h3>
+      <h3 class="mt-8 mb-2 text-[1.0625rem] font-semibold text-(--text-secondary)">
+        {{ $t('docs.installation.cli.step1.title') }}
+      </h3>
       <p class="text-[15px] leading-relaxed mb-3 text-(--text-secondary)">
-        Vue Bits works with two registries - both fetch the same source, so pick whichever you already use.
+        {{ $t('docs.installation.cli.step1.body') }}
       </p>
       <MethodSelector
         :methods="[
@@ -114,24 +134,32 @@ onMounted(() => window.scrollTo(0, 0));
           { key: 'jsrepo', label: 'jsrepo' }
         ]"
         :selected="cliTool"
-        aria-label="CLI tool"
+        :aria-label="$t('docs.installation.cli.toolAria')"
         @select="key => (cliTool = key as 'shadcn' | 'jsrepo')"
       />
 
-      <h3 class="mt-8 mb-2 text-[1.0625rem] font-semibold text-(--text-secondary)">2. Pick a package manager</h3>
+      <h3 class="mt-8 mb-2 text-[1.0625rem] font-semibold text-(--text-secondary)">
+        {{ $t('docs.installation.cli.step2.title') }}
+      </h3>
       <MethodSelector
         :methods="PKG_MANAGERS.map(m => ({ key: m, label: m }))"
         :selected="pkg"
-        aria-label="Package manager"
+        :aria-label="$t('docs.installation.cli.pkgAria')"
         @select="key => (pkg = key as PackageManager)"
       />
 
-      <h3 class="mt-8 mb-2 text-[1.0625rem] font-semibold text-(--text-secondary)">3. Run the command</h3>
-      <p class="text-[15px] leading-relaxed mb-3 text-(--text-secondary)">
-        This example installs
-        <span class="font-semibold text-(--color-accent)">SplitText</span>
-        - swap in any component name:
-      </p>
+      <h3 class="mt-8 mb-2 text-[1.0625rem] font-semibold text-(--text-secondary)">
+        {{ $t('docs.installation.cli.step3.title') }}
+      </h3>
+      <i18n-t
+        keypath="docs.installation.cli.step3.body"
+        tag="p"
+        class="text-[15px] leading-relaxed mb-3 text-(--text-secondary)"
+      >
+        <template #name>
+          <span class="font-semibold text-(--color-accent)">SplitText</span>
+        </template>
+      </i18n-t>
 
       <div class="relative rounded-xl border border-(--border-secondary) overflow-hidden">
         <code
@@ -147,7 +175,7 @@ onMounted(() => window.scrollTo(0, 0));
               ? 'bg-(--color-primary) text-black'
               : 'bg-(--bg-body) text-(--text-muted) hover:bg-(--bg-elevated) hover:text-(--text-primary)'
           "
-          aria-label="Copy install command"
+          :aria-label="$t('demo.copyInstallCommand')"
           @click="copyCommand"
         >
           <Check v-if="copied" :size="15" />
@@ -155,25 +183,30 @@ onMounted(() => window.scrollTo(0, 0));
         </button>
       </div>
 
-      <p class="text-[15px] leading-relaxed mt-4 text-(--text-muted)">
-        Pulls the component from
-        <a class="text-(--color-accent)" :href="registryUrl(EXAMPLE_SLUG)" target="_blank" rel="noreferrer">
-          {{ registryUrl(EXAMPLE_SLUG) }}
-        </a>
-        and copies it into your project.
-      </p>
+      <i18n-t
+        keypath="docs.installation.cli.footer"
+        tag="p"
+        class="text-[15px] leading-relaxed mt-4 text-(--text-muted)"
+      >
+        <template #link>
+          <a class="text-(--color-accent)" :href="registryUrl(EXAMPLE_SLUG)" target="_blank" rel="noreferrer">
+            {{ registryUrl(EXAMPLE_SLUG) }}
+          </a>
+        </template>
+      </i18n-t>
     </template>
 
-    <h2 class="mt-14 mb-3 text-xl font-semibold text-(--text-primary)">That's all!</h2>
+    <h2 class="mt-14 mb-3 text-xl font-semibold text-(--text-primary)">
+      {{ $t('docs.installation.done.title') }}
+    </h2>
 
     <p class="text-[15px] leading-relaxed mb-5 text-(--text-secondary)">
-      From here on, it's all about how you integrate the component into your project. The code is yours to play around
-      with - modify styling, functionality, anything goes!
+      {{ $t('docs.installation.done.body') }}
     </p>
 
     <DocsButtonBar
-      :next="{ label: 'MCP Server', route: '/get-started/mcp' }"
-      :previous="{ label: 'Introduction', route: '/get-started/introduction' }"
+      :next="{ label: $t('docs.mcp.title'), route: '/get-started/mcp' }"
+      :previous="{ label: $t('docs.introduction.title'), route: '/get-started/introduction' }"
     />
   </section>
 </template>

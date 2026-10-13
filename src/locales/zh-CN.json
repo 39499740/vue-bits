@@ -5574,6 +5574,159 @@
       "button": "复制为 Markdown",
       "copied": "已复制",
       "moreAria": "更多 AI 操作"
+    },
+    "introduction": {
+      "title": "介绍",
+      "lead": "挑选一个组件，在预览里调好参数，再把最适合你技术栈的版本复制或安装到项目中。",
+      "steps": {
+        "choose": {
+          "title": "选择组件",
+          "desc": "按分类浏览，或搜索你需要的交互效果。"
+        },
+        "customize": {
+          "title": "调成你要的样子",
+          "desc": "在预览中调整参数，然后把设置复制进你的使用代码。"
+        },
+        "add": {
+          "title": "加入你的项目",
+          "desc": "直接复制源码，或用 CLI 安装。"
+        }
+      },
+      "browseComponents": "浏览组件",
+      "installationGuide": "安装指南",
+      "about": "Vue Bits 是一个开源的表现力 UI 组件集合，让你在不引入整套设计系统的前提下，为界面加入动效与个性。",
+      "mission": {
+        "title": "使命",
+        "goal": "Vue Bits 的目标很简单——提供灵活、视觉出色，而且最重要的是免费的组件，让 Vue 项目更上一层楼。",
+        "principlesIntro": "为此，项目坚持以下原则：",
+        "principles": {
+          "freeForAll": {
+            "label": "完全免费",
+            "text": "{label}：代码归你所有，可自由用于你的项目"
+          },
+          "propFirst": {
+            "label": "属性优先",
+            "text": "{label}：通过精心设计的属性实现轻松定制"
+          },
+          "modular": {
+            "label": "完全模块化",
+            "text": "{label}：只安装你需要的部分，Vue Bits 不是一项依赖"
+          },
+          "stack": {
+            "label": "单一一致的技术栈",
+            "text": "{label}：每个组件都是 Vue 3 + TypeScript 编写、Tailwind 样式，可直接放入现代 Vue 应用"
+          }
+        }
+      },
+      "sections": {
+        "freeForAll": {
+          "title": "完全免费",
+          "body": "你引入项目的每个组件都可以随意修改和扩展，因为你拿到的是完整可见的源码，而不只是一个 import。"
+        },
+        "propFirst": {
+          "title": "属性优先",
+          "body": "每个组件都以灵活可定制为目标，通过属性即可调整外观与手感，不必每次都深入源码。"
+        },
+        "modular": {
+          "title": "完全模块化",
+          "body": "Vue Bits 不是传统的 NPM 库：你可以复制代码或用 CLI，只安装需要的组件，无需引入整个库。"
+        },
+        "stack": {
+          "title": "单一一致的技术栈",
+          "body": "每个组件都用 TypeScript 编写、Tailwind CSS 设定样式，只有一种版本可选——不必在 JS/TS 或 CSS/Tailwind 变体之间纠结。"
+        }
+      },
+      "performance": {
+        "title": "性能",
+        "intro": "我们会尽力优化组件并提供最佳体验，但使用 Vue Bits 时仍有几点建议：",
+        "tips": {
+          "lessIsMore": {
+            "label": "少即是多",
+            "text": "{label}：不建议在同一页面使用超过 2–3 个组件，过多动画可能影响性能或使用体验"
+          },
+          "mobile": {
+            "label": "移动端优化",
+            "text": "{label}：可考虑在移动端关闭部分特效，改用静态占位内容"
+          },
+          "thoroughTesting": {
+            "label": "充分测试",
+            "text": "{label}：你的设备也许性能很好，但请体谅用户——上线前务必在多台设备上测试"
+          }
+        }
+      }
+    },
+    "installation": {
+      "title": "安装",
+      "lead": "有两种方式引入 Vue Bits 组件——手动复制源码，或用 CLI 拉取。",
+      "pickMethod": "选择方式",
+      "methods": {
+        "manual": "手动",
+        "manualAria": "安装方式"
+      },
+      "stepsHeading": "步骤",
+      "manual": {
+        "intro": "把组件源码直接复制到你的项目中。",
+        "step1": {
+          "title": "1. 选择组件",
+          "body": "浏览组件库，打开你喜欢的组件，切换到它的{tab}标签页。",
+          "tab": "代码"
+        },
+        "step2": {
+          "title": "2. 复制代码",
+          "body": "每个组件都是单个 {file} 文件，用 TypeScript 编写、Tailwind 设定样式——把它复制到项目里新建的文件中。"
+        },
+        "step3": {
+          "title": "3. 安装依赖并使用",
+          "body1": "如果组件依赖外部库，其「代码」标签页会列出它们。按需安装：",
+          "body2": "然后像使用其他组件一样导入并渲染它："
+        }
+      },
+      "cli": {
+        "intro": "一条命令即可把组件拉进项目。",
+        "step1": {
+          "title": "1. 选择 CLI",
+          "body": "Vue Bits 支持两个注册源——二者拉取的是同一份源码，选你已经在用的那个即可。"
+        },
+        "toolAria": "CLI 工具",
+        "step2": {
+          "title": "2. 选择包管理器"
+        },
+        "pkgAria": "包管理器",
+        "step3": {
+          "title": "3. 运行命令",
+          "body": "下面的示例安装 {name}——换成任意组件名即可："
+        },
+        "footer": "从 {link} 拉取该组件并复制到你的项目中。"
+      },
+      "done": {
+        "title": "就这些！",
+        "body": "接下来就是你如何把组件集成进项目了。代码归你所有，随便改——样式、功能，怎么都行！"
+      }
+    },
+    "mcp": {
+      "title": "MCP 服务器",
+      "lead": "{mcp} 是一项开放标准，让 AI 助手能够安全地连接外部数据源与工具。",
+      "encourages": "Vue Bits 推荐使用 shadcn MCP 服务器，用自然语言浏览、搜索并安装组件。",
+      "quickStart": "快速开始",
+      "registriesIntro": "注册源配置在项目的 {file} 文件中，你需要先在其中加入 {registry} 注册源：",
+      "selectClient": "然后在下面选择你的客户端，配置 shadcn MCP 服务器。",
+      "clientAria": "MCP 客户端",
+      "runThis": "在你的项目中运行：",
+      "promptIntro": {
+        "claude": "重启 Claude Code，然后试试这样的提示词：",
+        "cursor": "然后打开 Cursor 设置，启用 shadcn MCP 服务器。试试这样的提示词：",
+        "vscode": "然后打开 {file}，点击 shadcn 服务器旁的 {start}。试试这样的提示词："
+      },
+      "prompts": {
+        "browseBackgrounds": "列出 Vue Bits 注册源里所有可用的背景组件",
+        "addDither": "把 Vue Bits 的 Dither 背景加到页面上，做成紫色",
+        "addFadeSection": "用 Vue Bits 的 FadeContent 新增一个滚动淡入的区块"
+      },
+      "tip": "提示：在 Claude Code 中用 /mcp 调试 MCP 服务器。",
+      "learnMore": {
+        "title": "了解更多",
+        "body": "想进一步了解 shadcn MCP 服务器的用法（包括各客户端的手动配置），请查阅官方文档："
+      }
     }
   }
 }

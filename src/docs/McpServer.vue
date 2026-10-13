@@ -5,9 +5,12 @@ import vscodeIcon from '@/assets/icons/vscode.svg';
 import CodeBlock from '@/components/common/CodeBlock.vue';
 import { SAMPLE_COMPONENTS_JSON_REGISTRIES_DOC } from '@/constants/cli';
 import { computed, onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import CopyPageButton from './CopyPageButton.vue';
 import DocsButtonBar from './DocsButtonBar.vue';
 import MethodSelector from './MethodSelector.vue';
+
+const { t } = useI18n();
 
 const CLIENTS = [
   { key: 'claude', label: 'Claude Code', icon: claudeIcon },
@@ -15,11 +18,11 @@ const CLIENTS = [
   { key: 'vscode', label: 'VS Code', icon: vscodeIcon }
 ];
 
-const EXAMPLE_PROMPTS = [
-  'Show me all the available backgrounds from the Vue Bits registry',
-  'Add the Dither background from Vue Bits to the page, make it purple',
-  'Add a new section which fades in on scroll using FadeContent from Vue Bits'
-];
+const EXAMPLE_PROMPTS = computed(() => [
+  t('docs.mcp.prompts.browseBackgrounds'),
+  t('docs.mcp.prompts.addDither'),
+  t('docs.mcp.prompts.addFadeSection')
+]);
 
 const selectedClient = ref<'claude' | 'cursor' | 'vscode'>('claude');
 
@@ -32,71 +35,88 @@ onMounted(() => window.scrollTo(0, 0));
   <section class="mx-auto pb-24 max-w-168.75 docs-page">
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
       <h1 class="m-0 text-4xl md:text-[2.75rem] font-bold leading-[1.04] tracking-tight text-(--text-primary)">
-        MCP Server
+        {{ $t('docs.mcp.title') }}
       </h1>
       <CopyPageButton />
     </div>
 
-    <p class="max-w-[60ch] mt-4 mb-5 text-lg leading-relaxed text-(--text-secondary)">
-      <a
-        class="underline text-(--text-secondary)"
-        href="https://modelcontextprotocol.io/"
-        target="_blank"
-        rel="noreferrer"
-      >
-        Model Context Protocol (MCP)
-      </a>
-      is an open standard that enables AI assistants to securely connect to external data sources and tools.
-    </p>
+    <i18n-t
+      keypath="docs.mcp.lead"
+      tag="p"
+      class="max-w-[60ch] mt-4 mb-5 text-lg leading-relaxed text-(--text-secondary)"
+    >
+      <template #mcp>
+        <a
+          class="underline text-(--text-secondary)"
+          href="https://modelcontextprotocol.io/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Model Context Protocol (MCP)
+        </a>
+      </template>
+    </i18n-t>
 
     <p class="text-[15px] leading-relaxed mb-5 text-(--text-muted)">
-      Vue Bits encourages the use of the shadcn MCP server to browse, search, and install components using natural
-      language.
+      {{ $t('docs.mcp.encourages') }}
     </p>
 
-    <h2 class="mt-14 mb-3 text-xl font-semibold text-(--text-primary)">Quick Start</h2>
+    <h2 class="mt-14 mb-3 text-xl font-semibold text-(--text-primary)">
+      {{ $t('docs.mcp.quickStart') }}
+    </h2>
 
-    <p class="text-[15px] leading-relaxed mb-3 text-(--text-secondary)">
-      Registries are configured in your project's
-      <span class="font-semibold text-(--color-accent)">components.json</span>
-      file, where you should first add the
-      <span class="font-semibold text-(--color-accent)">@vue-bits</span>
-      registry:
-    </p>
+    <i18n-t
+      keypath="docs.mcp.registriesIntro"
+      tag="p"
+      class="text-[15px] leading-relaxed mb-3 text-(--text-secondary)"
+    >
+      <template #file>
+        <span class="font-semibold text-(--color-accent)">components.json</span>
+      </template>
+      <template #registry>
+        <span class="font-semibold text-(--color-accent)">@vue-bits</span>
+      </template>
+    </i18n-t>
     <CodeBlock :code="SAMPLE_COMPONENTS_JSON_REGISTRIES_DOC" language="json" />
 
     <p class="text-[15px] leading-relaxed my-5 text-(--text-muted)">
-      Then, from the options below, select your client &amp; set up the shadcn MCP server.
+      {{ $t('docs.mcp.selectClient') }}
     </p>
 
     <MethodSelector
       :methods="CLIENTS"
       :selected="selectedClient"
-      aria-label="MCP client"
+      :aria-label="$t('docs.mcp.clientAria')"
       @select="key => (selectedClient = key as 'claude' | 'cursor' | 'vscode')"
     />
 
-    <p class="text-[15px] leading-relaxed my-5 text-(--text-secondary)">Run this in your project:</p>
+    <p class="text-[15px] leading-relaxed my-5 text-(--text-secondary)">{{ $t('docs.mcp.runThis') }}</p>
     <CodeBlock :code="initCommand" language="bash" />
 
     <p v-if="selectedClient === 'claude'" class="text-[15px] leading-relaxed my-3 text-(--text-secondary)">
-      Restart Claude Code and try prompts like:
+      {{ $t('docs.mcp.promptIntro.claude') }}
     </p>
     <p v-else-if="selectedClient === 'cursor'" class="text-[15px] leading-relaxed my-3 text-(--text-secondary)">
-      Then open Cursor Settings and enable the shadcn MCP server. Try prompts like:
+      {{ $t('docs.mcp.promptIntro.cursor') }}
     </p>
-    <p v-else class="text-[15px] leading-relaxed my-3 text-(--text-secondary)">
-      Then open
-      <span class="font-semibold text-(--color-accent)">.vscode/mcp.json</span>
-      and click
-      <span class="font-semibold text-(--color-accent)">Start</span>
-      next to the shadcn server. Try prompts like:
-    </p>
+    <i18n-t
+      v-else
+      keypath="docs.mcp.promptIntro.vscode"
+      tag="p"
+      class="text-[15px] leading-relaxed my-3 text-(--text-secondary)"
+    >
+      <template #file>
+        <span class="font-semibold text-(--color-accent)">.vscode/mcp.json</span>
+      </template>
+      <template #start>
+        <span class="font-semibold text-(--color-accent)">Start</span>
+      </template>
+    </i18n-t>
 
     <ul class="space-y-2 mb-5 pl-5 list-disc">
       <li
-        v-for="prompt in EXAMPLE_PROMPTS"
-        :key="prompt"
+        v-for="(prompt, i) in EXAMPLE_PROMPTS"
+        :key="i"
         class="text-[15px] leading-relaxed text-(--text-muted) max-w-[55ch]"
       >
         {{ prompt }}
@@ -104,14 +124,15 @@ onMounted(() => window.scrollTo(0, 0));
     </ul>
 
     <p v-if="selectedClient === 'claude'" class="text-[15px] leading-relaxed mb-5 text-(--text-muted)">
-      Tip: Use /mcp in Claude Code to debug the MCP server.
+      {{ $t('docs.mcp.tip') }}
     </p>
 
-    <h2 class="mt-14 mb-3 text-xl font-semibold text-(--text-primary)">Learn more</h2>
+    <h2 class="mt-14 mb-3 text-xl font-semibold text-(--text-primary)">
+      {{ $t('docs.mcp.learnMore.title') }}
+    </h2>
 
     <p class="text-[15px] leading-relaxed mb-4 text-(--text-muted)">
-      To learn more about using the shadcn MCP server, including manual setup for different clients, please visit the
-      official documentation:
+      {{ $t('docs.mcp.learnMore.body') }}
     </p>
 
     <a
@@ -124,8 +145,8 @@ onMounted(() => window.scrollTo(0, 0));
     </a>
 
     <DocsButtonBar
-      :next="{ label: 'Browse Components', route: '/get-started/index' }"
-      :previous="{ label: 'Installation', route: '/get-started/installation' }"
+      :next="{ label: $t('componentList.browseComponents'), route: '/get-started/index' }"
+      :previous="{ label: $t('docs.installation.title'), route: '/get-started/installation' }"
     />
   </section>
 </template>

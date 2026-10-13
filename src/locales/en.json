@@ -5148,6 +5148,159 @@
       "button": "Copy as Markdown",
       "copied": "Copied",
       "moreAria": "More AI actions"
+    },
+    "introduction": {
+      "title": "Introduction",
+      "lead": "Pick a component, tune it in the preview, then copy or install the exact variant for your stack.",
+      "steps": {
+        "choose": {
+          "title": "Choose a component",
+          "desc": "Browse by category or search for the interaction you need."
+        },
+        "customize": {
+          "title": "Make it yours",
+          "desc": "Tune the preview and copy the settings into your usage code."
+        },
+        "add": {
+          "title": "Add it to your project",
+          "desc": "Copy the source straight in, or install it with the CLI."
+        }
+      },
+      "browseComponents": "Browse components",
+      "installationGuide": "Installation guide",
+      "about": "Vue Bits is an open-source collection of expressive UI components for adding motion and personality without adopting an entire design system.",
+      "mission": {
+        "title": "Mission",
+        "goal": "The goal of Vue Bits is simple - provide flexible, visually stunning and most importantly, free components that take Vue projects to the next level.",
+        "principlesIntro": "To make that happen, the project is committed to the following principles:",
+        "principles": {
+          "freeForAll": {
+            "label": "Free For All",
+            "text": "{label}: You own the code, and it's free to use in your projects"
+          },
+          "propFirst": {
+            "label": "Prop-First Approach",
+            "text": "{label}: Easy customization through thoughtfully exposed props"
+          },
+          "modular": {
+            "label": "Fully Modular",
+            "text": "{label}: Install strictly what you need, Vue Bits is not a dependency"
+          },
+          "stack": {
+            "label": "Single, Consistent Stack",
+            "text": "{label}: Every component ships as Vue 3 + TypeScript, styled with Tailwind, so it drops straight into a modern Vue app"
+          }
+        }
+      },
+      "sections": {
+        "freeForAll": {
+          "title": "Free For All",
+          "body": "Every component you choose to bring into your project is yours to modify or extend, because you get full visibility of the code, not just an import."
+        },
+        "propFirst": {
+          "title": "Prop-First Approach",
+          "body": "Every component is designed to be flexible and customizable, with props that let you adjust the look and feel without always having to dive into the code."
+        },
+        "modular": {
+          "title": "Fully Modular",
+          "body": "Vue Bits is not your classic NPM library, you install only the components you need by either copying the code or using the CLI, without pulling in a whole library."
+        },
+        "stack": {
+          "title": "Single, Consistent Stack",
+          "body": "Every component is written in TypeScript and styled with Tailwind CSS, so there's exactly one version to reach for - no picking between JS/TS or CSS/Tailwind variants."
+        }
+      },
+      "performance": {
+        "title": "Performance",
+        "intro": "While we do everything possible to optimize components and offer the best experience, here are some tips to keep in mind when using Vue Bits:",
+        "tips": {
+          "lessIsMore": {
+            "label": "Less Is More",
+            "text": "{label}: Using more than 2-3 components on a page is not advised, it can overload your page with animations, potentially impacting performance or UX"
+          },
+          "mobile": {
+            "label": "Mobile Optimization",
+            "text": "{label}: Consider disabling certain effects on mobile and replacing them with static placeholders instead"
+          },
+          "thoroughTesting": {
+            "label": "Test Thoroughly",
+            "text": "{label}: Your device may be high-end, but be considerate of your users - always test on multiple devices before going live"
+          }
+        }
+      }
+    },
+    "installation": {
+      "title": "Installation",
+      "lead": "Add Vue Bits components two ways - copy the source by hand, or pull them in with a CLI.",
+      "pickMethod": "Pick the method",
+      "methods": {
+        "manual": "Manual",
+        "manualAria": "Installation method"
+      },
+      "stepsHeading": "Steps",
+      "manual": {
+        "intro": "Copy a component's source straight into your project.",
+        "step1": {
+          "title": "1. Pick a component",
+          "body": "Browse the library, open a component you like, and switch to its {tab} tab.",
+          "tab": "Code"
+        },
+        "step2": {
+          "title": "2. Copy the code",
+          "body": "Every component ships as a single {file} file written in TypeScript and styled with Tailwind - copy it into a new file in your project."
+        },
+        "step3": {
+          "title": "3. Install dependencies & use it",
+          "body1": "If a component relies on external libraries, its Code tab lists them. Install what it needs:",
+          "body2": "Then import and render it like any other component:"
+        }
+      },
+      "cli": {
+        "intro": "Pull a component into your project with a single command.",
+        "step1": {
+          "title": "1. Choose a CLI",
+          "body": "Vue Bits works with two registries - both fetch the same source, so pick whichever you already use."
+        },
+        "toolAria": "CLI tool",
+        "step2": {
+          "title": "2. Pick a package manager"
+        },
+        "pkgAria": "Package manager",
+        "step3": {
+          "title": "3. Run the command",
+          "body": "This example installs {name} - swap in any component name:"
+        },
+        "footer": "Pulls the component from {link} and copies it into your project."
+      },
+      "done": {
+        "title": "That's all!",
+        "body": "From here on, it's all about how you integrate the component into your project. The code is yours to play around with - modify styling, functionality, anything goes!"
+      }
+    },
+    "mcp": {
+      "title": "MCP Server",
+      "lead": "{mcp} is an open standard that enables AI assistants to securely connect to external data sources and tools.",
+      "encourages": "Vue Bits encourages the use of the shadcn MCP server to browse, search, and install components using natural language.",
+      "quickStart": "Quick Start",
+      "registriesIntro": "Registries are configured in your project's {file} file, where you should first add the {registry} registry:",
+      "selectClient": "Then, from the options below, select your client & set up the shadcn MCP server.",
+      "clientAria": "MCP client",
+      "runThis": "Run this in your project:",
+      "promptIntro": {
+        "claude": "Restart Claude Code and try prompts like:",
+        "cursor": "Then open Cursor Settings and enable the shadcn MCP server. Try prompts like:",
+        "vscode": "Then open {file} and click {start} next to the shadcn server. Try prompts like:"
+      },
+      "prompts": {
+        "browseBackgrounds": "Show me all the available backgrounds from the Vue Bits registry",
+        "addDither": "Add the Dither background from Vue Bits to the page, make it purple",
+        "addFadeSection": "Add a new section which fades in on scroll using FadeContent from Vue Bits"
+      },
+      "tip": "Tip: Use /mcp in Claude Code to debug the MCP server.",
+      "learnMore": {
+        "title": "Learn more",
+        "body": "To learn more about using the shadcn MCP server, including manual setup for different clients, please visit the official documentation:"
+      }
     }
   }
 }

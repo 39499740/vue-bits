@@ -1,26 +1,35 @@
 <script setup lang="ts">
 import { ArrowRight, Search, SlidersHorizontal, TerminalSquare } from 'lucide-vue-next';
-import { onMounted } from 'vue';
+import { computed, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import CopyPageButton from './CopyPageButton.vue';
 import DocsButtonBar from './DocsButtonBar.vue';
 
-const QUICK_START_STEPS = [
+const { t } = useI18n();
+
+const QUICK_START_STEPS = computed(() => [
   {
+    key: 'choose',
     icon: Search,
-    title: 'Choose a component',
-    description: 'Browse by category or search for the interaction you need.'
+    title: t('docs.introduction.steps.choose.title'),
+    description: t('docs.introduction.steps.choose.desc')
   },
   {
+    key: 'customize',
     icon: SlidersHorizontal,
-    title: 'Make it yours',
-    description: 'Tune the preview and copy the settings into your usage code.'
+    title: t('docs.introduction.steps.customize.title'),
+    description: t('docs.introduction.steps.customize.desc')
   },
   {
+    key: 'add',
     icon: TerminalSquare,
-    title: 'Add it to your project',
-    description: 'Copy the source straight in, or install it with the CLI.'
+    title: t('docs.introduction.steps.add.title'),
+    description: t('docs.introduction.steps.add.desc')
   }
-];
+]);
+
+const PRINCIPLES = ['freeForAll', 'propFirst', 'modular', 'stack'] as const;
+const PERFORMANCE_TIPS = ['lessIsMore', 'mobile', 'thoroughTesting'] as const;
 
 onMounted(() => window.scrollTo(0, 0));
 </script>
@@ -29,20 +38,20 @@ onMounted(() => window.scrollTo(0, 0));
   <section class="mx-auto pb-24 max-w-168.75 docs-page">
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
       <h1 class="m-0 text-4xl md:text-[2.75rem] font-bold leading-[1.04] tracking-tight text-(--text-primary)">
-        Introduction
+        {{ $t('docs.introduction.title') }}
       </h1>
       <CopyPageButton />
     </div>
 
     <p class="max-w-[60ch] mt-4 mb-5 text-lg leading-relaxed text-(--text-secondary)">
-      Pick a component, tune it in the preview, then copy or install the exact variant for your stack.
+      {{ $t('docs.introduction.lead') }}
     </p>
 
     <div class="my-7 overflow-hidden rounded-2xl border border-(--border-primary) bg-(--bg-elevated)">
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-px bg-(--border-primary)">
         <div
           v-for="(step, index) in QUICK_START_STEPS"
-          :key="step.title"
+          :key="step.key"
           class="bg-(--bg-elevated) p-5 flex flex-col gap-2"
         >
           <div class="flex items-center gap-2 justify-between text-(--color-accent)">
@@ -58,100 +67,82 @@ onMounted(() => window.scrollTo(0, 0));
           to="/get-started/index"
           class="inline-flex items-center gap-2 px-4 h-10 rounded-sm text-sm font-semibold text-black! bg-(--color-primary) no-underline transition-transform duration-200 hover:-translate-y-px"
         >
-          Browse components
+          {{ $t('docs.introduction.browseComponents') }}
           <ArrowRight :size="14" aria-hidden="true" />
         </RouterLink>
         <RouterLink
           to="/get-started/installation"
           class="inline-flex items-center px-4 h-10 rounded-sm text-sm font-medium text-(--text-muted) no-underline transition-colors duration-200 hover:text-(--text-primary)"
         >
-          Installation guide
+          {{ $t('docs.introduction.installationGuide') }}
         </RouterLink>
       </div>
     </div>
 
     <p class="text-[15px] leading-relaxed mb-5 text-(--text-secondary)">
-      Vue Bits is an open-source collection of expressive UI components for adding motion and personality without
-      adopting an entire design system.
+      {{ $t('docs.introduction.about') }}
     </p>
 
-    <h2 class="mt-14 mb-3 text-xl font-semibold text-(--text-primary)">Mission</h2>
+    <h2 class="mt-14 mb-3 text-xl font-semibold text-(--text-primary)">
+      {{ $t('docs.introduction.mission.title') }}
+    </h2>
 
     <p class="text-[15px] leading-relaxed mb-5 text-(--text-muted)">
-      The goal of Vue Bits is simple - provide flexible, visually stunning and most importantly, free components that
-      take Vue projects to the next level.
+      {{ $t('docs.introduction.mission.goal') }}
     </p>
     <p class="text-[15px] leading-relaxed mb-5 text-(--text-secondary)">
-      To make that happen, the project is committed to the following principles:
+      {{ $t('docs.introduction.mission.principlesIntro') }}
     </p>
 
     <ul class="space-y-2 mb-7 pl-5 list-disc">
-      <li class="text-[15px] leading-relaxed text-(--text-secondary) max-w-[55ch]">
-        <span class="font-semibold text-(--color-accent)">Free For All:</span>
-        You own the code, and it's free to use in your projects
-      </li>
-      <li class="text-[15px] leading-relaxed text-(--text-secondary) max-w-[55ch]">
-        <span class="font-semibold text-(--color-accent)">Prop-First Approach:</span>
-        Easy customization through thoughtfully exposed props
-      </li>
-      <li class="text-[15px] leading-relaxed text-(--text-secondary) max-w-[55ch]">
-        <span class="font-semibold text-(--color-accent)">Fully Modular:</span>
-        Install strictly what you need, Vue Bits is not a dependency
-      </li>
-      <li class="text-[15px] leading-relaxed text-(--text-secondary) max-w-[55ch]">
-        <span class="font-semibold text-(--color-accent)">Single, Consistent Stack:</span>
-        Every component ships as Vue 3 + TypeScript, styled with Tailwind, so it drops straight into a modern Vue app
-      </li>
+      <i18n-t
+        v-for="key in PRINCIPLES"
+        :key="key"
+        :keypath="`docs.introduction.mission.principles.${key}.text`"
+        tag="li"
+        class="text-[15px] leading-relaxed text-(--text-secondary) max-w-[55ch]"
+      >
+        <template #label>
+          <span class="font-semibold text-(--color-accent)">
+            {{ $t(`docs.introduction.mission.principles.${key}.label`) }}
+          </span>
+        </template>
+      </i18n-t>
     </ul>
 
-    <h3 class="mt-8 mb-2 text-[1.0625rem] font-semibold text-(--text-secondary)">Free For All</h3>
-    <p class="text-[15px] leading-relaxed mb-5 text-(--text-secondary)">
-      Every component you choose to bring into your project is yours to modify or extend, because you get full
-      visibility of the code, not just an import.
-    </p>
+    <template v-for="key in PRINCIPLES" :key="`section-${key}`">
+      <h3 class="mt-8 mb-2 text-[1.0625rem] font-semibold text-(--text-secondary)">
+        {{ $t(`docs.introduction.sections.${key}.title`) }}
+      </h3>
+      <p class="text-[15px] leading-relaxed mb-5 text-(--text-secondary)">
+        {{ $t(`docs.introduction.sections.${key}.body`) }}
+      </p>
+    </template>
 
-    <h3 class="mt-8 mb-2 text-[1.0625rem] font-semibold text-(--text-secondary)">Prop-First Approach</h3>
-    <p class="text-[15px] leading-relaxed mb-5 text-(--text-secondary)">
-      Every component is designed to be flexible and customizable, with props that let you adjust the look and feel
-      without always having to dive into the code.
-    </p>
-
-    <h3 class="mt-8 mb-2 text-[1.0625rem] font-semibold text-(--text-secondary)">Fully Modular</h3>
-    <p class="text-[15px] leading-relaxed mb-5 text-(--text-secondary)">
-      Vue Bits is not your classic NPM library, you install only the components you need by either copying the code or
-      using the CLI, without pulling in a whole library.
-    </p>
-
-    <h3 class="mt-8 mb-2 text-[1.0625rem] font-semibold text-(--text-secondary)">Single, Consistent Stack</h3>
-    <p class="text-[15px] leading-relaxed mb-5 text-(--text-secondary)">
-      Every component is written in TypeScript and styled with Tailwind CSS, so there's exactly one version to reach for
-      - no picking between JS/TS or CSS/Tailwind variants.
-    </p>
-
-    <h2 class="mt-14 mb-3 text-xl font-semibold text-(--text-primary)">Performance</h2>
+    <h2 class="mt-14 mb-3 text-xl font-semibold text-(--text-primary)">
+      {{ $t('docs.introduction.performance.title') }}
+    </h2>
 
     <p class="text-[15px] leading-relaxed mb-5 text-(--text-muted)">
-      While we do everything possible to optimize components and offer the best experience, here are some tips to keep
-      in mind when using Vue Bits:
+      {{ $t('docs.introduction.performance.intro') }}
     </p>
 
     <ul class="space-y-2 mb-7 pl-5 list-disc">
-      <li class="text-[15px] leading-relaxed text-(--text-secondary) max-w-[55ch]">
-        <span class="font-semibold text-(--color-accent)">Less Is More:</span>
-        Using more than 2-3 components on a page is not advised, it can overload your page with animations, potentially
-        impacting performance or UX
-      </li>
-      <li class="text-[15px] leading-relaxed text-(--text-secondary) max-w-[55ch]">
-        <span class="font-semibold text-(--color-accent)">Mobile Optimization:</span>
-        Consider disabling certain effects on mobile and replacing them with static placeholders instead
-      </li>
-      <li class="text-[15px] leading-relaxed text-(--text-secondary) max-w-[55ch]">
-        <span class="font-semibold text-(--color-accent)">Test Thoroughly:</span>
-        Your device may be high-end, but be considerate of your users - always test on multiple devices before going
-        live
-      </li>
+      <i18n-t
+        v-for="key in PERFORMANCE_TIPS"
+        :key="key"
+        :keypath="`docs.introduction.performance.tips.${key}.text`"
+        tag="li"
+        class="text-[15px] leading-relaxed text-(--text-secondary) max-w-[55ch]"
+      >
+        <template #label>
+          <span class="font-semibold text-(--color-accent)">
+            {{ $t(`docs.introduction.performance.tips.${key}.label`) }}
+          </span>
+        </template>
+      </i18n-t>
     </ul>
 
-    <DocsButtonBar :next="{ label: 'Installation', route: '/get-started/installation' }" />
+    <DocsButtonBar :next="{ label: $t('docs.installation.title'), route: '/get-started/installation' }" />
   </section>
 </template>

@@ -51,6 +51,9 @@ provide(CUSTOMIZE_ACTIONS, {
   reset: () => props.onreset?.(),
   canReset: computed(() => Boolean(props.onreset) && props.hasChanges)
 });
+// PropTable resolves `propDescs.<slug>.<prop>` through this injection; without it
+// every prop description silently falls back to its English source text.
+provide('componentSlug', props.componentName || '');
 const route = useRoute();
 
 const activeTab = ref<'preview' | 'code'>('preview');

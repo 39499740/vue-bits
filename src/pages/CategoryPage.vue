@@ -10,6 +10,11 @@ const { t, te, locale } = useI18n();
 
 const sub = computed(() => (route.params.subcategory as string) ?? '');
 const niceName = computed(() => decodeLabel(sub.value));
+// The docs pages render their own <h1>; the shared category headline would show a
+// second, untranslated-looking title above it (the slug falls back to `Mcp`,
+// `Installation`, ...), so it is suppressed on those routes only.
+const DOC_SLUGS = new Set(['introduction', 'installation', 'mcp']);
+const showCategoryTitle = computed(() => sub.value !== 'index' && !DOC_SLUGS.has(sub.value));
 const translatedName = computed(() => {
   const keyName = niceName.value === 'Ascii Text' ? 'ASCII Text' : niceName.value;
   const key = `componentNames.${keyName.replace(/\s+/g, '_')}`;
@@ -62,7 +67,7 @@ watch(
 
 <template>
   <div class="category-page">
-    <h1 v-if="sub !== 'index'" class="sub-category category-page-title">{{ translatedName }}</h1>
+    <h1 v-if="showCategoryTitle" class="sub-category category-page-title">{{ translatedName }}</h1>
     <component :is="PageComponent" v-if="PageComponent" />
     <div v-else-if="loading" class="category-page-state">{{ $t('componentDetail.loading') }}</div>
     <div v-else-if="loadError" class="category-page-state">{{ $t('componentDetail.loadError') }}</div>
