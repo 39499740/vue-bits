@@ -44,10 +44,10 @@
         />
         <div class="scrubber">
           <button type="button" class="scrubber-track scrubber-track--select" @click="inputRef?.click()">
-            <span class="scrubber-label">Upload</span>
+            <span class="scrubber-label">{{ $t('demo.upload') }}</span>
             <span class="scrubber-select-right">
               <span class="max-w-40 overflow-hidden text-ellipsis whitespace-nowrap scrubber-value">
-                {{ upload ? upload.name : 'SVG or PNG' }}
+                {{ upload ? upload.name : $t('demo.uploadHint') }}
               </span>
             </span>
           </button>
