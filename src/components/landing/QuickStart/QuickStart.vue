@@ -13,6 +13,7 @@ import {
 } from '@/constants/cli';
 
 import './QuickStart.css';
+import { withBase } from '@/utils/base';
 
 const { t } = useI18n();
 
@@ -207,7 +208,7 @@ onMounted(() => {
                 >
                   <img
                     class="ln-qs-tab-logo"
-                    src="/vendor/install-brands/jsrepo-favicon.ico"
+                    :src="withBase('/vendor/install-brands/jsrepo-favicon.ico')"
                     alt=""
                     width="16"
                     height="16"
@@ -230,7 +231,7 @@ onMounted(() => {
                 >
                   <img
                     class="ln-qs-tab-logo"
-                    src="/vendor/install-brands/shadcn-favicon.ico"
+                    :src="withBase('/vendor/install-brands/shadcn-favicon.ico')"
                     alt=""
                     width="16"
                     height="16"

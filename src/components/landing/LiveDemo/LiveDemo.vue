@@ -125,7 +125,7 @@ onMounted(() => {
             transitionDelay: `${i * 70}ms`
           }"
         >
-          <a :href="card.href" class="ln-demo-card-link">
+          <RouterLink :to="card.href" class="ln-demo-card-link">
             <div class="ln-demo-card-visual">
               <DemoPlaceholder :variant="card.variant" :active="visible[i]" />
             </div>
@@ -139,7 +139,7 @@ onMounted(() => {
                 {{ card.component }}
               </span>
             </div>
-          </a>
+          </RouterLink>
         </div>
       </div>
     </div>

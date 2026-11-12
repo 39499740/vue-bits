@@ -33,7 +33,7 @@
         <PreviewSwitch
           title="Sound"
           :model-value="!!soundUrl"
-          @update:model-value="value => (soundUrl = value ? '/assets/sounds/click-soft.mp3' : '')"
+          @update:model-value="value => (soundUrl = value ? withBase('/assets/sounds/click-soft.mp3') : '')"
         />
       </Customize>
     </template>
@@ -61,6 +61,7 @@ import { useForceRerender } from '@/composables/useForceRerender';
 import { optionWheel } from '@/constants/code/Components/optionWheelCode';
 import OptionWheel, { type Side } from '@/content/Components/OptionWheel/OptionWheel.vue';
 import optionWheelSource from '@/content/Components/OptionWheel/OptionWheel.vue?raw';
+import { withBase } from '@/utils/base';
 import { computed, ref } from 'vue';
 
 const { rerenderKey: key, forceRerender } = useForceRerender();
@@ -79,7 +80,7 @@ const DEFAULTS = {
   inset: 80,
   loop: false,
   draggable: true,
-  soundUrl: '/assets/sounds/click-soft.mp3',
+  soundUrl: withBase('/assets/sounds/click-soft.mp3'),
   soundVolume: 0.5
 };
 

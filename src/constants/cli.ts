@@ -6,7 +6,10 @@
 
 import { componentMetadata } from './Information';
 
-export const REGISTRY_BASE = 'https://vue-bits.dev/r';
+// Mirror deployments can serve their own registry: build with
+// VITE_REGISTRY_BASE=https://www.t502.fun/vue-bits/r so the install commands
+// printed in the docs point at the same host the reader is browsing.
+export const REGISTRY_BASE = import.meta.env.VITE_REGISTRY_BASE || 'https://vue-bits.dev/r';
 
 const normalizeSlug = (slug: string): string => slug.replace(/[^a-z0-9]/gi, '').toLowerCase();
 

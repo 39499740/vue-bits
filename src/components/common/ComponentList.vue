@@ -2,6 +2,7 @@
 import { NEW } from '@/constants/Categories.ts';
 import { componentMetadata, type ComponentMetadata } from '@/constants/Information';
 import { getSavedComponents, removeSavedComponent, toggleSavedComponent } from '@/utils/favorites';
+import { withBase } from '@/utils/base';
 import { fuzzyMatch } from '@/utils/fuzzy';
 import gsap from 'gsap';
 import { useToast } from 'primevue/usetoast';
@@ -77,7 +78,7 @@ const mapToItem = (entry: RawEntry | string) => {
     categoryLabel: translatedCategory,
     title: translatedTitle,
     description: translatedDesc !== i18nKey ? translatedDesc : (meta.description ?? ''),
-    videoUrl: meta.videoUrl ?? '',
+    videoUrl: withBase(meta.videoUrl ?? ''),
     tags: Array.isArray(meta.tags) ? meta.tags : [],
     isNew: NEW.includes(rawTitle)
   };

@@ -52,30 +52,30 @@ const localizedRows = computed(() => ({
   <div class="ln-feat-marquee">
     <div class="ln-feat-marquee-track">
       <div class="ln-feat-marquee-scroll">
-        <a
+        <RouterLink
           v-for="(c, i) in localizedRows.a"
           :key="i"
-          :href="HREF"
+          :to="HREF"
           :data-slug="toSlug(c.name)"
           :data-cat="c.cat"
           class="ln-feat-pill"
         >
           {{ c.label }}
-        </a>
+        </RouterLink>
       </div>
     </div>
     <div class="ln-feat-marquee-track">
       <div class="ln-feat-marquee-scroll--rev ln-feat-marquee-scroll">
-        <a
+        <RouterLink
           v-for="(c, i) in localizedRows.b"
           :key="i"
-          :href="HREF"
+          :to="HREF"
           :data-slug="toSlug(c.name)"
           :data-cat="c.cat"
           class="ln-feat-pill"
         >
           {{ c.label }}
-        </a>
+        </RouterLink>
       </div>
     </div>
   </div>

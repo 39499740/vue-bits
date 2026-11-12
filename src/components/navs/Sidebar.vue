@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { withBase } from '@/utils/base';
 import { getSavedComponents } from '@/utils/favorites';
 import {
   DashboardSquare01Icon,
@@ -235,7 +236,7 @@ function handlePreviewEnter(categoryName: string, subName: string, event: MouseE
   clearTimeout(hideTimer);
   updatePreviewPosition(event);
 
-  const videoBase = meta.videoUrl.replace(/\.(webm|mp4)$/i, '');
+  const videoBase = withBase(meta.videoUrl).replace(/\.(webm|mp4)$/i, '');
   const delay = preview.value ? 70 : 260;
   showTimer = setTimeout(() => {
     preview.value = { key, title: subName, videoBase };

@@ -69,7 +69,7 @@ onUnmounted(() => {
           </p>
 
           <div class="ln-cta-buttons">
-            <a href="/get-started/index" class="ln-cta-btn ln-cta-btn--primary">
+            <RouterLink to="/get-started/index" class="ln-cta-btn ln-cta-btn--primary">
               {{ $t('cta.browseComponents') }}
 
               <svg
@@ -87,7 +87,7 @@ onUnmounted(() => {
 
                 <polyline points="12 5 19 12 12 19" />
               </svg>
-            </a>
+            </RouterLink>
 
             <a :href="GITHUB_URL" target="_blank" rel="noopener noreferrer" class="ln-cta-btn ln-cta-btn--secondary">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">

@@ -102,12 +102,13 @@ import { useForceRerender } from '@/composables/useForceRerender';
 import { maskedHeading } from '@/constants/code/TextAnimations/maskedHeadingCode';
 import MaskedHeading, { type Reveal, type Trigger } from '@/content/TextAnimations/MaskedHeading/MaskedHeading.vue';
 import maskedHeadingSource from '@/content/TextAnimations/MaskedHeading/MaskedHeading.vue?raw';
+import { withBase } from '@/utils/base';
 import { computed, ref } from 'vue';
 
 const { forceRerender } = useForceRerender();
 
 const DEMO_IMAGE = 'https://images.unsplash.com/photo-1500673587002-1d2548cfba1b?q=80&w=1600&auto=format&fit=crop';
-const DEMO_VIDEO = '/assets/videos/masked-heading.mp4';
+const DEMO_VIDEO = withBase('/assets/videos/masked-heading.mp4');
 
 const DEFAULTS = {
   text: 'Designed in the details',

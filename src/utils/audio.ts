@@ -1,15 +1,17 @@
 /**
  * Lightweight WebAudio sample player used by the hero's interactive code
- * editor. Sound files are expected at /sounds/*.mp3 in `static/`. If they
- * are missing the player silently no-ops.
+ * editor. Sound files are resolved against the deployment base (the app can be
+ * hosted under a sub-path) and, if they are missing, the player silently no-ops.
  */
+
+import { withBase } from './base';
 
 let _audioCtx: AudioContext | undefined;
 const _buffers: Record<string, AudioBuffer> = {};
 const _sounds: Record<string, string> = {
-  tick: '/sounds/click-004.mp3',
-  color: '/sounds/drop-003.mp3',
-  toggle: '/sounds/switch-007.mp3'
+  tick: withBase('/sounds/click-004.mp3'),
+  color: withBase('/sounds/drop-003.mp3'),
+  toggle: withBase('/sounds/switch-007.mp3')
 };
 const _lastPlayed: Record<string, number> = {};
 

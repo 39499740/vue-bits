@@ -136,9 +136,10 @@ import TabsLayout from '@/components/common/TabsLayout.vue';
 import { paperCrumple } from '@/constants/code/Micro/paperCrumpleCode';
 import PaperCrumple, { type PaperCrumpleRelease } from '@/content/Micro/PaperCrumple/PaperCrumple.vue';
 import paperCrumpleSource from '@/content/Micro/PaperCrumple/PaperCrumple.vue?raw';
+import { withBase } from '@/utils/base';
 import { computed, ref } from 'vue';
 
-const IMAGE = '/assets/images/paper-crumple.jpg';
+const IMAGE = withBase('/assets/images/paper-crumple.jpg');
 
 const DEFAULTS = {
   width: 400,

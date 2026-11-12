@@ -17,10 +17,10 @@
           handle="javicodes"
           status="Online"
           contact-text="Contact Me"
-          avatar-url="/assets/person.png"
-          :icon-url="showIcon ? '/assets/iconpattern.png' : ''"
+          :avatar-url="withBase('/assets/person.png')"
+          :icon-url="showIcon ? withBase('/assets/iconpattern.png') : ''"
           :show-user-info="showUserInfo"
-          grain-url="/assets/grain.webp"
+          :grain-url="withBase('/assets/grain.webp')"
           :behind-glow-enabled="showBehindGlow"
           :behind-glow-color="behindGlowColor"
           :inner-gradient="customInnerGradient"
@@ -58,6 +58,7 @@ import { useForceRerender } from '@/composables/useForceRerender';
 import { profileCard } from '@/constants/code/Components/profileCardCode';
 import ProfileCard from '@/content/Components/ProfileCard/ProfileCard.vue';
 import profileCardSource from '@/content/Components/ProfileCard/ProfileCard.vue?raw';
+import { withBase } from '@/utils/base';
 import { computed, ref } from 'vue';
 
 const { rerenderKey, forceRerender } = useForceRerender();
