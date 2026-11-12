@@ -185,7 +185,8 @@
       "newBackground": "New Background",
       "retroBackground": "Retro Background",
       "getStarted": "Get started",
-      "learnMore": "Learn more"
+      "learnMore": "Learn more",
+      "creativeComponents": "Creative Components"
     },
     "promptTitle": "Integrate the {name} component from Vue Bits",
     "promptIntro": "You are helping integrate an open-source Vue component into an existing application.",

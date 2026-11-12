@@ -185,7 +185,8 @@
       "newBackground": "新背景",
       "retroBackground": "复古背景",
       "getStarted": "开始使用",
-      "learnMore": "了解更多"
+      "learnMore": "了解更多",
+      "creativeComponents": "创意组件"
     },
     "promptTitle": "从 Vue Bits 集成 {name} 组件",
     "promptIntro": "你正在帮助将一个开源 Vue 组件集成到现有应用中。",

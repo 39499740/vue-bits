@@ -59,19 +59,22 @@ import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import PreviewSwitch from './PreviewSwitch.vue';
 
-const { headline = 'Build interfaces that feel alive', pillText = 'Just shipped v2.0' } = defineProps<{
+const { headline = 'Build interfaces that feel alive', pillText = 'Creative Components' } = defineProps<{
   headline?: string;
   pillText?: string;
 }>();
 
 const { t } = useI18n();
-const translatedPillText = computed(() =>
-  pillText === 'Retro Background'
-    ? t('demo.background.retroBackground')
-    : pillText === 'New Background'
-      ? t('demo.background.newBackground')
-      : pillText
-);
+const PILL_TEXT_KEYS: Record<string, string> = {
+  'Creative Components': 'demo.background.creativeComponents',
+  'Retro Background': 'demo.background.retroBackground',
+  'New Background': 'demo.background.newBackground'
+};
+
+const translatedPillText = computed(() => {
+  const key = PILL_TEXT_KEYS[pillText];
+  return key ? t(key) : pillText;
+});
 const showContent = ref(true);
 </script>
 
